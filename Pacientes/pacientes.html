@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Pacientes</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Formulario de Paciente</h2>
+
+        <!-- FORMULARIO PRINCIPAL PACIENTE -->
+        <form id="formPaciente" method="POST" action="guardar_paciente.php" class="mb-4 p-4 border rounded">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" name="nombre" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Segundo Nombre</label>
+                    <input type="text" class="form-control" name="nombredos" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Tercer Nombre</label>
+                    <input type="text" class="form-control" name="nombretres" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Primer Apellido</label>
+                    <input type="text" class="form-control" name="apellido" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Segundo Apellido</label>
+                    <input type="text" class="form-control" name="apellidodos" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">DPI</label>
+                    <input type="text" class="form-control" name="dpi" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Teléfono</label>
+                    <input type="text" class="form-control" name="telefono" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                    <input type="date" class="form-control" id="fechaNacimiento" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="sexo" class="form-label">Sexo</label>
+                    <select class="form-control" id="sexo">
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="grupoEtnico" class="form-label">Grupo Étnico</label>
+                    <select class="form-control" id="sexo">
+                        <option value="">Seleccione...</option>
+                        <option value="Ladino">Ladino</option>
+                        <option value="Mestizo">Mestizo</option>
+                    </select>
+                </div>
+                
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Guardar Paciente</button>
+        </form>
+
+        <h4 class="text-center mb-4">Opciones Adicionales</h4>
+
+        <!-- CARDS PARA OPCIONES ADICIONALES -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Signos Vitales</h5>
+                        <button class="btn btn-success" onclick="abrirModal('datosVitalesModal')">Agregar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Tipo Diabetes</h5>
+                        <button class="btn btn-success" onclick="abrirModal('tipoDiabetesModal')">Agregar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Antecedentes Personales</h5>
+                        <button class="btn btn-success" onclick="abrirModal('antecedentesPersonalesModal')">Agregar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Antecedentes Familiares</h5>
+                        <button class="btn btn-success" onclick="abrirModal('antecedentesFamiliaresModal')">Agregar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Responsable Paciente</h5>
+                        <button class="btn btn-success" onclick="abrirModal('responsablePacienteModal')">Agregar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Historia Clínica</h5>
+                        <button class="btn btn-success" onclick="abrirModal('historiaClinicaModal')">Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALES -->
+    <div class="modal fade" id="tipoDiabetesModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tipo Diabetes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!--<form method="POST" action="guardar_tipo_diabetes.php">-->
+                        <select class="form-select">
+                            <option>Seleccione...</option>
+                            <option value="1">Diabetes Tipo 1</option>
+                            <option value="2">Diabetes Tipo 2</option>
+                            <option value="3">Diabetes Gestacional</option>
+                        </select>
+                        <button class="btn btn-primary w-100">Guardar</button>
+                        <!--<button type="submit" class="btn btn-primary mt-3">Guardar</button>
+
+                    </form>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL Antecedentes Personales -->
+    <div class="modal fade" id="antecedentesPersonalesModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Antecedentes Personales</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    
+                        <textarea class="form-control mb-2" placeholder="Enfermedades Previas"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Cirugías"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Traumatismos"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Ginecobstétricos"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Alergias"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Vicios y Manías"></textarea>
+                        
+                        <button class="btn btn-primary w-100">Guardar</button>
+                    
+                     <!--<form method="POST" action="guardar_antecedentes_personales.php"> 
+                        <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+                     </form>-->
+                </div>
+            </div>
+        </div>
+    </div>
+<!--MODAL para responsable Paciente-->
+<div class="modal fade" id="responsablePacienteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Responsable Paciente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                
+                
+                    <input type="text" class="form-control mb-2" placeholder="Primer Nombre">
+                    <input type="text" class="form-control mb-2" placeholder="Segundo Nombre">
+                    <input type="text" class="form-control mb-2" placeholder="Tercer Nombre">
+                    <input type="text" class="form-control mb-2" placeholder="Primer Apellido">
+                    <input type="text" class="form-control mb-2" placeholder="Segundo Apellido">
+                    <input type="text" class="form-control mb-2" placeholder="No DPI">
+                    <input type="text" class="form-control mb-2" placeholder="Teléfono">
+                    <input type="email" class="form-control mb-2" placeholder="Email">
+                    <button class="btn btn-primary w-100">Guardar</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--MODAL para Historia Clinica-->
+<div class="modal fade" id="historiaClinicaModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Historia Clinica</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+            <textarea class="form-control mb-2" placeholder="Motivo de Consulta"></textarea>
+            <textarea class="form-control mb-2" placeholder="Historia de la Enfermedad Actual"></textarea>
+            <textarea class="form-control mb-2" placeholder="Datos Subjetivos"></textarea>
+            <textarea class="form-control mb-2" placeholder="Examen Físico"></textarea>
+            <textarea class="form-control mb-2" placeholder="Impresión Clínica"></textarea>
+            <textarea class="form-control mb-2" placeholder="Tratamiento"></textarea>
+            <textarea class="form-control mb-2" placeholder="Estudios Laboratorio"></textarea>
+            <button class="btn btn-primary w-100">Guardar</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--MODAL para Signos Vitales-->
+<<div class="modal fade" id="datosVitalesModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Datos Vitales del Paciente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-2">
+                    <label for="peso" class="form-label">Peso (kg)</label>
+                    <input type="number" class="form-control" id="peso" placeholder="Ej. 70.00" step="0.01">
+                </div>
+                <div class="mb-2">
+                    <label for="talla" class="form-label">Talla (m)</label>
+                    <input type="number" class="form-control" id="talla" placeholder="Ej. 1.75" step="0.01">
+                </div>
+                <div class="mb-2">
+                    <label for="presionArterial" class="form-label">Presión Arterial</label>
+                    <input type="text" class="form-control" id="presionArterial" placeholder="Ej. 120/80 mmHg">
+                </div>
+                <div class="mb-2">
+                    <label for="imc" class="form-label">Índice de Masa Corporal (IMC)</label>
+                    <input type="number" class="form-control" id="imc" placeholder="Ej. 22.86" step="0.01">
+                </div>
+                <div class="mb-2">
+                    <label for="temperatura" class="form-label">Temperatura (°C)</label>
+                    <input type="number" class="form-control" id="temperatura" placeholder="Ej. 36.50" step="0.01">
+                </div>
+                <div class="mb-2">
+                    <label for="frecuenciaCardiaca" class="form-label">Frecuencia Cardíaca (bpm)</label>
+                    <input type="number" class="form-control" id="frecuenciaCardiaca" placeholder="Ej. 72">
+                </div>
+                <div class="mb-2">
+                    <label for="oxigenacion" class="form-label">Oxigenación (%)</label>
+                    <input type="number" class="form-control" id="oxigenacion" placeholder="Ej. 98.50" step="0.01">
+                </div>
+                <div class="mb-2">
+                    <label for="frecuenciaRespiratoria" class="form-label">Frecuencia Respiratoria (rpm)</label>
+                    <input type="number" class="form-control" id="frecuenciaRespiratoria" placeholder="Ej. 16">
+                </div>
+                <button class="btn btn-primary w-100">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- MODAL Antecedentes Familiares -->
+    <div class="modal fade" id="antecedentesFamiliaresModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Antecedentes Familiares</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    
+                        <textarea class="form-control mb-2" placeholder="Historial de Enfermedades Familiares"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Cirugías Familiares"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Traumatismos Familiares"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Ginecobstétricos Familiares"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Alergias Familiares"></textarea>
+                        <textarea class="form-control mb-2" placeholder="Vicios y Manías Familiares"></textarea>
+                        <button class="btn btn-primary w-100">Guardar</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function abrirModal(id) {
+            let modal = new bootstrap.Modal(document.getElementById(id));
+            modal.show();
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
