@@ -1,11 +1,11 @@
 <?php
 include '../conexion.php';
 
-$idPaciente = $_POST['id_paciente'];
+$idResponsable = $_POST['id_responsable'];
 
-$sql = "SELECT * FROM SignosVitales WHERE idPaciente = ?";
+$sql = "SELECT * FROM ResponsablePaciente WHERE IdResponsable = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $idPaciente);
+$stmt->bind_param("i", $idResponsable);
 $stmt->execute();
 $result = $stmt->get_result();
 

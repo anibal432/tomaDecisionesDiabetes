@@ -3,7 +3,7 @@ include '../conexion.php';
 
 $idPaciente = $_POST['id_paciente'];
 
-$sql = "SELECT * FROM SignosVitales WHERE idPaciente = ?";
+$sql = "SELECT * FROM AntecedentesFamiliares WHERE IdPaciente = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $idPaciente);
 $stmt->execute();
