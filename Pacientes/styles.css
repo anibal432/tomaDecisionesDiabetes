@@ -1,0 +1,12 @@
+
+        /* Estilo para el cuadro de selección */
+        .checkbox-container {
+            margin-bottom: 20px;
+        }
+        .checkbox-container label {
+            margin-left: 10px;
+        }
+        /* Ocultar el modal inicialmente */
+        #responsableModal {
+            display: none;
+        }
