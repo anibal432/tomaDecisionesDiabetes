@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+* {
+    font-family: "Open Sans", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    outline: none;
+    border: none;
+    text-transform: capitalize;
+}
+
+html {
+    font-size: 80.4%;
+}
+
+body {
+    background-color: rgb(219, 218, 218);
+    background-size: cover;
+    background-position: center;
+}
+
+:root {
+    --gris: #575757;
+    --blanco: #b8b8b8;
+    --azul: #3a7bd5; /* Color azul principal */
+    --azulClaro: #5c9bd5; /* Color azul claro */
+    --degradado: linear-gradient(90deg, var(--gris), var(--blanco));
+    --degradados: linear-gradient(90deg, var(--azul), var(--azulClaro)); /* Degradado azul */
+    --azulBrillante: #a4c8e1; /* Azul brillante */
+}
+
+.login {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.459);
+    color: #575757;
+    margin-top: 50px;
+    width: 100%;
+    height: auto;
+}
+
+.form-control {
+    background: rgba(47, 45, 45, 0.483);
+    border-style: none;
+    color: rgba(255, 255, 255, 0.694);
+    transition: 0.5s ease-in;
+    outline: none;
+    box-shadow: none;
+}
+
+.form-control:hover {
+    background: rgba(92, 92, 92, 0.401);
+}
+
+input.form-control:focus {
+    background: rgba(95, 95, 95, 0.5);
+    box-shadow: none;
+    outline: none;
+    color: rgb(194, 193, 193);
+}
+
+.btn:hover {
+    transform: scale(1.1);
+}
+
+.btn-iniciar-sesion {
+    background: rgba(92, 92, 92, 0.181);
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #c3c3c3;
+    border-color: #585858;
+    transition: background-color 0.3s ease-in, border-color 0.3s ease-in;
+}
+
+.btn-iniciar-sesion:hover {
+    color: #c3c3c3;
+    background-color: rgba(58, 123, 213, 0.6); /* Color azul al pasar el mouse */
+    border-color: rgba(58, 123, 213, 0.8); /* Color azul más oscuro al pasar el mouse */
+}
+
+.password-checkbox {
+    cursor: pointer;
+    background-color: rgba(156, 156, 156, 0.345);
+    border-radius: 5px;
+}
+
+.password-checkbox:checked {
+    background-color: rgba(156, 156, 156, 0.345);
+    border-radius: 5px;
+    border: 2px solid var(--azul);
+}
+
+.form-control {
+    background: #f5f5f5;
+    border-style: none;
+    color: #575757;
+    transition: 0.5s ease-in;
+    outline: none;
+    box-shadow: none;
+    font-size: 18px;
+    width: 100%;
+    height: 50px;
+}
+
+.form-control:hover {
+    background: #e7e7e7;
+}
+
+input.form-control:focus {
+    background: #e7e7e7;
+    box-shadow: none;
+    outline: none;
+    color: #575757;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.password-checkbox {
+    cursor: pointer;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+.password-checkbox:checked {
+    background-color: #5c9bd5;
+    border-radius: 5px;
+    border: 2px solid var(--azul);
+}
+
+.btn-lg {
+    background: var(--azul);
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    border-color: var(--azul);
+    transition: background-color 0.3s ease-in, border-color 0.3s ease-in;
+}
+
+.btn-iniciar-sesion:hover {
+    color: white;
+    background-color: var(--azulClaro);
+    border-color: var(--azulClaro);
+}
+
+.form-floating > label {
+    font-size: 13px;
+}
+
+.medium {
+    font-size: 13px;
+}
+
+.progress-bar-yellow {
+    background-color: rgba(255, 255, 0, 0.43);
+}
+
+.progress {
+    margin-top: 10px;
+    background-color: rgba(99, 97, 97, 0.1);
+}
+
+.progress-bar-red {
+    background-color: rgba(255, 0, 0, 0.424);
+}
+
+.progress-bar-green {
+    background-color: rgba(0, 128, 0, 0.46);
+}
+
+.btn:disabled {
+    background-color: rgba(92, 92, 92, 0.3);
+    color: #777777;
+    border-color: #777777;
+    cursor: not-allowed;
+}
