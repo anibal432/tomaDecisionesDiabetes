@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost";
-$username = "root";       
-$password = "";           
-$dbname = "diabetesumg"; 
+$servername = "167.86.71.203";
+$username = "allen";       
+$password = "patopatopato1";           
+$dbname = "DiabetesUmg"; 
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -12,4 +12,3 @@ if ($conn->connect_error) {
     //echo "Conexión exitosa<br>";
 }
 ?>
-

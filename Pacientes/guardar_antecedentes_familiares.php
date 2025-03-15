@@ -1,5 +1,5 @@
 <?php
-include '../conexion.php';
+include '../conexionDiabetes.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Capturar datos del formulario

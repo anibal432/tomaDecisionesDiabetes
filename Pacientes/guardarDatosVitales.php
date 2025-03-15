@@ -1,5 +1,5 @@
 <?php
-include '../conexion.php';
+include '../conexionDiabetes.php';
 
 $idPaciente = $_POST['id_paciente'];
 $peso = $_POST['peso'];

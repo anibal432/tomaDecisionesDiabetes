@@ -2,14 +2,14 @@
 include '../conexionDiabetes.php'; // Incluye la conexión a la base de datos
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $idPaciente = $_POST['id_paciente']; // Obtiene el ID del paciente
+    $idHistoriaClinica = $_POST['id_historia_clinica']; // Obtiene el ID de la historia clínica
 
-    // Consulta para obtener los antecedentes familiares
-    $sql = "SELECT IdAntFam, IdPaciente, Medicos, Quirurgicos, Traumaticos, Ginecobstetricos, Alergias, ViciosManias 
-            FROM AntecedentesFamiliares 
-            WHERE IdPaciente = ?";
+    // Consulta para obtener los datos de la historia clínica
+    $sql = "SELECT IdHistoriaClinica, IdPaciente, MotivoConsulta, HistoriaEnfActual, DatosSubjetivos, ExamenFisico, ImpresionClinica, Tratamiento, EstudiosLaboratorio 
+            FROM HistoriaClinica 
+            WHERE IdHistoriaClinica = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $idPaciente); // Asocia el parámetro
+    $stmt->bind_param("i", $idHistoriaClinica); // Asocia el parámetro
     $stmt->execute();
     $result = $stmt->get_result();
 

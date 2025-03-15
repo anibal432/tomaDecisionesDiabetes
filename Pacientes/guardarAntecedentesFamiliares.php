@@ -1,42 +1,77 @@
 <?php
-include '../conexion.php';
+include '../conexionDiabetes.php'; // Incluye la conexión a la base de datos
 
-$idPaciente = $_POST['id_paciente'];
-$medicos = $_POST['medicos'];
-$quirurgicos = $_POST['quirurgicos'];
-$traumaticos = $_POST['traumaticos'];
-$ginecobstetricos = $_POST['ginecobstetricos'];
-$alergias = $_POST['alergias'];
-$viciosManias = $_POST['vicios_manias'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Obtener los datos del formulario
+    $id_ant_fam = isset($_POST['id_ant_fam']) ? $_POST['id_ant_fam'] : null;
+    $id_paciente = $_POST['id_paciente'];
+    $medicos = $_POST['medicos'];
+    $quirurgicos = $_POST['quirurgicos'];
+    $traumaticos = $_POST['traumaticos'];
+    $ginecobstetricos = $_POST['ginecobstetricos'];
+    $alergias = $_POST['alergias'];
+    $vicios_manias = $_POST['vicios_manias'];
 
-// Verificar si ya existe un registro para este paciente
-$sqlCheck = "SELECT IdAntFam FROM AntecedentesFamiliares WHERE IdPaciente = ?";
-$stmtCheck = $conn->prepare($sqlCheck);
-$stmtCheck->bind_param("i", $idPaciente);
-$stmtCheck->execute();
-$stmtCheck->store_result();
+    // Iniciar una transacción para asegurar la consistencia de los datos
+    $conn->begin_transaction();
 
-if ($stmtCheck->num_rows > 0) {
-    // Actualizar el registro existente
-    $sqlUpdate = "UPDATE AntecedentesFamiliares SET Medicos = ?, Quirurgicos = ?, Traumaticos = ?, Ginecobstetricos = ?, Alergias = ?, ViciosManias = ? WHERE IdPaciente = ?";
-    $stmtUpdate = $conn->prepare($sqlUpdate);
-    $stmtUpdate->bind_param("ssssssi", $medicos, $quirurgicos, $traumaticos, $ginecobstetricos, $alergias, $viciosManias, $idPaciente);
-    if ($stmtUpdate->execute()) {
-        echo json_encode(['success' => true]);
-    } else {
-        echo json_encode(['success' => false, 'error' => $stmtUpdate->error]);
+    try {
+        if ($id_ant_fam) {
+            // Si existe, actualizar los antecedentes familiares
+            $sql = "UPDATE AntecedentesFamiliares 
+                    SET Medicos = ?, Quirurgicos = ?, Traumaticos = ?, 
+                        Ginecobstetricos = ?, Alergias = ?, ViciosManias = ? 
+                    WHERE IdAntFam = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param(
+                "ssssssi",
+                $medicos,
+                $quirurgicos,
+                $traumaticos,
+                $ginecobstetricos,
+                $alergias,
+                $vicios_manias,
+                $id_ant_fam
+            );
+        } else {
+            // Si no existe, insertar nuevos antecedentes familiares
+            $sql = "INSERT INTO AntecedentesFamiliares (IdPaciente, Medicos, Quirurgicos, Traumaticos, Ginecobstetricos, Alergias, ViciosManias) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param(
+                "issssss",
+                $id_paciente,
+                $medicos,
+                $quirurgicos,
+                $traumaticos,
+                $ginecobstetricos,
+                $alergias,
+                $vicios_manias
+            );
+        }
+
+        // Ejecutar la consulta
+        if ($stmt->execute()) {
+            // Confirmar la transacción
+            $conn->commit();
+            echo json_encode(['success' => true]);
+        } else {
+            // Revertir la transacción en caso de error
+            $conn->rollback();
+            echo json_encode(['success' => false, 'error' => $stmt->error]);
+        }
+
+        // Cerrar la consulta
+        $stmt->close();
+    } catch (Exception $e) {
+        // Revertir la transacción en caso de excepción
+        $conn->rollback();
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
+
+    // Cerrar la conexión
+    $conn->close();
 } else {
-    // Insertar un nuevo registro
-    $sqlInsert = "INSERT INTO AntecedentesFamiliares (IdPaciente, Medicos, Quirurgicos, Traumaticos, Ginecobstetricos, Alergias, ViciosManias) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    $stmtInsert = $conn->prepare($sqlInsert);
-    $stmtInsert->bind_param("issssss", $idPaciente, $medicos, $quirurgicos, $traumaticos, $ginecobstetricos, $alergias, $viciosManias);
-    if ($stmtInsert->execute()) {
-        echo json_encode(['success' => true]);
-    } else {
-        echo json_encode(['success' => false, 'error' => $stmtInsert->error]);
-    }
+    echo json_encode(['success' => false, 'error' => 'Método no permitido']);
 }
-
-$conn->close();
 ?>

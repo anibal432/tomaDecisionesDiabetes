@@ -92,7 +92,33 @@ include '../conexionDiabetes.php';
     </div>
     <button type="submit" class="btn btn-primary w-100">Guardar Paciente</button> 
 </form>
-
+<div id="mensaje" class="mt-3"></div>
+            <!--Aqui iba lo que son las opciones para ingresar los datos del paciente antes...-->
+    <!-- MODALES -->
+    <!-- MODAL Tipo Diabetes -->
+    <div class="modal fade" id="tipoDiabetesModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tipo de Diabetes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="guardarTipoDiabetes.php">
+                        <input type="hidden" name="id_paciente" value="<?php echo isset($_GET['id']) ? $_GET['id'] : ''; ?>">
+                        <select class="form-select mb-2" name="tipo_diabetes" required>
+                            <option value="">Seleccione...</option>
+                            <option value="Pre-diabetes">Pre-diabetes</option>
+                            <option value="Diabetes Tipo 1">Diabetes Tipo 1</option>
+                            <option value="Diabetes Tipo 2">Diabetes Tipo 2</option>
+                            <option value="Diabetes Gestacional">Diabetes Gestacional</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> 
 <!-- Modal para Editar Paciente -->
 <div class="modal fade" id="editarPacienteModal" tabindex="-1">
     <div class="modal-dialog">
@@ -313,7 +339,6 @@ include '../conexionDiabetes.php';
             <div class="modal-body">
                 <form id="formResponsablePaciente" method="POST" action="guardarResponsablePaciente.php">
                     <input type="hidden" name="id_responsable" id="id_responsable">
-                    <input type="hidden" name="id_paciente" id="id_paciente_responsable">
                     <!-- Campos del formulario -->
                     <div class="mb-2">
                         <label for="primer_nombre" class="form-label">Primer Nombre</label>
@@ -622,10 +647,10 @@ include '../conexionDiabetes.php';
                   </td>";
             echo "<td>
                     <div class='d-flex justify-content-center'>
-    <button class='btn btn-info me-2' onclick='abrirModalResponsablePaciente(" . $row['IdPaciente'] . ")'>
+    <button class='btn btn-info me-2' onclick='abrirModalResponsablePaciente()'>
         <i class='fas fa-plus'></i> 
     </button>
-    <button class='btn btn-warning me-2' onclick='abrirModalEditarResponsablePaciente(" . $row['IdPaciente'] . ")'>
+    <button class='btn btn-warning me-2' onclick='abrirModalEditarResponsablePaciente(" . $row['IdResponsable'] . ")'>
         <i class='fas fa-eye'></i>
     </button>
 </div>
@@ -658,7 +683,7 @@ include '../conexionDiabetes.php';
     </script>
 
     
-<!--
+
 <script>
         // Función para mostrar u ocultar el botón de agregar responsable
         function mostrarModalResponsable() {
@@ -677,7 +702,7 @@ include '../conexionDiabetes.php';
             const modal = new bootstrap.Modal(document.getElementById(modalId));
             modal.show();
         }
-    </script>-->
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!--funcion con ajax -->
@@ -991,13 +1016,10 @@ $(document).ready(function() {
     });
 });
 
-// Función para abrir el modal y crear un nuevo responsable
-function abrirModalResponsablePaciente(idPaciente) {
-    console.log('Abriendo modal para el paciente:', idPaciente); // Depuración
+function abrirModalResponsablePaciente() {
+    console.log('Abriendo modal para agregar responsable'); // Depuración
     // Limpiar el formulario
     $('#formResponsablePaciente')[0].reset();
-    // Establecer el ID del paciente en el formulario
-    $('#id_paciente_responsable').val(idPaciente);
     // Cambiar el texto del botón de submit
     $('#btnGuardarResponsablePaciente').text('Guardar');
     // Mostrar el modal
@@ -1005,18 +1027,17 @@ function abrirModalResponsablePaciente(idPaciente) {
     modal.show();
 }
 
-function abrirModalEditarResponsablePaciente(idPaciente) {
-    console.log('Abriendo modal para editar responsable del paciente con IdPaciente:', idPaciente); // Depuración
+function abrirModalEditarResponsablePaciente(idResponsable) {
+    console.log('Abriendo modal para editar responsable:', idResponsable); // Depuración
     $.ajax({
         url: 'obtenerResponsablePaciente.php', // Archivo PHP que obtiene los datos del responsable
         method: 'POST',
-        data: { id_paciente: idPaciente }, // Envía el ID del paciente
+        data: { id_responsable: idResponsable }, // Envía el ID del responsable
         success: function(data) {
             const responsable = JSON.parse(data); // Convierte la respuesta JSON en un objeto
             if (responsable) {
                 // Rellenar los campos del modal con los datos obtenidos
                 $('#id_responsable').val(responsable.IdResponsable);
-                $('#id_paciente_responsable').val(responsable.IdPaciente);
                 $('#primer_nombre').val(responsable.PrimerNombre);
                 $('#segundo_nombre').val(responsable.SegundoNombre);
                 $('#tercer_nombre').val(responsable.TercerNombre);
@@ -1033,7 +1054,7 @@ function abrirModalEditarResponsablePaciente(idPaciente) {
                 const modal = new bootstrap.Modal(document.getElementById('responsablePacienteModal'));
                 modal.show();
             } else {
-                alert('No se encontró un responsable asociado a este paciente.');
+                alert('No se encontraron datos para este responsable.');
             }
         },
         error: function(xhr, status, error) {
@@ -1055,7 +1076,7 @@ $(document).ready(function() {
             success: function(response) {
                 const result = JSON.parse(response);
                 if (result.success) {
-                    alert('Responsable del paciente guardado exitosamente!');
+                    alert('Responsable guardado exitosamente!');
                     // Cerrar el modal
                     const modal = bootstrap.Modal.getInstance(document.getElementById('responsablePacienteModal'));
                     modal.hide();
@@ -1202,7 +1223,7 @@ function abrirModalEditarPaciente(idPaciente) {
                 $('#tercer_nombre').val(paciente.NombreTres);
                 $('#primer_apellido').val(paciente.PrimerApellido);
                 $('#segundo_apellido').val(paciente.SegundoApellido);
-                $('#dpi').val(paciente.NoDpi);
+                $('#dpi').val(paciente.DPI);
                 $('#telefono').val(paciente.Telefono);
                 $('#fecha_nacimiento').val(paciente.FechaNacimiento);
                 $('#sexo').val(paciente.Sexo);
@@ -1227,7 +1248,35 @@ function abrirModalEditarPaciente(idPaciente) {
     });
 }
 
+$(document).ready(function() {
+    $('#formEditarPaciente').on('submit', function(event) {
+        event.preventDefault(); // Prevenir el envío normal del formulario
 
+        const formData = $(this).serialize(); // Serializar los datos del formulario
+
+        $.ajax({
+            url: 'guardarUpdatePaciente.php', // Asegúrate de que la ruta sea correcta
+            type: 'POST', // Método de envío
+            data: formData,
+            success: function(response) {
+                const result = JSON.parse(response);
+                if (result.success) {
+                    alert('Datos del paciente actualizados exitosamente!');
+                    // Cerrar el modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editarPacienteModal'));
+                    modal.hide();
+                    // Recargar la página o actualizar la tabla
+                    location.reload(); // Opcional: Recargar la página
+                } else {
+                    alert('Error al guardar los datos: ' + result.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Error al guardar los datos: ' + error);
+            }
+        });
+    });
+});
 
 
 $(document).ready(function() {

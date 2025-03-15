@@ -7,6 +7,7 @@ include '../conexionDiabetes.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <br><br><br>
     <title>Formulario de Pacientes</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -21,77 +22,7 @@ include '../conexionDiabetes.php';
     
 </head>
 <body>
-<div class="container mt-5">
-        <h2 class="text-center">Formulario de Paciente</h2>
 
-        <!-- FORMULARIO PRINCIPAL PACIENTE -->
-        <form id="formPaciente" method="POST" action="guardar_paciente.php" class="mb-4 p-4 border rounded">
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label>Tipo Diabetes</label>
-            <select class="form-control" name="producto[]" required>
-                <?php 
-                $sql = "SELECT IdDiabetes, DESCRIPCION FROM TipoDiabetes";
-                $result = $conn->query($sql);
-                while ($row = $result->fetch_assoc()) {
-                    echo "<option value='" . $row['IdDiabetes'] . "'>" . $row['DESCRIPCION'] . "</option>";
-                }
-                ?>
-            </select>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label class="form-label">Primer Nombre</label>
-            <input type="text" class="form-control" name="nombre" required>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label class="form-label">Segundo Nombre</label>
-            <input type="text" class="form-control" name="nombredos" required>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label class="form-label">Tercer Nombre</label>
-            <input type="text" class="form-control" name="nombretres">
-        </div>
-        <div class="col-md-6 mb-3">
-            <label class="form-label">Primer Apellido</label>
-            <input type="text" class="form-control" name="apellido" required>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label class="form-label">Segundo Apellido</label>
-            <input type="text" class="form-control" name="apellidodos">
-        </div>
-        <div class="col-md-6 mb-3">
-            <label class="form-label">DPI</label>
-            <input type="text" class="form-control" name="dpi">
-        </div>
-        <div class="col-md-6 mb-3">
-            <label class="form-label">Teléfono</label>
-            <input type="text" class="form-control" name="telefono">
-        </div>
-        <div class="col-md-6 mb-3">
-            <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
-            <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" required>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label for="sexo" class="form-label">Sexo</label>
-            <select class="form-control" name="sexo" required>
-                <option value="Masculino">Masculino</option>
-                <option value="Femenino">Femenino</option>
-            </select>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label for="grupoEtnico" class="form-label">Grupo Étnico</label>
-            <select class="form-control" name="grupoEtnico" required>
-                <option value="">Seleccione...</option>
-                <option value="Ladino">Ladino</option>
-                <option value="Mestizo">Mestizo</option>
-                <option value="Mestizo">Maya</option>
-                <option value="Mestizo">Garifuna</option>
-                <option value="Mestizo">Otro</option>
-            </select>
-        </div>
-    </div>
-    <button type="submit" class="btn btn-primary w-100">Guardar Paciente</button> 
-</form>
 
 <!-- Modal para Editar Paciente -->
 <div class="modal fade" id="editarPacienteModal" tabindex="-1">

@@ -1,8 +1,9 @@
 <?php
-include '../conexion.php';
+include '../conexionDiabetes.php'; // Incluye la conexión a la base de datos
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_responsable = $_POST['id_responsable'];
+    // Obtener los datos del formulario
+    $id_responsable = isset($_POST['id_responsable']) ? $_POST['id_responsable'] : null;
     $id_paciente = $_POST['id_paciente'];
     $primer_nombre = $_POST['primer_nombre'];
     $segundo_nombre = $_POST['segundo_nombre'];
@@ -13,25 +14,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telefono = $_POST['telefono'];
     $email = $_POST['email'];
 
-    if (empty($id_responsable)) {
-        // Insertar nuevo responsable
-        $sql = "INSERT INTO ResponsablePaciente (IdPaciente, PrimerNombre, SegundoNombre, TercerNombre, PrimerApellido, SegundoApellido, NoDpi, Telefono, Email) 
-                VALUES ('$id_paciente', '$primer_nombre', '$segundo_nombre', '$tercer_nombre', '$primer_apellido', '$segundo_apellido', '$no_dpi', '$telefono', '$email')";
-    } else {
-        // Actualizar responsable existente
-        $sql = "UPDATE ResponsablePaciente 
-                SET PrimerNombre = '$primer_nombre', SegundoNombre = '$segundo_nombre', TercerNombre = '$tercer_nombre', 
-                    PrimerApellido = '$primer_apellido', SegundoApellido = '$segundo_apellido', NoDpi = '$no_dpi', 
-                    Telefono = '$telefono', Email = '$email' 
-                WHERE IdResponsable = '$id_responsable'";
+    // Iniciar una transacción para asegurar la consistencia de los datos
+    $conn->begin_transaction();
+
+    try {
+        if ($id_responsable) {
+            // Si existe, actualizar el responsable
+            $sql = "UPDATE ResponsablePaciente 
+                    SET PrimerNombre = ?, SegundoNombre = ?, TercerNombre = ?, 
+                        PrimerApellido = ?, SegundoApellido = ?, NoDpi = ?, 
+                        Telefono = ?, Email = ? 
+                    WHERE IdResponsable = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param(
+                "ssssssssi",
+                $primer_nombre,
+                $segundo_nombre,
+                $tercer_nombre,
+                $primer_apellido,
+                $segundo_apellido,
+                $no_dpi,
+                $telefono,
+                $email,
+                $id_responsable
+            );
+        } else {
+            // Si no existe, insertar un nuevo responsable
+            $sql = "INSERT INTO ResponsablePaciente (IdPaciente, PrimerNombre, SegundoNombre, TercerNombre, PrimerApellido, SegundoApellido, NoDpi, Telefono, Email) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param(
+                "issssssss",
+                $id_paciente,
+                $primer_nombre,
+                $segundo_nombre,
+                $tercer_nombre,
+                $primer_apellido,
+                $segundo_apellido,
+                $no_dpi,
+                $telefono,
+                $email
+            );
+        }
+
+        // Ejecutar la consulta
+        if ($stmt->execute()) {
+            // Confirmar la transacción
+            $conn->commit();
+            echo json_encode(['success' => true]);
+        } else {
+            // Revertir la transacción en caso de error
+            $conn->rollback();
+            echo json_encode(['success' => false, 'error' => $stmt->error]);
+        }
+
+        // Cerrar la consulta
+        $stmt->close();
+    } catch (Exception $e) {
+        // Revertir la transacción en caso de excepción
+        $conn->rollback();
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
 
-    if ($conn->query($sql) === TRUE) {
-        echo json_encode(['success' => true]);
-    } else {
-        echo json_encode(['success' => false, 'error' => $conn->error]);
-    }
-
+    // Cerrar la conexión
     $conn->close();
+} else {
+    echo json_encode(['success' => false, 'error' => 'Método no permitido']);
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-include '../conexion.php'; 
+include '../conexionDiabetes.php'; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Datos del paciente
@@ -23,30 +23,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("issssssssss", $tipoDiabetes, $nombreUno, $nombreDos, $nombreTres, $primerApellido, $segundoApellido, $dpi, $telefono, $fechaNacimiento, $sexo, $grupoEtnico);
     
     if ($stmt->execute()) {
-        // Obtener el IdPaciente generado
-        $idPaciente = $conn->insert_id;
-
-        // Aquí puedes agregar lógica para manejar la inserción de datos en otras tablas
-        // Por ejemplo, si se agregan antecedentes personales
-        if (isset($_POST['antecedentesPersonales'])) {
-            // Supón que tienes un campo para antecedentes personales
-            $medicos = $_POST['antecedentesPersonales']['medicos'];
-            $quirurgicos = $_POST['antecedentesPersonales']['quirurgicos'];
-            // Y así sucesivamente...
-
-            $sqlAntecedentes = "INSERT INTO AntecedentesPersonales (IdPaciente, Medicos, Quirurgicos) VALUES (?, ?, ?)";
-            $stmtAntecedentes = $conn->prepare($sqlAntecedentes);
-            $stmtAntecedentes->bind_param("iss", $idPaciente, $medicos, $quirurgicos);
-            $stmtAntecedentes->execute();
-        }
-
-        // Repite esto para otras tablas como HistoriaClinica, SignosVitales, etc.
-
-        if ($stmt->execute()) {
-            echo json_encode(['status' => 'success', 'message' => 'Paciente guardado exitosamente!']);
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Error al guardar el paciente.']);
-        }
+        echo "<script>alert('Paciente registrado'); window.location.href='pacientesPrueba.php';</script>";;
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Error al guardar el paciente.']);
     }
 
     $stmt->close();
@@ -54,3 +33,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $conn->close();
 ?>
+
+
