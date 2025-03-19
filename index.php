@@ -14,7 +14,7 @@ unset($_SESSION['error']);
   <link rel="stylesheet" href="css/Login.css">
   <title>Iniciar sesión</title>
 </head>
-<body>
+<body> 
 <div class="container">
   <div class="row g-0 justify-content-center pt-5 mt-5">
     <div class="col-md-8 col-lg-6">

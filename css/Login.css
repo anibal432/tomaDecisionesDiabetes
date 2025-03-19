@@ -16,9 +16,28 @@ html {
 }
 
 body {
+    background-image: url('../Imagenes/salud.jpg'); /* Cambia 'ruta/a/tu/imagen.jpg' por la ruta de tu imagen */
     background-size: cover;
     background-position: center;
-    background-color: rgb(219, 218, 218);
+    background-repeat: no-repeat;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    filter: blur(10px); /* Ajusta el valor de blur según tu preferencia */
+    z-index: -1;
 }
 
 :root {
@@ -32,7 +51,7 @@ body {
 }
 
 .login {
-    background: white;
+    background: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente para el formulario */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.459);
@@ -40,57 +59,8 @@ body {
     margin-top: 50px;
     width: 100%;
     height: auto;
-}
-
-.form-control {
-    background: rgba(47, 45, 45, 0.483);
-    border-style: none;
-    color: rgba(255, 255, 255, 0.694);
-    transition: 0.5s ease-in;
-    outline: none;
-    box-shadow: none;
-}
-
-.form-control:hover {
-    background: rgba(92, 92, 92, 0.401);
-}
-
-input.form-control:focus {
-    background: rgba(95, 95, 95, 0.5);
-    box-shadow: none;
-    outline: none;
-    color: rgb(194, 193, 193);
-}
-
-.btn:hover {
-    transform: scale(1.1);
-}
-
-.btn-iniciar-sesion {
-    background: var(--azul);
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: white;
-    border-color: var(--azul);
-    transition: background-color 0.3s ease-in, border-color 0.3s ease-in;
-}
-
-.btn-iniciar-sesion:hover {
-    color: white;
-    background-color: var(--azulClaro);
-    border-color: var(--azulClaro);
-}
-
-.password-checkbox {
-    cursor: pointer;
-    background-color: rgba(156, 156, 156, 0.345);
-    border-radius: 5px;
-}
-
-.password-checkbox:checked {
-    background-color: rgba(156, 156, 156, 0.345);
-    border-radius: 5px;
-    border: 2px solid var(--azul);
+    z-index: 1;
+    position: relative;
 }
 
 .form-control {
@@ -122,12 +92,26 @@ input.form-control:focus {
     cursor: pointer;
 }
 
+.btn-iniciar-sesion {
+    background: var(--azul);
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    border-color: var(--azul);
+    transition: background-color 0.3s ease-in, border-color 0.3s ease-in;
+}
+
+.btn-iniciar-sesion:hover {
+    color: white;
+    background-color: var(--azulClaro);
+    border-color: var(--azulClaro);
+}
+
 .password-checkbox {
     cursor: pointer;
     background-color: #f5f5f5;
     border-radius: 5px;
 }
-
 
 .form-floating > label {
     font-size: 13px;
