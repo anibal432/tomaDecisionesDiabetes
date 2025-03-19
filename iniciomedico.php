@@ -13,11 +13,14 @@
         <ul>
             <li><a href="iniciomedico.php"><i class="fas fa-home"></i>Inicio</a></li>
             <li><a href="#"><i class="fas fa-solid fa-users"></i>Boton 1</a></li>
-            <li><a href="#"><i class="fas fa-solid fa-hospital-user"></i>Boton 2</a></li>
+            <li><a href="/Pacientes/pacientesPrueba.php"><i class="fas fa-solid fa-hospital-user"></i>Ing. Paciente</a></li>
+            <li><a href="/Pacientes/datosPaciente.php"><i class="fas fa-solid fa-hospital-user"></i>Datos del Paciente</a></li>
+
             <li><a href="Logout.php"><i class="fas fa-solid fa-right-from-bracket"></i>LogOut</a></li>
         </ul>
     </nav>
     <br>
-    <p>si usted esta viendo esto es medico</p>
 </body>
 </html>
+
+
