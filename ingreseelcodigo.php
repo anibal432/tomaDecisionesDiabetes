@@ -26,10 +26,10 @@ unset($_SESSION['error']);
 <div class="container">
     <div class="row g-0 justify-content-center pt-5 mt-5 mr-1">
         <div class="col-md-8 col-lg-6">
-            <div class="login d-flex align-items-center py-5">
+            <div class="login d-flex py-5">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-9 col-lg-8 mx-auto">
+                        <div class="col-md-70 mx-auto">
                             <h3 class="login-heading mb-4 text-center ">Cambio de Contraseña</h3>
                             <label>Correo Ingresado: <?php echo isset($_SESSION['correo_ingresado']) ? $_SESSION['correo_ingresado'] : ''; ?></label>
                             <form action="actualizarcontraseña.php" method="POST">

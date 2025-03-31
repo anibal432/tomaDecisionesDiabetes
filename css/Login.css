@@ -1,5 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
+:root {
+    --gris: #575757;
+    --blanco: #b8b8b8;
+    --azul: #3a7bd5;
+    --azulClaro: #5c9bd5;
+    --azulBrillante: #a4c8e1;
+    --degradado: linear-gradient(90deg, var(--gris), var(--blanco));
+    --degradados: linear-gradient(90deg, var(--azul), var(--azulClaro));
+}
+
 * {
     font-family: "Open Sans", sans-serif;
     margin: 0;
@@ -16,16 +26,13 @@ html {
 }
 
 body {
-    background-image: url('../Imagenes/salud.jpg'); /* Cambia 'ruta/a/tu/imagen.jpg' por la ruta de tu imagen */
+    background-image: url('../Imagenes/salud.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     height: 100vh;
     margin: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
 }
 
 body::before {
@@ -36,87 +43,259 @@ body::before {
     right: 0;
     bottom: 0;
     background: inherit;
-    filter: blur(10px); /* Ajusta el valor de blur según tu preferencia */
+    filter: blur(10px);
     z-index: -1;
 }
 
-:root {
-    --gris: #575757;
-    --blanco: #b8b8b8;
-    --azul: #3a7bd5; /* Color azul principal */
-    --azulClaro: #5c9bd5; /* Color azul claro */
-    --degradado: linear-gradient(90deg, var(--gris), var(--blanco));
-    --degradados: linear-gradient(90deg, var(--azul), var(--azulClaro)); /* Degradado azul */
-    --azulBrillante: #a4c8e1; /* Azul brillante */
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
 .login {
-    background: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente para el formulario */
+    background: rgba(255, 255, 255, 0.911);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.459);
-    color: #575757;
-    margin-top: 50px;
+    color: var(--gris);
     width: 100%;
-    height: auto;
-    z-index: 1;
-    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.login-heading {
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--gris);
+    text-align: center;
 }
 
 .form-control {
     background: #f5f5f5;
-    border-style: none;
-    color: #575757;
-    transition: 0.5s ease-in;
+    border: none;
+    color: var(--gris);
+    transition: all 0.3s ease;
     outline: none;
     box-shadow: none;
-    font-size: 18px;
+    font-size: 1rem;
     width: 100%;
     height: 50px;
+    padding: 1rem;
+    border-radius: 8px;
 }
 
 .form-control:hover {
     background: #e7e7e7;
 }
 
-input.form-control:focus {
+.form-control:focus {
     background: #e7e7e7;
-    box-shadow: none;
-    outline: none;
-    color: #575757;
+    box-shadow: 0 0 0 2px var(--azulBrillante);
 }
 
-.btn {
-    padding: 10px 20px;
-    border-radius: 8px;
+.form-floating > label {
+    font-size: 0.9rem;
+    color: var(--gris);
+    opacity: 0.8;
+    padding: 0.5rem 1rem;
+}
+
+.form-check-input {
     cursor: pointer;
+    width: 1.2em;
+    height: 1.2em;
+    margin-top: 0.2em;
+}
+
+.form-check-label {
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
 }
 
 .btn-iniciar-sesion {
     background: var(--azul);
-    font-size: 1.2rem;
-    font-weight: bold;
+    font-size: 1.1rem;
+    font-weight: 600;
     color: white;
-    border-color: var(--azul);
-    transition: background-color 0.3s ease-in, border-color 0.3s ease-in;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+.btn-iniciar-sesion::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transition: all 0.6s ease;
+    z-index: -1;
 }
 
 .btn-iniciar-sesion:hover {
+    background: var(--azulClaro);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(58, 123, 213, 0.3);
+}
+
+.btn-iniciar-sesion:hover::before {
+    left: 100%;
+}
+
+.forgot-password {
+    display: block;
+    text-align: center;
+    margin-top: 1.2rem;
+    color: var(--azul);
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: var(--azulClaro);
+    text-decoration: underline;
+}
+
+.modal-verificacion .modal-content {
+    background: rgba(255, 255, 255, 0.911);
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.459);
+    border: none;
+}
+
+.modal-verificacion .modal-header {
+    background: transparent;
+    border-bottom: none;
+    padding: 1.5rem 1.5rem 0;
+    position: relative;
+}
+
+.modal-verificacion .modal-title {
+    font-weight: 600;
+    color: var(--gris);
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.modal-verificacion .btn-close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    opacity: 0.8;
+}
+
+.modal-verificacion .modal-body {
+    padding: 0 2rem 2rem;
+    text-align: center;
+}
+
+.modal-verificacion .verification-icon svg {
+    width: 60px;
+    height: 60px;
+    stroke: var(--azul);
+    margin-bottom: 1rem;
+}
+
+.modal-verificacion .form-control {
+    font-size: 1.5rem;
+    letter-spacing: 5px;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-verificacion .btn-verificar {
+    background: var(--azul);
     color: white;
-    background-color: var(--azulClaro);
-    border-color: var(--azulClaro);
+    padding: 12px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.password-checkbox {
-    cursor: pointer;
-    background-color: #f5f5f5;
-    border-radius: 5px;
+.modal-verificacion .btn-verificar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transition: all 0.6s ease;
 }
 
-.form-floating > label {
-    font-size: 13px;
+.modal-verificacion .btn-verificar:hover {
+    background: var(--azulClaro);
+    transform: translateY(-2px);
 }
 
-.medium {
-    font-size: 13px;
+.modal-verificacion .btn-verificar:hover::before {
+    left: 100%;
+}
+
+.modal-verificacion .resend-link {
+    color: var(--azul);
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    display: inline-block;
+    transition: color 0.3s ease;
+}
+
+.modal-verificacion .resend-link:hover {
+    color: var(--azulClaro);
+    text-decoration: none;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .login {
+        max-width: 90%;
+        padding: 15px;
+    }
+    html {
+        font-size: 75%;
+    }
+}
+
+@media (max-width: 576px) {
+    .login {
+        padding: 1.5rem;
+    }
+    
+    .btn-iniciar-sesion {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
 }

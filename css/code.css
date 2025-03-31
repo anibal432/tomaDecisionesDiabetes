@@ -16,29 +16,51 @@ html {
 }
 
 body {
-    background-color: rgb(219, 218, 218);
+    background-image: url('../Imagenes/salud.jpg');
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+}
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    filter: blur(10px);
+    z-index: -1;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    padding: 20px;
 }
 
 :root {
     --gris: #575757;
     --blanco: #b8b8b8;
-    --azul: #3a7bd5; /* Color azul principal */
-    --azulClaro: #5c9bd5; /* Color azul claro */
+    --azul: #3a7bd5;
+    --azulClaro: #5c9bd5;
+    --azulBrillante: #a4c8e1;
     --degradado: linear-gradient(90deg, var(--gris), var(--blanco));
-    --degradados: linear-gradient(90deg, var(--azul), var(--azulClaro)); /* Degradado azul */
-    --azulBrillante: #a4c8e1; /* Azul brillante */
+    --degradados: linear-gradient(90deg, var(--azul), var(--azulClaro));
 }
 
 .login {
-    background: white;
+    background: rgba(255, 255, 255, 0.911);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.459);
     color: #575757;
-    margin-top: 50px;
-    width: 100%;
+    margin-top: 20px;
+    width: 90%;
     height: auto;
 }
 
@@ -67,24 +89,51 @@ input.form-control:focus {
 }
 
 .btn-iniciar-sesion {
-    background: rgba(92, 92, 92, 0.181);
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #c3c3c3;
-    border-color: #585858;
-    transition: background-color 0.3s ease-in, border-color 0.3s ease-in;
+    background: var(--azul);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    width: 100%; 
+    display: block;
+    text-align: center;
 }
-
+.btn-iniciar-sesion::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    transition: all 0.6s ease;
+    z-index: -1;
+}
 .btn-iniciar-sesion:hover {
-    color: #c3c3c3;
-    background-color: rgba(58, 123, 213, 0.6); /* Color azul al pasar el mouse */
-    border-color: rgba(58, 123, 213, 0.8); /* Color azul más oscuro al pasar el mouse */
+    background: var(--azulClaro);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(58, 123, 213, 0.3);
 }
-
+.btn-iniciar-sesion:hover::before {
+    left: 100%;
+}
 .password-checkbox {
     cursor: pointer;
-    background-color: rgba(156, 156, 156, 0.345);
-    border-radius: 5px;
+    width: 1.2em;
+    height: 1.2em;
+    margin-top: 0.2em;
 }
 
 .password-checkbox:checked {
@@ -95,14 +144,16 @@ input.form-control:focus {
 
 .form-control {
     background: #f5f5f5;
-    border-style: none;
-    color: #575757;
-    transition: 0.5s ease-in;
+    border: none;
+    color: var(--gris);
+    transition: all 0.3s ease;
     outline: none;
     box-shadow: none;
-    font-size: 18px;
+    font-size: 0.9rem;
     width: 100%;
-    height: 50px;
+    height: 45px;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
 }
 
 .form-control:hover {
@@ -125,12 +176,12 @@ input.form-control:focus {
 .password-checkbox {
     cursor: pointer;
     background-color: #f5f5f5;
-    border-radius: 5px;
+    border-radius: 3px;
 }
 
 .password-checkbox:checked {
-    background-color: #5c9bd5;
-    border-radius: 5px;
+    background-color: var(--azul);
+    border-radius: 3px;
     border: 2px solid var(--azul);
 }
 
@@ -151,6 +202,7 @@ input.form-control:focus {
 
 .form-floating > label {
     font-size: 13px;
+    margin-bottom: 5px;
 }
 
 .medium {
