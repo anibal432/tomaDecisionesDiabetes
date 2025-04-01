@@ -42,18 +42,7 @@ include '../conexionDiabetes.php';
         <!-- FORMULARIO PRINCIPAL PACIENTE -->
         <form id="formPaciente" method="POST" action="guardar_paciente.php" class="mb-4 p-4 border rounded">
     <div class="row">
-        <div class="col-md-6 mb-3">
-            <label>Tipo Diabetes</label>
-            <select class="form-control" name="producto[]" required>
-                <?php 
-                $sql = "SELECT IdDiabetes, DESCRIPCION FROM TipoDiabetes";
-                $result = $conn->query($sql);
-                while ($row = $result->fetch_assoc()) {
-                    echo "<option value='" . $row['IdDiabetes'] . "'>" . $row['DESCRIPCION'] . "</option>";
-                }
-                ?>
-            </select>
-        </div>
+        
         <div class="col-md-6 mb-3">
             <label class="form-label">Primer Nombre</label>
             <input type="text" class="form-control" name="nombre" required>
