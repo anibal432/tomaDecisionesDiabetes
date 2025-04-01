@@ -16,6 +16,8 @@ include '../conexionDiabetes.php';
     <!-- Estilos personalizados -->
     <link rel="stylesheet" href="stilos.css">
     <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/botonUno.css">
+
     <!-- jQuery y dependencias de Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -25,12 +27,12 @@ include '../conexionDiabetes.php';
 <nav class="navbar">
         <div class="logo">Diabetes Log</div>
         <ul>
-        <li><a href="../iniciomedico.php"><i class="fas fa-home"></i>Inicio</a></li>
-            <li><a href="#"><i class="fas fa-solid fa-users"></i>Boton 1</a></li>
-            <li><a href="../Pacientes/pacientesPrueba.php"><i class="fas fa-solid fa-hospital-user"></i>Ing. Paciente</a></li>
-            <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-solid fa-hospital-user"></i>Datos del Paciente</a></li>
-
-            <li><a href="Logout.php"><i class="fas fa-solid fa-right-from-bracket"></i>LogOut</a></li>
+        <li><a href="../iniciomedico.php"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="../Pacientes/pacientesPrueba.php"><i class="fas fa-user-plus"></i> Ing. Paciente</a></li>
+            <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> Asignar Turno</a></li>
+            <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> Datos del Paciente</a></li>
+            <li><a href="../Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> Tipos de Diabetes</a></li>
+            <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> LogOut</a></li>
         </ul>
     </nav>
     <br>
@@ -94,10 +96,8 @@ include '../conexionDiabetes.php';
             </select>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary w-100">Guardar Paciente</button> 
+    <button type="submit" class="btn btn-custom w-100">Guardar Paciente</button> 
 </form>
-
-
 
 </body>
 </html>

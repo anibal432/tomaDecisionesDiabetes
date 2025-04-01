@@ -1,0 +1,28 @@
+:root {
+    --first-color: #007BFF; /* Azul */
+    --first-color-light: #5BC0DE; /* Azul claro */
+    --title-color: #003366; /* Azul marino oscuro */
+    --text-color: #007BFF; /* Azul para el texto */
+    --text-color-light: #B0E0E6; /* Azul claro para texto */
+    --body-color: #F0F8FF; /* Blanco azulado */
+    --container-color: white; /* Blanco */
+}
+.btn-custom {
+background-color: var(--title-color); /* Café oscuro */
+color: var(--container-color); /* Blanco */
+border: 2px solid var(--text-color); /* Gris */
+padding: 6px 10px; /* Aumentar el padding para hacer el botón más grande */
+font-size: 11px; /* Aumentar el tamaño de la fuente */
+font-weight: bold;
+text-transform: uppercase;
+border-radius: 10px; /* Bordes más redondeados */
+transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+cursor: pointer; /* Cambiar el cursor al pasar por el botón */
+}
+
+.btn-custom:hover {
+background-color: var(--first-color); /* Café claro */
+border-color: var(--title-color); /* Café oscuro */
+color: var(--container-color); /* Blanco */
+transform: scale(1.05); /* Agrandar ligeramente el botón al pasar el ratón */
+}
