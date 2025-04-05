@@ -26,14 +26,15 @@ include '../conexionDiabetes.php';
 <body>
 
 <nav class="navbar">
+    <div class="navbar-icon"><i class="fa-solid fa-user-doctor"></i></div>
         <div class="logo">Diabetes Log</div>
         <ul>            
-            <li><a href="../iniciomedico.php"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="../Pacientes/pacientesPrueba.php"><i class="fas fa-user-plus"></i> Ing. Paciente</a></li>
-            <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> Asignar Turno</a></li>
-            <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> Datos del Paciente</a></li>
-            <li><a href="../Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> Tipos de Diabetes</a></li>
-            <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> LogOut</a></li>
+            <li><a href="../iniciomedico.php" class="active"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+            <li><a href="../Pacientes/pacientesPrueba.php"><i class="fas fa-user-plus"></i> <span>Ing. Paciente</span></a></li>
+            <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> <span>Asignar Turno</span></a></li>
+            <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> <span>Datos del Paciente</span></a></li>
+            <li><a href="../Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> <span>Tipos de Diabetes</span></a></li>
+            <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
         </ul>
     </nav>
 

@@ -48,6 +48,7 @@ $result = $conn->query("SELECT * FROM TipoDiabetes ORDER BY DESCRIPCION");
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Estilos personalizados -->
     <link rel="stylesheet" href="stilos.css">
     <link rel="stylesheet" href="../css/nav.css">
@@ -57,16 +58,15 @@ $result = $conn->query("SELECT * FROM TipoDiabetes ORDER BY DESCRIPCION");
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <!-- Menú de navegación -->
-    <nav class="navbar">
+<nav class="navbar">
         <div class="logo">Diabetes Log</div>
-        <ul>
-            <li><a href="../iniciomedico.php"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="../Pacientes/pacientesPrueba.php"><i class="fas fa-user-plus"></i> Ing. Paciente</a></li>
-            <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> Asignar Turno</a></li>
-            <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> Datos del Paciente</a></li>
-            <li><a href="../Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> Tipos de Diabetes</a></li>
-            <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> LogOut</a></li>
+        <ul>            
+            <li><a href="../iniciomedico.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+            <li><a href="../Pacientes/pacientesPrueba.php"><i class="fas fa-user-plus"></i> <span>Ing. Paciente</span></a></li>
+            <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> <span>Asignar Turno</span></a></li>
+            <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> <span>Datos del Paciente</span></a></li>
+            <li><a href="../Consultas/TipoDiabetes.php" class="active"><i class="fas fa-vial"></i> <span>Tipos de Diabetes</span></a></li>
+            <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
         </ul>
     </nav>
 
