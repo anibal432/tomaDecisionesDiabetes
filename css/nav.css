@@ -185,3 +185,174 @@ body {
     opacity: 1;
     transform: translateX(0);
 }
+
+
+
+/* CONTENIDO PRINCIPAL - VERSIÓN COMPACTA */
+.main-content {
+    margin-left: 85px;
+    padding: 15px;
+    transition: margin-left 0.5s ease;
+    display: grid;
+    gap: 15px;
+    grid-template-rows: auto auto auto;
+}
+
+/* Tarjeta de bienvenida compacta */
+.welcome-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(58, 123, 213, 0.1);
+    max-width: 1000px;
+}
+
+.greeting-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.welcome-card h1 {
+    color: #3a7bd5;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.clock {
+    font-size: 1rem;
+    background: rgba(58, 123, 213, 0.1);
+    padding: 6px 12px;
+    border-radius: 18px;
+    font-weight: 500;
+    color: #3a7bd5;
+}
+
+/* Cards compactas */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    max-width: 1000px;
+}
+
+.med-card {
+    padding: 15px;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s ease;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.med-card:hover {
+    transform: translateY(-3px);
+}
+
+.med-card i {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+}
+
+.med-card h3 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+.count {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.med-link {
+    color: white;
+    opacity: 0.9;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: opacity 0.3s;
+    margin-top: auto;
+}
+
+.med-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.today {
+    background: linear-gradient(135deg, #3a7bd5 0%, #5c9bd5 100%);
+}
+
+.upcoming {
+    background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+}
+
+/* Gráfica compacta */
+.chart-container {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(58, 123, 213, 0.1);
+    max-width: 1000px;
+}
+
+.chart-container h2 {
+    color: #3a7bd5;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#diabetesChart {
+    width: 100% !important;
+    height: 250px !important; 
+}
+
+.chart-note {
+    text-align: right;
+    color: #666;
+    font-size: 0.7rem;
+    margin-top: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 12px;
+        margin-left: 70px;
+    }
+    
+    .greeting-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .welcome-card h1 {
+        font-size: 1.2rem;
+    }
+    
+    .clock {
+        font-size: 0.9rem;
+        padding: 4px 10px;
+    }
+    
+    .cards-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .med-card {
+        min-height: 140px;
+        padding: 12px;
+    }
+}
