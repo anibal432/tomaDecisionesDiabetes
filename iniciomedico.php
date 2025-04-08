@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return ${context.dataset.label}: ${context.raw};
+                                return `${context.dataset.label}: ${context.raw}`;
                             }
                         }
                     }
