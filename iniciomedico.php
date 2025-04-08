@@ -3,186 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio - Médicos | Diabetes Log</title>
+    <title>Inicio - Medicos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #2c7873;
-            --secondary-color: #6fb98f;
-            --accent-color: #f8b400;
-            --light-color: #f5f5f5;
-            --dark-color: #333;
-            --danger-color: #e74c3c;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        body {
-            background-color: #f9f9f9;
-            color: var(--dark-color);
-            line-height: 1.6;
-        }
-        
-        .navbar {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo::before {
-            content: "\f0f1";
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            margin-right: 10px;
-            color: var(--accent-color);
-        }
-        
-        .navbar ul {
-            display: flex;
-            list-style: none;
-        }
-        
-        .navbar li {
-            margin-left: 1.5rem;
-            position: relative;
-        }
-        
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-        }
-        
-        .navbar a i {
-            margin-right: 8px;
-            font-size: 1.1rem;
-        }
-        
-        .navbar a:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-        
-        .navbar a.active {
-            background-color: var(--accent-color);
-        }
-        
-        .logout-btn {
-            background-color: var(--danger-color);
-        }
-        
-        .logout-btn:hover {
-            background-color: #c0392b;
-        }
-        
-        .main-content {
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .dashboard-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        
-        .card-icon {
-            font-size: 1.8rem;
-            color: var(--primary-color);
-            margin-right: 1rem;
-        }
-        
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-        
-        .card-body {
-            color: #666;
-        }
-        
-        .welcome-section {
-            background: white;
-            border-radius: 8px;
-            padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            margin-bottom: 2rem;
-        }
-        
-        .welcome-title {
-            font-size: 1.8rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-        
-        .welcome-text {
-            color: #666;
-            margin-bottom: 1.5rem;
-        }
-        
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                padding: 1rem;
-            }
-            
-            .navbar ul {
-                margin-top: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .navbar li {
-                margin: 0.5rem;
-            }
-        }
-    </style>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/nav.css">
 </head>
@@ -191,64 +13,149 @@
     <div class="navbar-icon"><i class="fa-solid fa-user-doctor"></i></div>
         <div class="logo">Diabetes Log</div>
         <ul>            
-            <li><a href="../iniciomedico.php" class="active"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="../tomaDecisionesDiabetes/Pacientes/pacientesPrueba.php"><i class="fas fa-user-plus"></i> Ing. Paciente</a></li>
-            <li><a href="/Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> Asignar Turno</a></li>
-            <li><a href="/Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> Datos del Paciente</a></li>
-            <li><a href="/Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> Tipos de Diabetes</a></li>
-            <li><a href="Logout.php" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
-            
+            <li><a href="../iniciomedico.php" class="active"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+            <li><a href="../Pacientes/pacientesPrueba.php"><i class="fas fa-user-plus"></i> <span>Ing. Paciente</span></a></li>
+            <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> <span>Asignar Turno</span></a></li>
+            <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> <span>Datos del Paciente</span></a></li>
+            <li><a href="../Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> <span>Tipos de Diabetes</span></a></li>
+            <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
         </ul>
     </nav>
     
     <div class="main-content">
-        <section class="welcome-section">
-            <h1 class="welcome-title">Bienvenido, Doctor</h1>
-            <p class="welcome-text">Desde este panel podrá gestionar a sus pacientes, asignar turnos y consultar información relevante sobre diabetes.</p>
-        </section>
-        
-        <div class="dashboard-cards">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-icon"><i class="fas fa-user-plus"></i></div>
-                    <h3 class="card-title">Ingresar Paciente</h3>
-                </div>
-                <div class="card-body">
-                    Registre nuevos pacientes en el sistema para comenzar a monitorear su condición.
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-icon"><i class="fas fa-calendar-check"></i></div>
-                    <h3 class="card-title">Asignar Turnos</h3>
-                </div>
-                <div class="card-body">
-                    Programe consultas y controles para sus pacientes de manera rápida y organizada.
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
-                    <h3 class="card-title">Seguimiento</h3>
-                </div>
-                <div class="card-body">
-                    Revise el progreso y evolución de sus pacientes a lo largo del tiempo.
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-icon"><i class="fas fa-book-medical"></i></div>
-                    <h3 class="card-title">Recursos</h3>
-                </div>
-                <div class="card-body">
-                    Acceda a información actualizada sobre los diferentes tipos de diabetes y tratamientos.
-                </div>
-            </div>
+    <div class="welcome-card compact">
+        <div class="greeting-container">
+            <h1><i class="fas fa-stethoscope"></i> <span id="greeting-text"></span>, Dr. Tal</h1>
+            <div id="live-clock" class="clock"></div>
         </div>
-
     </div>
+
+    <div class="cards-container compact">
+        <div class="med-card today compact">
+            <i class="fas fa-calendar-day"></i>
+            <h3>Citas Hoy</h3>
+            <p class="count">--.--</p>
+            <a href="../Consultas/AsignarTurno.php" class="med-link">Ver</a>
+        </div>
+        
+        <div class="med-card upcoming compact">
+            <i class="fas fa-calendar-week"></i>
+            <h3>Próximas</h3>
+            <p class="count">--.--</p>
+            <a href="../Consultas/AsignarTurno.php" class="med-link">Ver</a>
+        </div>
+    </div>
+
+    <div class="chart-container">
+    <h2><i class="fas fa-chart-bar"></i> Distribución de Pacientes por Tipo de Diabetes</h2>
+    <canvas id="diabetesChart"></canvas>
+    <p class="chart-note">Total de pacientes: <span id="total-pacientes">0</span></p>
+</div>
+</div>
+
+<script>
+function updateGreetingAndClock() {
+    const now = new Date();
+    const hour = now.getHours();
+    
+    let greeting;
+    if (hour < 12) greeting = "Buenos días";
+    else if (hour < 19) greeting = "Buenas tardes";
+    else greeting = "Buenas noches";
+    const options = {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    };
+    const timeString = now.toLocaleTimeString('es-ES', options);
+
+    document.getElementById('greeting-text').textContent = greeting;
+    document.getElementById('live-clock').textContent = timeString;
+}
+
+setInterval(updateGreetingAndClock, 1000);
+updateGreetingAndClock();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const response = await fetch('get_pacientes_data.php');
+        const data = await response.json();
+        
+        document.getElementById('total-pacientes').textContent = data.total;
+        
+        const diabetesData = {
+            labels: data.labels,
+            datasets: [{
+                label: 'Número de Pacientes',
+                data: data.values,
+                backgroundColor: [
+                    '#3a7bd5', 
+                    '#4CAF50',
+                    '#FF9800',
+                    '#9C27B0'  
+                ],
+                borderWidth: 0
+            }]
+        };
+
+        const config = {
+            type: 'bar',
+            data: diabetesData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ${context.dataset.label}: ${context.raw};
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'No. de Pacientes' },
+                        ticks: { stepSize: 1 }
+                    },
+                    x: {
+                        title: { display: true, text: 'Tipo de Diabetes' }
+                    }
+                }
+            }
+        };
+
+        new Chart(document.getElementById('diabetesChart'), config);
+        
+    } catch (error) {
+        console.error('Error al cargar datos:', error);
+        mostrarDatosEjemplo();
+    }
+});
+
+function mostrarDatosEjemplo() {
+    new Chart(document.getElementById('diabetesChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Tipo 1', 'Tipo 2', 'Gestacional'],
+            datasets: [{
+                label: 'Datos no disponibles',
+                data: [0, 0, 0],
+                backgroundColor: ['#3a7bd5', '#4CAF50', '#FF9800']
+            }]
+        },
+        options: {
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+}
+</script>
+
 </body>
 </html>
