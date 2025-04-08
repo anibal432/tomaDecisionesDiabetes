@@ -158,7 +158,6 @@ body {
     }
 }
 
-/* Estilos para el icono y logo */
 .navbar-icon {
     position: absolute;
     top: 20px;
@@ -186,9 +185,6 @@ body {
     transform: translateX(0);
 }
 
-
-
-/* CONTENIDO PRINCIPAL - VERSIÓN COMPACTA */
 .main-content {
     margin-left: 85px;
     padding: 15px;
@@ -198,7 +194,6 @@ body {
     grid-template-rows: auto auto auto;
 }
 
-/* Tarjeta de bienvenida compacta */
 .welcome-card {
     background: white;
     padding: 15px;
@@ -232,7 +227,6 @@ body {
     color: #3a7bd5;
 }
 
-/* Cards compactas */
 .cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -295,7 +289,6 @@ body {
     background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
 }
 
-/* Gráfica compacta */
 .chart-container {
     background: white;
     padding: 15px;
@@ -325,7 +318,6 @@ body {
     margin-top: 8px;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .main-content {
         padding: 12px;
