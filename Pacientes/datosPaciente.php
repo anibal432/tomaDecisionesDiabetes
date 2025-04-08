@@ -15,13 +15,28 @@ include '../conexionDiabetes.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../css/nav.css">
   
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
- <!--Bootstrap JS y dependencias (Popper.js y jQuery) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <!--Bootstrap JS y dependencias (Popper.js y jQuery) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     
+    <style>
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .table-container {
+            margin-top: 20px;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
 
@@ -38,598 +53,572 @@ include '../conexionDiabetes.php';
         </ul>
     </nav>
 
+<div class="main-content">
+    <!-- Modal para Editar Paciente -->
+    <div class="modal fade" id="editarPacienteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Datos del Paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarPaciente" method="POST" action="guardarUpdatePaciente.php">
+                        <!-- Campo oculto para el ID del paciente -->
+                        <input type="hidden" name="id_paciente" id="id_paciente_editar">
 
-<!-- Modal para Editar Paciente -->
-<div class="modal fade" id="editarPacienteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Editar Datos del Paciente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="formEditarPaciente" method="POST" action="guardarUpdatePaciente.php">
-                    <!-- Campo oculto para el ID del paciente -->
-                    <input type="hidden" name="id_paciente" id="id_paciente_editar">
+                        <!-- Campo para Tipo de Diabetes -->
+                        <div class="mb-3">
+                            <label for="tipo_diabetes" class="form-label">Tipo de Diabetes</label>
+                            <select class="form-control" id="tipo_diabetes" name="tipo_diabetes" required>
+                                <?php
+                                // Obtener los tipos de diabetes desde la base de datos
+                                $sql = "SELECT IdDiabetes, DESCRIPCION FROM TipoDiabetes";
+                                $result = $conn->query($sql);
+                                while ($row = $result->fetch_assoc()) {
+                                    echo "<option value='" . $row['IdDiabetes'] . "'>" . $row['DESCRIPCION'] . "</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
 
-                    <!-- Campo para Tipo de Diabetes -->
-                    <div class="mb-3">
-                        <label for="tipo_diabetes" class="form-label">Tipo de Diabetes</label>
-                        <select class="form-control" id="tipo_diabetes" name="tipo_diabetes" required>
-                            <?php
-                            // Obtener los tipos de diabetes desde la base de datos
-                            $sql = "SELECT IdDiabetes, DESCRIPCION FROM TipoDiabetes";
-                            $result = $conn->query($sql);
-                            while ($row = $result->fetch_assoc()) {
-                                echo "<option value='" . $row['IdDiabetes'] . "'>" . $row['DESCRIPCION'] . "</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-
-                    <!-- Resto de los campos del formulario -->
-                    <div class="mb-3">
-                        <label for="primer_nombre" class="form-label">Primer Nombre</label>
-                        <input type="text" class="form-control" id="primer_nombre" name="primer_nombre" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="segundo_nombre" class="form-label">Segundo Nombre</label>
-                        <input type="text" class="form-control" id="segundo_nombre" name="segundo_nombre">
-                    </div>
-                    <div class="mb-3">
-                        <label for="tercer_nombre" class="form-label">Tercer Nombre</label>
-                        <input type="text" class="form-control" id="tercer_nombre" name="tercer_nombre">
-                    </div>
-                    <div class="mb-3">
-                        <label for="primer_apellido" class="form-label">Primer Apellido</label>
-                        <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
-                        <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido">
-                    </div>
-                    <div class="mb-3">
-                        <label for="dpi" class="form-label">DPI</label>
-                        <input type="text" class="form-control" id="dpi" name="dpi">
-                    </div>
-                    <div class="mb-3">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono">
-                    </div>
-                    <div class="mb-3">
-                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="sexo" class="form-label">Sexo</label>
-                        <select class="form-control" id="sexo" name="sexo" required>
-                            <option value="Masculino">Masculino</option>
-                            <option value="Femenino">Femenino</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="grupo_etnico" class="form-label">Grupo Étnico</label>
-                        <select class="form-control" id="grupo_etnico" name="grupo_etnico" required>
-                            <option value="Ladino">Ladino</option>
-                            <option value="Mestizo">Mestizo</option>
-                            <option value="Maya">Maya</option>
-                            <option value="Garifuna">Garifuna</option>
-                            <option value="Otro">Otro</option>
-                        </select>
-                    </div>
-                    <button type="submit" id="btnGuardarPaciente" class="btn btn-primary w-100">Guardar Cambios</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-            <!-- Modal para Agregar Paciente -->
-<div class="modal fade" id="pacienteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Agregar Paciente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="formPaciente" method="POST" action="guardarUpdatePaciente.php">
-                    <div class="mb-3">
-                        <label>Tipo Diabetes</label>
-                        <select class="form-control" name="producto[]" required>
-                            <?php 
-                            $sql = "SELECT IdDiabetes, DESCRIPCION FROM TipoDiabetes";
-                            $result = $conn->query($sql);
-                            while ($row = $result->fetch_assoc()) {
-                                echo "<option value='" . $row['IdDiabetes'] . "'>" . $row['DESCRIPCION'] . "</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Primer Nombre</label>
-                        <input type="text" class="form-control" name="nombre" required>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Segundo Nombre</label>
-                        <input type="text" class="form-control" name="nombredos" required>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Tercer Nombre</label>
-                        <input type="text" class="form-control" name="nombretres">
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Primer Apellido</label>
-                        <input type="text" class="form-control" name="apellido" required>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Segundo Apellido</label>
-                        <input type="text" class="form-control" name="apellidodos">
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">DPI</label>
-                        <input type="text" class="form-control" name="dpi" required>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" name="telefono" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
-                        <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="sexo" class="form-label">Sexo</label>
-                        <select class="form-control" name="sexo" required>
-                            <option value="Masculino">Masculino</option>
-                            <option value="Femenino">Femenino</option>
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <label for="grupoEtnico" class="form-label">Grupo Étnico</label>
-                        <select class="form-control" name="grupoEtnico" required>
-                            <option value="">Seleccione...</option>
-                            <option value="Ladino">Ladino</option>
-                            <option value="Maya">Maya</option>
-                            <option value="Garifuna">Garifuna</option>
-                            <option value="Otro">Otro</option>
-                        </select>
-                    </div>
-                    <button type="submit" id="btnGuardarPaciente" class="btn btn-primary w-100">Guardar</button>
-                </form>
+                        <!-- Resto de los campos del formulario -->
+                        <div class="mb-3">
+                            <label for="primer_nombre" class="form-label">Primer Nombre</label>
+                            <input type="text" class="form-control" id="primer_nombre" name="primer_nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="segundo_nombre" class="form-label">Segundo Nombre</label>
+                            <input type="text" class="form-control" id="segundo_nombre" name="segundo_nombre">
+                        </div>
+                        <div class="mb-3">
+                            <label for="tercer_nombre" class="form-label">Tercer Nombre</label>
+                            <input type="text" class="form-control" id="tercer_nombre" name="tercer_nombre">
+                        </div>
+                        <div class="mb-3">
+                            <label for="primer_apellido" class="form-label">Primer Apellido</label>
+                            <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
+                            <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido">
+                        </div>
+                        <div class="mb-3">
+                            <label for="dpi" class="form-label">DPI</label>
+                            <input type="text" class="form-control" id="dpi" name="dpi">
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono" name="telefono">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="sexo" class="form-label">Sexo</label>
+                            <select class="form-control" id="sexo" name="sexo" required>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Femenino">Femenino</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="grupo_etnico" class="form-label">Grupo Étnico</label>
+                            <select class="form-control" id="grupo_etnico" name="grupo_etnico" required>
+                                <option value="Ladino">Ladino</option>
+                                <option value="Mestizo">Mestizo</option>
+                                <option value="Maya">Maya</option>
+                                <option value="Garifuna">Garifuna</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <button type="submit" id="btnGuardarPaciente" class="btn btn-primary w-100">Guardar Cambios</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-
-<!-- Modal para Antecedentes Personales -->
-<div class="modal fade" id="antecedentesPersonalesModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Antecedentes Personales</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="formAntecedentesPersonales" method="POST" action="guardarAntecedentesPersonales.php">
-                    <input type="hidden" name="id_ant_personal" id="id_ant_personal">
-                    <input type="hidden" name="id_paciente" id="id_paciente_antecedentes">
-                    <!-- Campos del formulario -->
-                    <div class="mb-2">
-                        <label for="medicos" class="form-label">Médicos</label>
-                        <textarea class="form-control" id="medicos" name="medicos"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="quirurgicos" class="form-label">Quirúrgicos</label>
-                        <textarea class="form-control" id="quirurgicos" name="quirurgicos"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="traumaticos" class="form-label">Traumáticos</label>
-                        <textarea class="form-control" id="traumaticos" name="traumaticos"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="ginecobstetricos" class="form-label">Ginecobstétricos</label>
-                        <textarea class="form-control" id="ginecobstetricos" name="ginecobstetricos"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="alergias" class="form-label">Alergias</label>
-                        <textarea class="form-control" id="alergias" name="alergias"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="vicios_manias" class="form-label">Vicios y Manías</label>
-                        <textarea class="form-control" id="vicios_manias" name="vicios_manias"></textarea>
-                    </div>
-                    <button type="submit" id="btnGuardarAntecedentes" class="btn btn-primary w-100">Guardar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL Responsable del Paciente -->
-
-<div class="modal fade" id="responsablePacienteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Responsable del Paciente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="formResponsablePaciente" method="POST" action="guardarResponsablePaciente.php">
-                    <input type="hidden" name="id_responsable" id="id_responsable">
-                    <input type="hidden" name="id_paciente" id="id_paciente_responsable">
-                    <!-- Campos del formulario -->
-                    <div class="mb-2">
-                        <label for="primer_nombre" class="form-label">Primer Nombre</label>
-                        <input type="text" class="form-control" id="primer_nombre" name="primer_nombre" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="segundo_nombre" class="form-label">Segundo Nombre</label>
-                        <input type="text" class="form-control" id="segundo_nombre" name="segundo_nombre">
-                    </div>
-                    <div class="mb-2">
-                        <label for="tercer_nombre" class="form-label">Tercer Nombre</label>
-                        <input type="text" class="form-control" id="tercer_nombre" name="tercer_nombre">
-                    </div>
-                    <div class="mb-2">
-                        <label for="primer_apellido" class="form-label">Primer Apellido</label>
-                        <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
-                        <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido">
-                    </div>
-                    <div class="mb-2">
-                        <label for="no_dpi" class="form-label">No. DPI</label>
-                        <input type="text" class="form-control" id="no_dpi" name="no_dpi" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <button type="submit" id="btnGuardarResponsablePaciente" class="btn btn-primary w-100">Guardar</button>
-                </form>
+    <!-- Modal para Agregar Paciente -->
+    <div class="modal fade" id="pacienteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formPaciente" method="POST" action="guardarUpdatePaciente.php">
+                        <div class="mb-3">
+                            <label>Tipo Diabetes</label>
+                            <select class="form-control" name="producto[]" required>
+                                <?php 
+                                $sql = "SELECT IdDiabetes, DESCRIPCION FROM TipoDiabetes";
+                                $result = $conn->query($sql);
+                                while ($row = $result->fetch_assoc()) {
+                                    echo "<option value='" . $row['IdDiabetes'] . "'>" . $row['DESCRIPCION'] . "</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Primer Nombre</label>
+                            <input type="text" class="form-control" name="nombre" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Segundo Nombre</label>
+                            <input type="text" class="form-control" name="nombredos" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Tercer Nombre</label>
+                            <input type="text" class="form-control" name="nombretres">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Primer Apellido</label>
+                            <input type="text" class="form-control" name="apellido" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Segundo Apellido</label>
+                            <input type="text" class="form-control" name="apellidodos">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">DPI</label>
+                            <input type="text" class="form-control" name="dpi" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" name="telefono" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="sexo" class="form-label">Sexo</label>
+                            <select class="form-control" name="sexo" required>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Femenino">Femenino</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label for="grupoEtnico" class="form-label">Grupo Étnico</label>
+                            <select class="form-control" name="grupoEtnico" required>
+                                <option value="">Seleccione...</option>
+                                <option value="Ladino">Ladino</option>
+                                <option value="Maya">Maya</option>
+                                <option value="Garifuna">Garifuna</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <button type="submit" id="btnGuardarPaciente" class="btn btn-primary w-100">Guardar</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Modal para Antecedentes Personales -->
+    <div class="modal fade" id="antecedentesPersonalesModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Antecedentes Personales</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAntecedentesPersonales" method="POST" action="guardarAntecedentesPersonales.php">
+                        <input type="hidden" name="id_ant_personal" id="id_ant_personal">
+                        <input type="hidden" name="id_paciente" id="id_paciente_antecedentes">
+                        <!-- Campos del formulario -->
+                        <div class="mb-2">
+                            <label for="medicos" class="form-label">Médicos</label>
+                            <textarea class="form-control" id="medicos" name="medicos"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="quirurgicos" class="form-label">Quirúrgicos</label>
+                            <textarea class="form-control" id="quirurgicos" name="quirurgicos"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="traumaticos" class="form-label">Traumáticos</label>
+                            <textarea class="form-control" id="traumaticos" name="traumaticos"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="ginecobstetricos" class="form-label">Ginecobstétricos</label>
+                            <textarea class="form-control" id="ginecobstetricos" name="ginecobstetricos"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="alergias" class="form-label">Alergias</label>
+                            <textarea class="form-control" id="alergias" name="alergias"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="vicios_manias" class="form-label">Vicios y Manías</label>
+                            <textarea class="form-control" id="vicios_manias" name="vicios_manias"></textarea>
+                        </div>
+                        <button type="submit" id="btnGuardarAntecedentes" class="btn btn-primary w-100">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL Responsable del Paciente -->
+    <div class="modal fade" id="responsablePacienteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Responsable del Paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formResponsablePaciente" method="POST" action="guardarResponsablePaciente.php">
+                        <input type="hidden" name="id_responsable" id="id_responsable">
+                        <input type="hidden" name="id_paciente" id="id_paciente_responsable">
+                        <!-- Campos del formulario -->
+                        <div class="mb-2">
+                            <label for="primer_nombre" class="form-label">Primer Nombre</label>
+                            <input type="text" class="form-control" id="primer_nombre" name="primer_nombre" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="segundo_nombre" class="form-label">Segundo Nombre</label>
+                            <input type="text" class="form-control" id="segundo_nombre" name="segundo_nombre">
+                        </div>
+                        <div class="mb-2">
+                            <label for="tercer_nombre" class="form-label">Tercer Nombre</label>
+                            <input type="text" class="form-control" id="tercer_nombre" name="tercer_nombre">
+                        </div>
+                        <div class="mb-2">
+                            <label for="primer_apellido" class="form-label">Primer Apellido</label>
+                            <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
+                            <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido">
+                        </div>
+                        <div class="mb-2">
+                            <label for="no_dpi" class="form-label">No. DPI</label>
+                            <input type="text" class="form-control" id="no_dpi" name="no_dpi" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono" name="telefono" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <button type="submit" id="btnGuardarResponsablePaciente" class="btn btn-primary w-100">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL para Historia Clínica -->
-
-<div class="modal fade" id="historiaClinicaModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Historia Clínica</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="formHistoriaClinica" method="POST" action="guardarHistoriaClinica.php">
-                    <input type="hidden" name="id_historia_clinica" id="id_historia_clinica">
-                    <input type="hidden" name="id_paciente" id="id_paciente_historia">
-                    <!-- Campos del formulario -->
-                    <div class="mb-2">
-                        <label for="motivo_consulta" class="form-label">Motivo de Consulta</label>
-                        <textarea class="form-control" id="motivo_consulta" name="motivo_consulta" required></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="historia_enf_actual" class="form-label">Historia de la Enfermedad Actual</label>
-                        <textarea class="form-control" id="historia_enf_actual" name="historia_enf_actual" required></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="datos_subjetivos" class="form-label">Datos Subjetivos</label>
-                        <textarea class="form-control" id="datos_subjetivos" name="datos_subjetivos" required></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="examen_fisico" class="form-label">Examen Físico</label>
-                        <textarea class="form-control" id="examen_fisico" name="examen_fisico" required></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="impresion_clinica" class="form-label">Impresión Clínica</label>
-                        <textarea class="form-control" id="impresion_clinica" name="impresion_clinica" required></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="tratamiento" class="form-label">Tratamiento</label>
-                        <textarea class="form-control" id="tratamiento" name="tratamiento" required></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="estudios_laboratorio" class="form-label">Estudios de Laboratorio</label>
-                        <textarea class="form-control" id="estudios_laboratorio" name="estudios_laboratorio" required></textarea>
-                    </div>
-                    <button type="submit" id="btnGuardarHistoriaClinica" class="btn btn-primary w-100">Guardar</button>
-                </form>
+    <div class="modal fade" id="historiaClinicaModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Historia Clínica</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formHistoriaClinica" method="POST" action="guardarHistoriaClinica.php">
+                        <input type="hidden" name="id_historia_clinica" id="id_historia_clinica">
+                        <input type="hidden" name="id_paciente" id="id_paciente_historia">
+                        <!-- Campos del formulario -->
+                        <div class="mb-2">
+                            <label for="motivo_consulta" class="form-label">Motivo de Consulta</label>
+                            <textarea class="form-control" id="motivo_consulta" name="motivo_consulta" required></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="historia_enf_actual" class="form-label">Historia de la Enfermedad Actual</label>
+                            <textarea class="form-control" id="historia_enf_actual" name="historia_enf_actual" required></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="datos_subjetivos" class="form-label">Datos Subjetivos</label>
+                            <textarea class="form-control" id="datos_subjetivos" name="datos_subjetivos" required></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="examen_fisico" class="form-label">Examen Físico</label>
+                            <textarea class="form-control" id="examen_fisico" name="examen_fisico" required></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="impresion_clinica" class="form-label">Impresión Clínica</label>
+                            <textarea class="form-control" id="impresion_clinica" name="impresion_clinica" required></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="tratamiento" class="form-label">Tratamiento</label>
+                            <textarea class="form-control" id="tratamiento" name="tratamiento" required></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="estudios_laboratorio" class="form-label">Estudios de Laboratorio</label>
+                            <textarea class="form-control" id="estudios_laboratorio" name="estudios_laboratorio" required></textarea>
+                        </div>
+                        <button type="submit" id="btnGuardarHistoriaClinica" class="btn btn-primary w-100">Guardar</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <!-- MODAL para Signos Vitales -->
-<!-- MODAL para Signos Vitales -->
-<div class="modal fade" id="datosVitalesModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Datos Vitales del Paciente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="formDatosVitales" method="POST" action="guardarDatosVitales.php">
-                    <input type="hidden" name="id_paciente" id="id_paciente" value="">
-                    <div class="mb-2">
-                        <label for="peso" class="form-label">Peso (Lbs)</label>
-                        <input type="number" class="form-control" id="peso" name="peso" placeholder="Ej. 70.00" step="0.01" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="talla" class="form-label">Talla (m)</label>
-                        <input type="number" class="form-control" id="talla" name="talla" placeholder="Ej. 1.75" step="0.01" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="presionArterial" class="form-label">Presión Arterial</label>
-                        <input type="text" class="form-control" id="presionArterial" name="presion_arterial" placeholder="Ej. 120/80 mmHg" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="imc" class="form-label">Índice de Masa Corporal (IMC)</label>
-                        <input type="number" class="form-control" id="imc" name="imc" placeholder="Ej. 22.86" step="0.01" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="temperatura" class="form-label">Temperatura (°C)</label>
-                        <input type="number" class="form-control" id="temperatura" name="temperatura" placeholder="Ej. 36.50" step="0.01" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="frecuenciaCardiaca" class="form-label">Frecuencia Cardíaca (bpm)</label>
-                        <input type="number" class="form-control" id="frecuenciaCardiaca" name="frecuencia_cardiaca" placeholder="Ej. 72" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="oxigenacion" class="form-label">Oxigenación (%)</label>
-                        <input type="number" class="form-control" id="oxigenacion" name="oxigenacion" placeholder="Ej. 98.50" step="0.01" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="frecuenciaRespiratoria" class="form-label">Frecuencia Respiratoria (rpm)</label>
-                        <input type="number" class="form-control" id="frecuenciaRespiratoria" name="frecuencia_respiratoria" placeholder="Ej. 16" required>
-                    </div>
-                    <button type="submit" id="btnGuardarDatosVitales" class="btn btn-primary w-100">Guardar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-            <!-- Modal para editar datos vitales-->
-            <div class="modal fade" id="editarDatosVitalesModal" tabindex="-1" aria-labelledby="editarDatosVitalesModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editarDatosVitalesModalLabel">Editar Datos Vitales del Paciente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="formEditarDatosVitales">
-                    <input type="hidden" name="id_paciente" id="id_paciente_editar" value="">
-                    <div class="mb-2">
-                        <label for="peso_editar" class="form-label">Peso (Lbs)</label>
-                        <input type="number" class="form-control" id="peso_editar" name="peso" step="0.01" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="talla_editar" class="form-label">Talla (m)</label>
-                        <input type="number" class="form-control" id="talla_editar" name="talla" step="0.01" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="presionArterial_editar" class="form-label">Presión Arterial</label>
-                        <input type="text" class="form-control" id="presionArterial_editar" name="presion_arterial" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="imc_editar" class="form-label">Índice de Masa Corporal (IMC)</label>
-                        <input type="number" class="form-control" id="imc_editar" name="imc" step="0.01" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="temperatura_editar" class="form-label">Temperatura (°C)</label>
-                        <input type="number" class="form-control" id="temperatura_editar" name="temperatura" step="0.01" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="frecuenciaCardiaca_editar" class="form-label">Frecuencia Cardíaca (bpm)</label>
-                        <input type="number" class="form-control" id="frecuenciaCardiaca_editar" name="frecuencia_cardiaca" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="oxigenacion_editar" class="form-label">Oxigenación (%)</label>
-                        <input type="number" class="form-control" id="oxigenacion_editar" name="oxigenacion" step="0.01" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="frecuenciaRespiratoria_editar" class="form-label">Frecuencia Respiratoria (rpm)</label>
-                        <input type="number" class="form-control" id="frecuenciaRespiratoria_editar" name="frecuencia_respiratoria" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="guardarDatosVitales()">Guardar Cambios</button>
+    <div class="modal fade" id="datosVitalesModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Datos Vitales del Paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formDatosVitales" method="POST" action="guardarDatosVitales.php">
+                        <input type="hidden" name="id_paciente" id="id_paciente" value="">
+                        <div class="mb-2">
+                            <label for="peso" class="form-label">Peso (Lbs)</label>
+                            <input type="number" class="form-control" id="peso" name="peso" placeholder="Ej. 70.00" step="0.01" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="talla" class="form-label">Talla (m)</label>
+                            <input type="number" class="form-control" id="talla" name="talla" placeholder="Ej. 1.75" step="0.01" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="presionArterial" class="form-label">Presión Arterial</label>
+                            <input type="text" class="form-control" id="presionArterial" name="presion_arterial" placeholder="Ej. 120/80 mmHg" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="imc" class="form-label">Índice de Masa Corporal (IMC)</label>
+                            <input type="number" class="form-control" id="imc" name="imc" placeholder="Ej. 22.86" step="0.01" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="temperatura" class="form-label">Temperatura (°C)</label>
+                            <input type="number" class="form-control" id="temperatura" name="temperatura" placeholder="Ej. 36.50" step="0.01" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="frecuenciaCardiaca" class="form-label">Frecuencia Cardíaca (bpm)</label>
+                            <input type="number" class="form-control" id="frecuenciaCardiaca" name="frecuencia_cardiaca" placeholder="Ej. 72" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="oxigenacion" class="form-label">Oxigenación (%)</label>
+                            <input type="number" class="form-control" id="oxigenacion" name="oxigenacion" placeholder="Ej. 98.50" step="0.01" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="frecuenciaRespiratoria" class="form-label">Frecuencia Respiratoria (rpm)</label>
+                            <input type="number" class="form-control" id="frecuenciaRespiratoria" name="frecuencia_respiratoria" placeholder="Ej. 16" required>
+                        </div>
+                        <button type="submit" id="btnGuardarDatosVitales" class="btn btn-primary w-100">Guardar</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal para Antecedentes Familiares -->
-<!-- Modal -->
-<div class="modal fade" id="antecedentesFamiliaresModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Antecedentes Familiares</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="formAntecedentesFamiliares" method="POST" action="guardarAntecedentesFamiliares.php">
-                    <input type="hidden" name="id_ant_fam" id="id_ant_fam">
-                    <input type="hidden" name="id_paciente" id="id_paciente_antecedentes_familiares">
-                    <!-- Campos del formulario -->
-                    <div class="mb-2">
-                        <label for="medicos_fam" class="form-label">Médicos</label>
-                        <textarea class="form-control" id="medicos_fam" name="medicos"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="quirurgicos_fam" class="form-label">Quirúrgicos</label>
-                        <textarea class="form-control" id="quirurgicos_fam" name="quirurgicos"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="traumaticos_fam" class="form-label">Traumáticos</label>
-                        <textarea class="form-control" id="traumaticos_fam" name="traumaticos"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="ginecobstetricos_fam" class="form-label">Ginecobstétricos</label>
-                        <textarea class="form-control" id="ginecobstetricos_fam" name="ginecobstetricos"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="alergias_fam" class="form-label">Alergias</label>
-                        <textarea class="form-control" id="alergias_fam" name="alergias"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="vicios_manias_fam" class="form-label">Vicios y Manías</label>
-                        <textarea class="form-control" id="vicios_manias_fam" name="vicios_manias"></textarea>
-                    </div>
-                    <button type="submit" id="btnGuardarAntecedentesFamiliares" class="btn btn-primary w-100">Guardar</button>
-                </form>
+    <!-- Modal para editar datos vitales-->
+    <div class="modal fade" id="editarDatosVitalesModal" tabindex="-1" aria-labelledby="editarDatosVitalesModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarDatosVitalesModalLabel">Editar Datos Vitales del Paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarDatosVitales">
+                        <input type="hidden" name="id_paciente" id="id_paciente_editar" value="">
+                        <div class="mb-2">
+                            <label for="peso_editar" class="form-label">Peso (Lbs)</label>
+                            <input type="number" class="form-control" id="peso_editar" name="peso" step="0.01" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="talla_editar" class="form-label">Talla (m)</label>
+                            <input type="number" class="form-control" id="talla_editar" name="talla" step="0.01" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="presionArterial_editar" class="form-label">Presión Arterial</label>
+                            <input type="text" class="form-control" id="presionArterial_editar" name="presion_arterial" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="imc_editar" class="form-label">Índice de Masa Corporal (IMC)</label>
+                            <input type="number" class="form-control" id="imc_editar" name="imc" step="0.01" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="temperatura_editar" class="form-label">Temperatura (°C)</label>
+                            <input type="number" class="form-control" id="temperatura_editar" name="temperatura" step="0.01" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="frecuenciaCardiaca_editar" class="form-label">Frecuencia Cardíaca (bpm)</label>
+                            <input type="number" class="form-control" id="frecuenciaCardiaca_editar" name="frecuencia_cardiaca" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="oxigenacion_editar" class="form-label">Oxigenación (%)</label>
+                            <input type="number" class="form-control" id="oxigenacion_editar" name="oxigenacion" step="0.01" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="frecuenciaRespiratoria_editar" class="form-label">Frecuencia Respiratoria (rpm)</label>
+                            <input type="number" class="form-control" id="frecuenciaRespiratoria_editar" name="frecuencia_respiratoria" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="guardarDatosVitales()">Guardar Cambios</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
+    <!-- Modal para Antecedentes Familiares -->
+    <div class="modal fade" id="antecedentesFamiliaresModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Antecedentes Familiares</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAntecedentesFamiliares" method="POST" action="guardarAntecedentesFamiliares.php">
+                        <input type="hidden" name="id_ant_fam" id="id_ant_fam">
+                        <input type="hidden" name="id_paciente" id="id_paciente_antecedentes_familiares">
+                        <!-- Campos del formulario -->
+                        <div class="mb-2">
+                            <label for="medicos_fam" class="form-label">Médicos</label>
+                            <textarea class="form-control" id="medicos_fam" name="medicos"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="quirurgicos_fam" class="form-label">Quirúrgicos</label>
+                            <textarea class="form-control" id="quirurgicos_fam" name="quirurgicos"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="traumaticos_fam" class="form-label">Traumáticos</label>
+                            <textarea class="form-control" id="traumaticos_fam" name="traumaticos"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="ginecobstetricos_fam" class="form-label">Ginecobstétricos</label>
+                            <textarea class="form-control" id="ginecobstetricos_fam" name="ginecobstetricos"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="alergias_fam" class="form-label">Alergias</label>
+                            <textarea class="form-control" id="alergias_fam" name="alergias"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="vicios_manias_fam" class="form-label">Vicios y Manías</label>
+                            <textarea class="form-control" id="vicios_manias_fam" name="vicios_manias"></textarea>
+                        </div>
+                        <button type="submit" id="btnGuardarAntecedentesFamiliares" class="btn btn-primary w-100">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<!--Tabla de los datos del paciente-->
+    <!--Tabla de los datos del paciente-->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0 class=responsive">Datos del Paciente</h4>
+        <div>
+            <input type="text" id="searchPaciente" class="form-control" placeholder="Buscar Paciente" style="width: 300px; display: inline-block;" oninput="buscarPaciente()">
+        </div>
+    </div>
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
-            
-    <h4 class="mb-0 class=responsive">Datos del Paciente</h4>
-    <div>
-        <input type="text" id="searchPaciente" class="form-control" placeholder="Buscar Paciente" style="width: 300px; display: inline-block;" oninput="buscarPaciente()">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nombre Paciente</th>
+                    <th>Signos Vitales</th>
+                    <th>Ant. Personales</th>
+                    <th>Ant. Familiares</th>
+                    <th>Responsable Paciente</th>
+                    <th>Historia Clínica</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $sql = "SELECT IdPaciente, CONCAT(NombreUno, ' ', NombreDos, ' ', NombreTres, ' ', PrimerApellido, ' ', SegundoApellido) AS NombreCompleto FROM Paciente";
+                $result = $conn->query($sql);
+                $no = 1;
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $no++ . "</td>";
+                        echo "<td>
+                                <div class='d-flex justify-content-between align-items-center'>
+                        <span>" . htmlspecialchars($row['NombreCompleto']) . "</span>
+                        <button class='btn btn-warning me-2' onclick='abrirModalEditarPaciente(" . $row['IdPaciente'] . ")'>
+                            <i class='fas fa-edit'></i>
+                        </button>
+                    </div>
+                              </td>";
+                        echo "<td>
+                                <div class='d-flex justify-content-center'>
+                                    <button class='btn btn-info me-2' onclick='abrirModalDatosVitales(" . $row['IdPaciente'] . ")'>
+                                        <i class='fas fa-plus'></i> 
+                                    </button>
+                                    <button class='btn btn-warning me-2' onclick='abrirModalEditarDatosVitales(" . $row['IdPaciente'] . ")'>
+                                        <i class='fas fa-eye'></i>
+                                    </button>
+                                </div>
+                              </td>";
+                        echo "<td>
+                                <div class='d-flex justify-content-center'>
+                                    <button class='btn btn-info me-2' onclick='abrirModalAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
+                                <i class='fas fa-plus'></i> 
+                                    </button>
+                                    <button class='btn btn-warning me-2' onclick='abrirModalEditarAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
+                                <i class='fas fa-eye'></i>
+                                    </button>
+                                </div>
+                              </td>";
+                        echo "<td>
+                                <div class='d-flex justify-content-center'>
+        <button class='btn btn-info me-2' onclick='abrirModalAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
+            <i class='fas fa-plus'></i> 
+        </button>
+        <button class='btn btn-warning me-2' onclick='abrirModalEditarAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
+            <i class='fas fa-eye'></i>
+        </button>
+    </div>
+                              </td>";
+                        echo "<td>
+                                <div class='d-flex justify-content-center'>
+        <button class='btn btn-info me-2' onclick='abrirModalResponsablePaciente(" . $row['IdPaciente'] . ")'>
+            <i class='fas fa-plus'></i> 
+        </button>
+        <button class='btn btn-warning me-2' onclick='abrirModalEditarResponsablePaciente(" . $row['IdPaciente'] . ")'>
+            <i class='fas fa-eye'></i>
+        </button>
+    </div>
+                              </td>";
+                              echo "<td>
+                              <div class='d-flex justify-content-center'>
+                                  <button class='btn btn-info me-2' onclick='abrirModalHistoriaClinica(" . $row['IdPaciente'] . ", null)'>
+                                      <i class='fas fa-plus'></i> 
+                                  </button>
+                                  <button class='btn btn-warning me-2' onclick='abrirModalEditarHistoriaClinica(" . $row['IdPaciente'] . ")'>
+                                        <i class='fas fa-eye'></i>
+                                    </button>
+                              </div>
+                            </td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='7' class='text-center'>No hay pacientes registrados.</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
     </div>
 </div>
 
-<div class="table-responsive">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nombre Paciente</th>
-                <th>Signos Vitales</th>
-                <th>Ant. Personales</th>
-                <th>Ant. Familiares</th>
-                <th>Responsable Paciente</th>
-                <th>Historia Clínica</th>
-            </tr>
-        </thead>
-        <tbody>
-    <?php
-    $sql = "SELECT IdPaciente, CONCAT(NombreUno, ' ', NombreDos, ' ', NombreTres, ' ', PrimerApellido, ' ', SegundoApellido) AS NombreCompleto FROM Paciente";
-    $result = $conn->query($sql);
-    $no = 1;
-
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr>";
-            echo "<td>" . $no++ . "</td>";
-            echo "<td>
-                    <div class='d-flex justify-content-between align-items-center'>
-            <span>" . htmlspecialchars($row['NombreCompleto']) . "</span>
-            <button class='btn btn-warning me-2' onclick='abrirModalEditarPaciente(" . $row['IdPaciente'] . ")'>
-                <i class='fas fa-edit'></i>
-            </button>
-        </div>
-                  </td>";
-            echo "<td>
-                    <div class='d-flex justify-content-center'>
-                        <button class='btn btn-info me-2' onclick='abrirModalDatosVitales(" . $row['IdPaciente'] . ")'>
-                            <i class='fas fa-plus'></i> 
-                        </button>
-                        <button class='btn btn-warning me-2' onclick='abrirModalEditarDatosVitales(" . $row['IdPaciente'] . ")'>
-                            <i class='fas fa-eye'></i>
-                        </button>
-                    </div>
-                  </td>";
-            echo "<td>
-                    <div class='d-flex justify-content-center'>
-                        <button class='btn btn-info me-2' onclick='abrirModalAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
-                    <i class='fas fa-plus'></i> 
-                        </button>
-                        <button class='btn btn-warning me-2' onclick='abrirModalEditarAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
-                    <i class='fas fa-eye'></i>
-                        </button>
-                    </div>
-                  </td>";
-            echo "<td>
-                    <div class='d-flex justify-content-center'>
-    <button class='btn btn-info me-2' onclick='abrirModalAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
-        <i class='fas fa-plus'></i> 
-    </button>
-    <button class='btn btn-warning me-2' onclick='abrirModalEditarAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
-        <i class='fas fa-eye'></i>
-    </button>
-</div>
-                  </td>";
-            echo "<td>
-                    <div class='d-flex justify-content-center'>
-    <button class='btn btn-info me-2' onclick='abrirModalResponsablePaciente(" . $row['IdPaciente'] . ")'>
-        <i class='fas fa-plus'></i> 
-    </button>
-    <button class='btn btn-warning me-2' onclick='abrirModalEditarResponsablePaciente(" . $row['IdPaciente'] . ")'>
-        <i class='fas fa-eye'></i>
-    </button>
-</div>
-                  </td>";
-                  echo "<td>
-                  <div class='d-flex justify-content-center'>
-                      <button class='btn btn-info me-2' onclick='abrirModalHistoriaClinica(" . $row['IdPaciente'] . ", null)'>
-                          <i class='fas fa-plus'></i> 
-                      </button>
-                      <button class='btn btn-warning me-2' onclick='abrirModalEditarHistoriaClinica(" . $row['IdPaciente'] . ")'>
-                            <i class='fas fa-eye'></i>
-                        </button>
-                  </div>
-                </td>";
-            echo "</tr>";
-        }
-    } else {
-        echo "<tr><td colspan='7' class='text-center'>No hay pacientes registrados.</td></tr>";
-    }
-    ?>
-    </tbody>
-    </table>
-</div>
-
-    <script>
-        function abrirModal(id) {
-            let modal = new bootstrap.Modal(document.getElementById(id));
-            modal.show();
-        }
-    </script>
-
-    
-<!--
 <script>
-        // Función para mostrar u ocultar el botón de agregar responsable
-        function mostrarModalResponsable() {
-            const checkResponsable = document.getElementById('tieneResponsable');
-            const btnAgregarResponsable = document.getElementById('btnAgregarResponsable');
+    function abrirModal(id) {
+        let modal = new bootstrap.Modal(document.getElementById(id));
+        modal.show();
+    }
+</script>
 
-            if (checkResponsable.checked) {
-                btnAgregarResponsable.style.display = 'block'; // Mostrar botón
-            } else {
-                btnAgregarResponsable.style.display = 'none'; // Ocultar botón
-            }
-        }
 
-        // Función para abrir el modal
-        function abrirModal(modalId) {
-            const modal = new bootstrap.Modal(document.getElementById(modalId));
-            modal.show();
-        }
-    </script>-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!--funcion con ajax -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!--funcion con ajax -->
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
     $('#formPaciente').on('submit', function(event) {
@@ -1174,9 +1163,6 @@ function abrirModalEditarPaciente(idPaciente) {
     });
 }
 
-
-
-
 $(document).ready(function() {
     $('#formEditarPaciente').on('submit', function(event) {
         event.preventDefault(); // Prevenir el envío normal del formulario
@@ -1211,4 +1197,3 @@ $(document).ready(function() {
 
 </body>
 </html>
-
