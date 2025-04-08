@@ -1,3 +1,23 @@
+<?php
+session_start();
+include('conexionL.php');
+
+$nombreMedico = 'Invitado';
+
+if (!empty($_SESSION['correo'])) {
+    $stmt = $conn->prepare("SELECT PrimerNombre FROM Medico WHERE CorreoMedico = ?");
+    $stmt->bind_param("s", $_SESSION['correo']);
+    $stmt->execute();
+    $stmt->bind_result($nombre);
+    if ($stmt->fetch()) {
+        $nombreMedico = $nombre;
+    }
+    $stmt->close();
+}
+$conn->close();
+?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -25,7 +45,7 @@
     <div class="main-content">
     <div class="welcome-card compact">
         <div class="greeting-container">
-            <h1><i class="fas fa-stethoscope"></i> <span id="greeting-text"></span> Mi Amor, Dr</h1>
+        <h1><i class="fas fa-stethoscope"></i> <span id="greeting-text"></span>mi amor, Dr. <?php echo htmlspecialchars($nombreMedico); ?></h1>
             <div id="live-clock" class="clock"></div>
         </div>
     </div>
