@@ -262,56 +262,57 @@ include '../conexionDiabetes.php';
     </div>
 
     <!-- MODAL Responsable del Paciente -->
-    <div class="modal fade" id="responsablePacienteModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Responsable del Paciente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formResponsablePaciente" method="POST" action="guardarResponsablePaciente.php">
-                        <input type="hidden" name="id_responsable" id="id_responsable">
-                        <input type="hidden" name="id_paciente" id="id_paciente_responsable">
-                        <!-- Campos del formulario -->
-                        <div class="mb-2">
-                            <label for="primer_nombre" class="form-label">Primer Nombre</label>
-                            <input type="text" class="form-control" id="primer_nombre" name="primer_nombre" required>
-                        </div>
-                        <div class="mb-2">
-                            <label for="segundo_nombre" class="form-label">Segundo Nombre</label>
-                            <input type="text" class="form-control" id="segundo_nombre" name="segundo_nombre">
-                        </div>
-                        <div class="mb-2">
-                            <label for="tercer_nombre" class="form-label">Tercer Nombre</label>
-                            <input type="text" class="form-control" id="tercer_nombre" name="tercer_nombre">
-                        </div>
-                        <div class="mb-2">
-                            <label for="primer_apellido" class="form-label">Primer Apellido</label>
-                            <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" required>
-                        </div>
-                        <div class="mb-2">
-                            <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
-                            <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido">
-                        </div>
-                        <div class="mb-2">
-                            <label for="no_dpi" class="form-label">No. DPI</label>
-                            <input type="text" class="form-control" id="no_dpi" name="no_dpi" required>
-                        </div>
-                        <div class="mb-2">
-                            <label for="telefono" class="form-label">Teléfono</label>
-                            <input type="text" class="form-control" id="telefono" name="telefono" required>
-                        </div>
-                        <div class="mb-2">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <button type="submit" id="btnGuardarResponsablePaciente" class="btn btn-primary w-100">Guardar</button>
-                    </form>
-                </div>
+<!-- Modal para Responsable del Paciente -->
+<div class="modal fade" id="responsablePacienteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Responsable del Paciente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formResponsablePaciente" method="POST" action="guardarResponsablePaciente.php">
+                    <input type="hidden" name="id_responsable" id="id_responsable">
+                    <input type="hidden" name="id_paciente" id="id_paciente_responsable">
+                    <!-- Campos del formulario -->
+                    <div class="mb-2">
+                        <label for="primer_nombre" class="form-label">Primer Nombre</label>
+                        <input type="text" class="form-control" id="primer_nombre" name="primer_nombre" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="segundo_nombre" class="form-label">Segundo Nombre</label>
+                        <input type="text" class="form-control" id="segundo_nombre" name="segundo_nombre">
+                    </div>
+                    <div class="mb-2">
+                        <label for="tercer_nombre" class="form-label">Tercer Nombre</label>
+                        <input type="text" class="form-control" id="tercer_nombre" name="tercer_nombre">
+                    </div>
+                    <div class="mb-2">
+                        <label for="primer_apellido" class="form-label">Primer Apellido</label>
+                        <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
+                        <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido">
+                    </div>
+                    <div class="mb-2">
+                        <label for="no_dpi" class="form-label">No. DPI</label>
+                        <input type="text" class="form-control" id="no_dpi" name="no_dpi" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <button type="submit" id="btnGuardarResponsablePaciente" class="btn btn-primary w-100">Guardar</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
     <!-- MODAL para Historia Clínica -->
     <div class="modal fade" id="historiaClinicaModal" tabindex="-1">
@@ -568,23 +569,23 @@ include '../conexionDiabetes.php';
                               </td>";
                         echo "<td>
                                 <div class='d-flex justify-content-center'>
-        <button class='btn btn-info me-2' onclick='abrirModalAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
-            <i class='fas fa-plus'></i> 
-        </button>
-        <button class='btn btn-warning me-2' onclick='abrirModalEditarAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
-            <i class='fas fa-eye'></i>
-        </button>
-    </div>
+                                <button class='btn btn-info me-2' onclick='abrirModalAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
+                                <i class='fas fa-plus'></i> 
+                                </button>
+                                <button class='btn btn-warning me-2' onclick='abrirModalEditarAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
+                            <i class='fas fa-eye'></i>
+                            </button>
+                            </div>
                               </td>";
                         echo "<td>
-                                <div class='d-flex justify-content-center'>
-        <button class='btn btn-info me-2' onclick='abrirModalResponsablePaciente(" . $row['IdPaciente'] . ")'>
-            <i class='fas fa-plus'></i> 
-        </button>
-        <button class='btn btn-warning me-2' onclick='abrirModalEditarResponsablePaciente(" . $row['IdPaciente'] . ")'>
-            <i class='fas fa-eye'></i>
-        </button>
-    </div>
+                               <div class='d-flex justify-content-center'>
+    <button class='btn btn-info me-2' onclick='abrirModalResponsablePaciente(" . $row['IdPaciente'] . ")'>
+        <i class='fas fa-plus'></i> 
+    </button>
+    <button class='btn btn-warning me-2' onclick='abrirModalEditarResponsablePaciente(" . $row['IdPaciente'] . ")'>
+        <i class='fas fa-eye'></i>
+    </button>
+</div>
                               </td>";
                               echo "<td>
                               <div class='d-flex justify-content-center'>
@@ -927,7 +928,7 @@ $(document).ready(function() {
     });
 });
 
-// Función para abrir el modal y crear un nuevo responsable
+// Función para abrir el modal en modo "editar"
 function abrirModalResponsablePaciente(idPaciente) {
     console.log('Abriendo modal para el paciente:', idPaciente); // Depuración
     // Limpiar el formulario
@@ -1007,6 +1008,7 @@ $(document).ready(function() {
         });
     });
 });
+
 
 //funcion para historial clinica
 function abrirModalHistoriaClinica(idPaciente) {
