@@ -23,20 +23,226 @@ include '../conexionDiabetes.php';
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     
     <style>
+        
+    /* Estilos generales */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* Estilos para la barra de navegación lateral */
+    .navbar {
+        width: 250px;
+        color: white;
+        height: 100vh;
+        position: fixed;
+        padding: 20px 0;
+        transition: all 0.3s;
+        z-index: 1000;
+    }
+
+    .navbar-icon {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: #3498db;
+    }
+
+    .logo {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 30px;
+        padding: 0 15px;
+        color: #ecf0f1;
+    }
+
+    .navbar ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }   
+
+    .navbar ul li a {
+        color: #ecf0f1;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .navbar ul li a i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+    }
+
+    .navbar ul li a span {
+        font-size: 0.95rem;
+    }
+
+    .navbar ul li a.active {
+        color: #3498db;
+        font-weight: bold;
+    }
+
+    /* Contenido principal */
+    .main-content {
+        margin-left: 250px;
+        padding: 20px;
+        width: calc(100% - 250px);
+        background-color: #fff;
+        min-height: 100vh;
+    }
+
+    /* Estilos para el layout de dos columnas */
+    .content-wrapper {
+        display: flex;
+        gap: 20px;
+    }
+
+    .form-container {
+        flex: 1;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .table-container {
+        flex: 2;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    /* Estilos para los títulos */
+    h4 {
+        margin-bottom: 20px;
+        font-weight: 600;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+    }
+
+    /* Estilos para los botones */
+    .btn {
+        padding: 8px 15px;
+        border-radius: 4px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn i {
+        margin-right: 5px;
+    }
+
+    /* Estilos para la tabla */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table th {
+        background-color: #3498db;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+
+    .table td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        vertical-align: middle;
+    }
+
+    .table tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Estilos para los modales */
+    .modal-header {
+        background-color: #3498db;
+        color: white;
+    }
+
+    .modal-content {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* Estilos para el buscador */
+    .search-container {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #searchPaciente {
+        border-radius: 20px;
+        padding: 8px 15px;
+        border: 1px solid #ddd;
+        width: 300px;
+    }
+
+    /* Estilos responsivos */
+    @media (max-width: 992px) {
+        .content-wrapper {
+            flex-direction: column;
+        }
+        
+        .navbar {
+            width: 70px;
+            overflow: hidden;
+        }
+        
+        .navbar .logo, .navbar ul li span {
+            display: none;
+        }
+        
+        .navbar ul li {
+            text-align: center;
+        }
+        
+        .navbar ul li a i {
+            margin-right: 0;
+            font-size: 1.5rem;
+        }
+        
         .main-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            margin-left: 70px;
+            width: calc(100% - 70px);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .navbar {
+            width: 100%;
+            height: auto;
+            position: relative;
         }
         
-        .table-container {
-            margin-top: 20px;
+        .navbar ul {
+            display: flex;
+            flex-wrap: wrap;
         }
         
-        .search-container {
-            margin-bottom: 20px;
+        .navbar ul li {
+            flex: 1 0 auto;
+            border-bottom: none;
         }
-    </style>
+        
+        .main-content {
+            margin-left: 0;
+            width: 100%;
+        }
+        
+        #searchPaciente {
+            width: 100%;
+        }
+    }
+</style>
 </head>
 <body>
 
@@ -44,7 +250,7 @@ include '../conexionDiabetes.php';
     <div class="navbar-icon"><i class="fa-solid fa-user-doctor"></i></div>
         <div class="logo">Diabetes Log</div>
         <ul>            
-            <li><a href="../iniciomedico.php" class="active"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+            <li><a href="../iniciomedico.php" class="fas user"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
             <li><a href="../Pacientes/pacientesPrueba.php"><i class="fas fa-user-plus"></i> <span>Ing. Paciente</span></a></li>
             <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> <span>Asignar Turno</span></a></li>
             <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> <span>Datos del Paciente</span></a></li>
