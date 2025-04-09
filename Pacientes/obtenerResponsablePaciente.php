@@ -4,8 +4,8 @@ include '../conexionDiabetes.php'; // Incluye la conexión a la base de datos
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idPaciente = $_POST['id_paciente']; // Obtiene el ID del paciente
 
-    // Consulta para obtener los datos del responsable
-    $sql = "SELECT IdResponsable, PrimerNombre, SegundoNombre, TercerNombre, PrimerApellido, SegundoApellido, NoDpi, Telefono, Email, IdPaciente 
+    // Consulta para obtener los datos del responsable asociado al paciente
+    $sql = "SELECT IdResponsable, IdPaciente, PrimerNombre, SegundoNombre, TercerNombre, PrimerApellido, SegundoApellido, NoDpi, Telefono, Email 
             FROM ResponsablePaciente 
             WHERE IdPaciente = ?";
     $stmt = $conn->prepare($sql);
