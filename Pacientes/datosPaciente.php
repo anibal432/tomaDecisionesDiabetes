@@ -261,59 +261,93 @@ include '../conexionDiabetes.php';
         </div>
     </div>
 
-    <!-- MODAL Responsable del Paciente -->
 <!-- Modal para Responsable del Paciente -->
-<div class="modal fade" id="responsablePacienteModal" tabindex="-1">
-    <div class="modal-dialog">
+<div class="modal fade" id="responsablePacienteModal" tabindex="-1" aria-labelledby="responsableModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Responsable del Paciente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="responsableModalLabel">
+                    <i class="fas fa-user-shield me-2"></i> Responsable del Paciente
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="formResponsablePaciente" method="POST" action="guardarResponsablePaciente.php">
+                <form id="formResponsablePaciente" method="POST" action="guardarResponsablePaciente.php" autocomplete="off">
+                    <!-- Campos ocultos -->
                     <input type="hidden" name="id_responsable" id="id_responsable">
                     <input type="hidden" name="id_paciente" id="id_paciente_responsable">
-                    <!-- Campos del formulario -->
-                    <div class="mb-2">
-                        <label for="primer_nombre" class="form-label">Primer Nombre</label>
-                        <input type="text" class="form-control" id="primer_nombre" name="primer_nombre" required>
+                    
+                    <div class="row g-3">
+                        <!-- Nombres -->
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="primer_nombre" name="primer_nombre" placeholder="Primer nombre" required>
+                                <label for="primer_nombre">Primer Nombre *</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="segundo_nombre" name="segundo_nombre" placeholder="Segundo nombre">
+                                <label for="segundo_nombre">Segundo Nombre</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="tercer_nombre" name="tercer_nombre" placeholder="Tercer nombre">
+                                <label for="tercer_nombre">Tercer Nombre</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Apellidos -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" placeholder="Primer apellido" required>
+                                <label for="primer_apellido">Primer Apellido *</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido" placeholder="Segundo apellido">
+                                <label for="segundo_apellido">Segundo Apellido</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Datos de contacto -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="no_dpi" name="no_dpi" placeholder="Número de DPI" required pattern="[0-9]{13}" title="El DPI debe contener 13 dígitos">
+                                <label for="no_dpi">No. DPI *</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Teléfono" required pattern="[0-9]{8}" title="El teléfono debe contener 8 dígitos">
+                                <label for="telefono">Teléfono *</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Email -->
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="correo@ejemplo.com" required>
+                                <label for="email">Correo Electrónico *</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label for="segundo_nombre" class="form-label">Segundo Nombre</label>
-                        <input type="text" class="form-control" id="segundo_nombre" name="segundo_nombre">
+                    
+                    <div class="modal-footer mt-4">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-1"></i> Cancelar
+                        </button>
+                        <button type="submit" id="btnGuardarResponsablePaciente" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> Guardar
+                        </button>
                     </div>
-                    <div class="mb-2">
-                        <label for="tercer_nombre" class="form-label">Tercer Nombre</label>
-                        <input type="text" class="form-control" id="tercer_nombre" name="tercer_nombre">
-                    </div>
-                    <div class="mb-2">
-                        <label for="primer_apellido" class="form-label">Primer Apellido</label>
-                        <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
-                        <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido">
-                    </div>
-                    <div class="mb-2">
-                        <label for="no_dpi" class="form-label">No. DPI</label>
-                        <input type="text" class="form-control" id="no_dpi" name="no_dpi" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <button type="submit" id="btnGuardarResponsablePaciente" class="btn btn-primary w-100">Guardar</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
     <!-- MODAL para Historia Clínica -->
     <div class="modal fade" id="historiaClinicaModal" tabindex="-1">
         <div class="modal-dialog">
@@ -928,30 +962,29 @@ $(document).ready(function() {
     });
 });
 
-// Función para abrir el modal en modo "editar"
-function abrirModalResponsablePaciente(idPaciente) {
-    console.log('Abriendo modal para el paciente:', idPaciente); // Depuración
-    // Limpiar el formulario
-    $('#formResponsablePaciente')[0].reset();
-    // Establecer el ID del paciente en el formulario
-    $('#id_paciente_responsable').val(idPaciente);
-    // Cambiar el texto del botón de submit
-    $('#btnGuardarResponsablePaciente').text('Guardar');
-    // Mostrar el modal
-    const modal = new bootstrap.Modal(document.getElementById('responsablePacienteModal'));
-    modal.show();
-}
-
 function abrirModalEditarResponsablePaciente(idPaciente) {
-    console.log('Abriendo modal para editar responsable del paciente con IdPaciente:', idPaciente); // Depuración
+    console.log('Solicitando datos para paciente:', idPaciente);
+    
+    // Configurar el modal
+    const modal = new bootstrap.Modal('#responsablePacienteModal');
+    const $btn = $('#btnGuardarResponsablePaciente');
+    
+    // Mostrar estado de carga
+    $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Cargando...');
+    
+    // Realizar la petición AJAX
     $.ajax({
-        url: 'obtenerResponsablePaciente.php', // Archivo PHP que obtiene los datos del responsable
+        url: 'obtenerResponsablePaciente.php',
         method: 'POST',
-        data: { id_paciente: idPaciente }, // Envía el ID del paciente
-        success: function(data) {
-            const responsable = JSON.parse(data); // Convierte la respuesta JSON en un objeto
-            if (responsable) {
-                // Rellenar los campos del modal con los datos obtenidos
+        dataType: 'json',
+        data: { id_paciente: idPaciente },
+        success: function(response) {
+            console.log('Respuesta recibida:', response);
+            
+            if (response.success && response.data) {
+                const responsable = response.data;
+                
+                // Llenar el formulario
                 $('#id_responsable').val(responsable.IdResponsable);
                 $('#id_paciente_responsable').val(responsable.IdPaciente);
                 $('#primer_nombre').val(responsable.PrimerNombre);
@@ -962,54 +995,30 @@ function abrirModalEditarResponsablePaciente(idPaciente) {
                 $('#no_dpi').val(responsable.NoDpi);
                 $('#telefono').val(responsable.Telefono);
                 $('#email').val(responsable.Email);
-
-                // Cambiar el texto del botón de submit
-                $('#btnGuardarResponsablePaciente').text('Guardar Cambios');
-
+                
+                // Cambiar texto del botón
+                $btn.html('<i class="fas fa-save me-1"></i> Actualizar');
+                
                 // Mostrar el modal
-                const modal = new bootstrap.Modal(document.getElementById('responsablePacienteModal'));
                 modal.show();
             } else {
-                alert('No se encontró un responsable asociado a este paciente.');
+                alert(response.message || 'No se encontraron datos del responsable');
+                // Abrir modal en blanco para nuevo registro
+                $('#formResponsablePaciente')[0].reset();
+                $('#id_paciente_responsable').val(idPaciente);
+                $btn.html('<i class="fas fa-save me-1"></i> Guardar');
+                modal.show();
             }
         },
         error: function(xhr, status, error) {
-            console.error('Error al obtener datos del responsable:', error);
+            console.error('Error en la petición:', error);
+            alert('Error al cargar los datos: ' + error);
+        },
+        complete: function() {
+            $btn.prop('disabled', false);
         }
     });
 }
-
-$(document).ready(function() {
-    $('#formResponsablePaciente').on('submit', function(event) {
-        event.preventDefault(); // Prevenir el envío normal del formulario
-
-        const formData = $(this).serialize(); // Serializar los datos del formulario
-
-        $.ajax({
-            url: $(this).attr('action'), // URL del script PHP (guardarResponsablePaciente.php)
-            type: $(this).attr('method'), // Método de envío (POST)
-            data: formData,
-            success: function(response) {
-                const result = JSON.parse(response);
-                if (result.success) {
-                    alert('Responsable del paciente guardado exitosamente!');
-                    // Cerrar el modal
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('responsablePacienteModal'));
-                    modal.hide();
-                    // Recargar la página o actualizar la tabla
-                    location.reload(); // Opcional: Recargar la página
-                } else {
-                    alert('Error al guardar los datos: ' + result.error);
-                }
-            },
-            error: function(xhr, status, error) {
-                alert('Error al guardar los datos: ' + error);
-            }
-        });
-    });
-});
-
-
 //funcion para historial clinica
 function abrirModalHistoriaClinica(idPaciente) {
     console.log('Abriendo modal para el paciente:', idPaciente); // Depuración

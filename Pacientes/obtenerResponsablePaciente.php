@@ -1,27 +1,59 @@
 <?php
-include '../conexionDiabetes.php'; // Incluye la conexión a la base de datos
+include '../conexionDiabetes.php';
+
+header('Content-Type: application/json'); // Asegurar que la respuesta es JSON
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $idPaciente = $_POST['id_paciente']; // Obtiene el ID del paciente
+    $idPaciente = $_POST['id_paciente'];
 
-    // Consulta para obtener los datos del responsable asociado al paciente
-    $sql = "SELECT IdResponsable, IdPaciente, PrimerNombre, SegundoNombre, TercerNombre, PrimerApellido, SegundoApellido, NoDpi, Telefono, Email 
-            FROM ResponsablePaciente 
-            WHERE IdPaciente = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $idPaciente); // Asocia el parámetro
-    $stmt->execute();
-    $result = $stmt->get_result();
+    // Consulta mejorada con manejo de errores
+    try {
+        $sql = "SELECT * FROM ResponsablePaciente WHERE IdPaciente = ?";
+        $stmt = $conn->prepare($sql);
+        
+        if (!$stmt) {
+            throw new Exception("Error al preparar la consulta: " . $conn->error);
+        }
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc(); // Obtiene la fila de resultados
-        echo json_encode($row); // Devuelve los datos en formato JSON
-    } else {
-        echo json_encode(null); // Si no hay resultados, devuelve null
+        $stmt->bind_param("i", $idPaciente);
+        
+        if (!$stmt->execute()) {
+            throw new Exception("Error al ejecutar la consulta: " . $stmt->error);
+        }
+
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            
+            // Verificación de campos nulos
+            $response = [
+                'success' => true,
+                'data' => [
+                    'IdResponsable' => $row['IdResponsable'],
+                    'PrimerNombre' => $row['PrimerNombre'] ?? '',
+                    'SegundoNombre' => $row['SegundoNombre'] ?? '',
+                    'TercerNombre' => $row['TercerNombre'] ?? '',
+                    'PrimerApellido' => $row['PrimerApellido'] ?? '',
+                    'SegundoApellido' => $row['SegundoApellido'] ?? '',
+                    'NoDpi' => $row['NoDpi'] ?? '',
+                    'Telefono' => $row['Telefono'] ?? '',
+                    'Email' => $row['Email'] ?? '',
+                    'IdPaciente' => $row['IdPaciente']
+                ]
+            ];
+        } else {
+            $response = ['success' => false, 'message' => 'No se encontró responsable para este paciente'];
+        }
+        
+        echo json_encode($response);
+        
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    } finally {
+        if (isset($stmt)) $stmt->close();
+        $conn->close();
     }
-
-    $stmt->close();
-    $conn->close();
 } else {
     echo json_encode(['success' => false, 'error' => 'Método no permitido']);
 }
