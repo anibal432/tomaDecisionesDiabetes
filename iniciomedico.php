@@ -38,6 +38,7 @@ $conn->close();
             <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> <span>Asignar Turno</span></a></li>
             <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> <span>Datos del Paciente</span></a></li>
             <li><a href="../Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> <span>Tipos de Diabetes</span></a></li>
+            <li><a href="insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
             <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
         </ul>
     </nav>
@@ -72,7 +73,6 @@ $conn->close();
     <p class="chart-note">Total de pacientes: <span id="total-pacientes">0</span></p>
 </div>
 </div>
-
 <script>
 function updateGreetingAndClock() {
     const now = new Date();
