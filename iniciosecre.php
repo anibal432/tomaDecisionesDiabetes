@@ -3,14 +3,25 @@ session_start();
 include('conexionL.php');
 
 $nombreSecre = 'Invitado';
+$esJefeSecretaria = false; 
 
 if (!empty($_SESSION['correo'])) {
-    $stmt = $conn->prepare("SELECT PrimerNombre FROM Secretarias WHERE CorreoSecre = ?");
-    $stmt->bind_param("s", $_SESSION['correos']);
+    $stmt = $conn->prepare("SELECT IdSecre, PrimerNombre FROM Secretarias WHERE CorreoSecre = ?");
+    $stmt->bind_param("s", $_SESSION['correo']);
     $stmt->execute();
-    $stmt->bind_result($nombre);
+    $stmt->bind_result($idSecre, $nombre);
+    
     if ($stmt->fetch()) {
         $nombreSecre = $nombre;
+        $stmt_jefe = $conn->prepare("SELECT IdJefeS FROM JefeSec WHERE IdSecre = ?");
+        $stmt_jefe->bind_param("i", $idSecre);
+        $stmt_jefe->execute();
+        $stmt_jefe->store_result();
+        
+        if ($stmt_jefe->num_rows > 0) {
+            $esJefeSecretaria = true;
+        }
+        $stmt_jefe->close();
     }
     $stmt->close();
 }
@@ -21,7 +32,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio - Secretari@s</title>
+    <title>Inicio | Admin Log</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/nav.css">
@@ -29,16 +40,18 @@ $conn->close();
 <body>
 <nav class="navbar">
     <div class="navbar-icon"><i class="fa-solid fa-clipboard-user"></i></div>
-        <div class="logo">Admin Log</div>
-        <ul>            
-            <li><a href="../iniciosecre.php" class="active"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+    <div class="logo">Admin Log</div>
+    <ul>            
+        <li><a href="../iniciosecre.php" class="active"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+        <?php if ($esJefeSecretaria): ?>
             <li><a href="insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
             <li><a href="gestión_secretarias.php"><i class="fa-solid fa-id-card"></i> <span>Ingresar Secre</span></a></li>
-            <li><a href="Citas.php"><i class="fa-solid fa-calendar-days"></i> <span>Agendar Cita</span></a></li>
-            <li><a href="turnospacientes.php"><i class="fa-solid fa-ticket"></i><span>Turnos de Pacientes</span></a></li>
-            <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
-        </ul>
-    </nav>
+        <?php endif; ?>
+        <li><a href="Citas.php"><i class="fa-solid fa-calendar-days"></i> <span>Agendar Cita</span></a></li>
+        <li><a href="turnospacientes.php"><i class="fa-solid fa-ticket"></i><span>Turnos de Pacientes</span></a></li>
+        <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
+    </ul>
+</nav>
 
     <div class="main-content">
     <div class="welcome-card compact">

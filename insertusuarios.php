@@ -4,29 +4,23 @@ include('conexionL.php');
 
 $correo_medico_logeado = $_SESSION['correo'] ?? '';
 
-$tipo_usuario = '';
-if (!empty($correo_medico_logeado)) {
-    $query_medico = "SELECT IdMedico FROM Medico WHERE CorreoMedico = ?";
-    $stmt_medico = $conn->prepare($query_medico);
-    $stmt_medico->bind_param("s", $correo_medico_logeado);
-    $stmt_medico->execute();
-    $result_medico = $stmt_medico->get_result();
-    
-    if ($result_medico->num_rows > 0) {
-        $tipo_usuario = 'medico';
-    } else {
-        $query_secre = "SELECT IdSecre FROM Secretarias WHERE CorreoSecre = ?";
-        $stmt_secre = $conn->prepare($query_secre);
-        $stmt_secre->bind_param("s", $correo_medico_logeado);
-        $stmt_secre->execute();
-        $result_secre = $stmt_secre->get_result();
-        
-        if ($result_secre->num_rows > 0) {
-            $tipo_usuario = 'secretaria';
-        }
-    }
+if (empty($correo_medico_logeado)) {
+    header("Location: iniciomedico.php");
+    exit();
 }
 
+$query_jefe = "SELECT j.IdJefeM FROM JefeMed j
+               JOIN Medico m ON j.IdMedico = m.IdMedico
+               WHERE m.CorreoMedico = ?";
+$stmt_jefe = $conn->prepare($query_jefe);
+$stmt_jefe->bind_param("s", $correo_medico_logeado);
+$stmt_jefe->execute();
+$result_jefe = $stmt_jefe->get_result();
+
+if ($result_jefe->num_rows === 0) {
+    header("Location: iniciomedico.php");
+    exit();
+}
 $mostrar_desactivados = isset($_GET['mostrar_desactivados']) && $_GET['mostrar_desactivados'] == '1';
 $busqueda = $_GET['busqueda'] ?? '';
 $query = "SELECT m.IdMedico, m.PrimerNombre, m.PrimerApellido, m.CorreoMedico, m.NoColegiado, 
@@ -164,18 +158,20 @@ $stmt->close();
                                     </span>
                                 </td>
                                 <td class="action-buttons">
-                                    <button class="action-btn edit-btn" onclick="editarMedico(<?= $medico['IdMedico'] ?>)">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="action-btn toggle-btn <?= $medico['desactivado'] ? 'inactive' : '' ?>" 
-                                            onclick="toggleMedico(<?= $medico['IdMedico'] ?>, <?= $medico['desactivado'] ? '0' : '1' ?>)">
-                                        <i class="fas <?= $medico['desactivado'] ? 'fa-user-check' : 'fa-user-slash' ?>"></i>
-                                        <?= $medico['desactivado'] ? '' : '' ?>
-                                    </button>
-                                    <button class="action-btn schedule-btn" onclick="openScheduleModal('<?= $medico['CorreoMedico'] ?>')">
-                                      <i class="fas fa-calendar-alt"></i>
-                                    </button>
-                                </td>
+    <button class="action-btn edit-btn" onclick="editarMedico(<?= $medico['IdMedico'] ?>)">
+        <i class="fas fa-edit"></i>
+    </button>
+    <button class="action-btn toggle-btn <?= $medico['desactivado'] ? 'inactive' : '' ?>" 
+            onclick="toggleMedico(<?= $medico['IdMedico'] ?>, <?= $medico['desactivado'] ? '0' : '1' ?>)">
+        <i class="fas <?= $medico['desactivado'] ? 'fa-user-check' : 'fa-user-slash' ?>"></i>
+    </button>
+    <button class="action-btn schedule-btn" onclick="openScheduleModal('<?= $medico['CorreoMedico'] ?>')">
+        <i class="fas fa-calendar-alt"></i>
+    </button>
+    <button class="action-btn crown-btn" onclick="assignAsChief(<?= $medico['IdMedico'] ?>, '<?= htmlspecialchars($medico['PrimerNombre'] . ' ' . $medico['PrimerApellido']) ?>')">
+        <i class="fas fa-crown"></i>
+    </button>
+</td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -583,6 +579,55 @@ function saveSchedule() {
             text: 'Error en la conexión',
             icon: 'error'
         });
+    });
+}
+
+function assignAsChief(medicoId, medicoNombre) {
+    Swal.fire({
+        title: '¿Asignar como Jefe Médico?',
+        html: `¿Está seguro de otorgar el puesto de jefe a <b>${medicoNombre}</b>?<br><br>
+              <small>Esta acción reemplazará al jefe médico actual(Tú)</small>`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, asignar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#ffd700',
+        customClass: {
+            confirmButton: 'swal-confirm-chief-btn'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('asignar_jefe.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `idMedico=${medicoId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Éxito',
+                        text: data.message || 'Jefe médico asignado correctamente',
+                        icon: 'success'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.message || 'Error al asignar jefe médico',
+                        icon: 'error'
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error en la conexión: ' + error,
+                    icon: 'error'
+                });
+            });
+        }
     });
 }
 </script>

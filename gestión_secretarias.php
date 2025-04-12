@@ -4,27 +4,22 @@ include('conexionL.php');
 
 $correo_usuario_logeado = $_SESSION['correo'] ?? '';
 
-$tipo_usuario = '';
-if (!empty($correo_usuario_logeado)) {
-    $query_medico = "SELECT IdMedico FROM Medico WHERE CorreoMedico = ?";
-    $stmt_medico = $conn->prepare($query_medico);
-    $stmt_medico->bind_param("s", $correo_usuario_logeado);
-    $stmt_medico->execute();
-    $result_medico = $stmt_medico->get_result();
-    
-    if ($result_medico->num_rows > 0) {
-        $tipo_usuario = 'medico';
-    } else {
-        $query_secre = "SELECT IdSecre FROM Secretarias WHERE CorreoSecre = ?";
-        $stmt_secre = $conn->prepare($query_secre);
-        $stmt_secre->bind_param("s", $correo_usuario_logeado);
-        $stmt_secre->execute();
-        $result_secre = $stmt_secre->get_result();
-        
-        if ($result_secre->num_rows > 0) {
-            $tipo_usuario = 'secretaria';
-        }
-    }
+if (empty($correo_usuario_logeado)) {
+    header("Location: iniciosecre.php");
+    exit();
+}
+
+$query_jefe_sec = "SELECT js.IdJefeS FROM JefeSec js
+                  JOIN Secretarias s ON js.IdSecre = s.IdSecre
+                  WHERE s.CorreoSecre = ?";
+$stmt_jefe_sec = $conn->prepare($query_jefe_sec);
+$stmt_jefe_sec->bind_param("s", $correo_usuario_logeado);
+$stmt_jefe_sec->execute();
+$result_jefe_sec = $stmt_jefe_sec->get_result();
+
+if ($result_jefe_sec->num_rows === 0) {
+    header("Location: iniciosecre.php");
+    exit();
 }
 
 $mostrar_desactivados = isset($_GET['mostrar_desactivados']) && $_GET['mostrar_desactivados'] == '1';
@@ -56,32 +51,13 @@ $stmt->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Secretarias | Diabetes Log</title>
+    <title>Gestión de Secretarias | Admin Log</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/nav.css">
     <link rel="stylesheet" href="css/insert.css">
 </head>
 <body>
-
-<?php if ($tipo_usuario == 'medico'): ?>
-    <!-- Navbar para Médicos -->
-    <nav class="navbar">
-        <div class="navbar-icon"><i class="fa-solid fa-user-doctor"></i></div>
-        <div class="logo">Diabetes Log</div>
-        <ul>            
-            <li><a href="../iniciomedico.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
-            <li><a href="../Pacientes/pacientesPrueba.php"><i class="fas fa-user-plus"></i> <span>Ing. Paciente</span></a></li>
-            <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> <span>Asignar Turno</span></a></li>
-            <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> <span>Datos del Paciente</span></a></li>
-            <li><a href="../Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> <span>Tipos de Diabetes</span></a></li>
-            <li><a href="insertusuarios.php" class="active"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
-            <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
-        </ul>
-    </nav>
-
-<?php elseif ($tipo_usuario == 'secretaria'): ?>
-    <!-- Navbar para Secretarias -->
     <nav class="navbar">
         <div class="navbar-icon"><i class="fa-solid fa-clipboard-user"></i></div>
         <div class="logo">Admin Log</div>
@@ -94,21 +70,6 @@ $stmt->close();
             <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
         </ul>
     </nav>
-
-<?php else: ?>
- <nav class="navbar">
-        <div class="navbar-icon"><i class="fa-solid fa-clipboard-user"></i></div>
-        <div class="logo">Admin Log</div>
-        <ul>            
-            <li><a href="../iniciosecre.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
-            <li><a href="insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
-            <li><a href="gestión_secretarias.php" class="active"><i class="fa-solid fa-id-card"></i> <span>Ingresar Secre</span></a></li>
-            <li><a href="Citas.php"><i class="fa-solid fa-calendar-days"></i> <span>Agendar Cita</span></a></li>
-            <li><a href="turnospacientes.php"><i class="fa-solid fa-ticket"></i><span>Turnos de Pacientes</span></a></li>
-            <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
-        </ul>
-    </nav>
-<?php endif; ?>
 
 <main class="main-content">
     <div class="container">
@@ -173,6 +134,9 @@ $stmt->close();
                                     <button class="action-btn toggle-btn <?= $secretaria['desactivado'] ? 'inactive' : '' ?>" 
                                             onclick="toggleSecretaria(<?= $secretaria['IdSecre'] ?>, <?= $secretaria['desactivado'] ? '0' : '1' ?>)">
                                         <i class="fas <?= $secretaria['desactivado'] ? 'fa-user-check' : 'fa-user-slash' ?>"></i>
+                                    </button>
+                                    <button class="action-btn crown-btn" onclick="assignAsChief(<?= $secretaria['IdSecre'] ?>, '<?= htmlspecialchars($secretaria['PrimerNombre'] . ' ' . $secretaria['PrimerApellido']) ?>')">
+                                         <i class="fas fa-crown"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -463,6 +427,56 @@ $stmt->close();
             closeEditModal();
         }
     }
+
+    function assignAsChief(secretariaId, secretariaNombre) {
+    Swal.fire({
+        title: '¿Asignar como Jefe Admin?',
+        html: `¿Está seguro de otorgar el puesto de jefe a <b>${secretariaNombre}</b>?<br><br>
+              <small>Esta acción reemplazará al jefe admin actual (Tú)</small>`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, asignar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#ffd700',
+        customClass: {
+            confirmButton: 'swal-confirm-chief-btn'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('asignar_jefeAdmin.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `idSecre=${secretariaId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Éxito',
+                        text: data.message || 'Jefe Admin asignado correctamente',
+                        icon: 'success'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.message || 'Error al asignar jefe admin',
+                        icon: 'error'
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error en la conexión: ' + error,
+                    icon: 'error'
+                });
+            });
+        }
+    });
+}
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
