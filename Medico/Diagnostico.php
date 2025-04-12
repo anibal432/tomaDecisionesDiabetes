@@ -44,9 +44,11 @@ if (isset($_POST['insertDiagnosticos'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar Diagnósticos</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        
         .search-results {
             max-height: 200px;
             overflow-y: auto;
@@ -54,6 +56,8 @@ if (isset($_POST['insertDiagnosticos'])) {
         .search-results li {
             cursor: pointer;
         }
+
+        
     </style>
 </head>
 <body>
@@ -62,6 +66,7 @@ if (isset($_POST['insertDiagnosticos'])) {
         <div class="row">
             <div class="col-md-6 mx-auto">
                 <form id="diagnosticForm">
+               
                     <div class="mb-3">
                         <label for="search" class="form-label">Buscar CIE10</label>
                         <input type="text" id="search" class="form-control" placeholder="Escribe para buscar..." autocomplete="off">

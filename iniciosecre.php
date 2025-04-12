@@ -75,7 +75,7 @@ $conn->close();
     <div class="main-content">
     <div class="welcome-card compact">
         <div class="greeting-container">
-        <h1><i class="fas fa-stethoscope"></i> <span id="greeting-text"></span>mi amor, Admn. <?php echo htmlspecialchars($nombreSecre); ?></h1>
+        <h1><i class="fas fa-stethoscope"></i> <span id="greeting-text"></span> Admn. <?php echo htmlspecialchars($nombreSecre); ?></h1>
             <div id="live-clock" class="clock"></div>
         </div>
     </div>

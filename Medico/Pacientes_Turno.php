@@ -1,22 +1,21 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require_once 'conexion.php';
 
-// Agregamos IdPaciente a la consulta para poder pasarlo como parámetro
+// Consulta directa a la tabla Turnos
 $sql = "SELECT 
-            t.IdTurno,
-            p.IdPaciente,
-            CONCAT_WS(' ', p.NombreUno, p.NombreDos, p.PrimerApellido, p.SegundoApellido) AS NombreCompleto,
-            ft.FechaAtencion,
-            t.IdTurnoAsignado,
-            t.Estado
+            IdTurno,
+            PrimerNombrePac,
+            SegundoNombrePac,
+            PrimerApellidoPac,
+            SegundoApellidoPac,
+            EstadoCita
         FROM 
-            Turnos t
-        INNER JOIN 
-            Paciente p ON t.IdPaciente = p.IdPaciente
-        INNER JOIN
-            FechaTurno ft ON t.IdTurnoAsignado = ft.IdTurnoAsignado
+            Turnos
         ORDER BY 
-            t.IdTurno DESC";
+            IdTurno DESC";
 
 $result = $conn->query($sql);
 ?>
@@ -26,7 +25,7 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado Completo de Turnos</title>
+    <title>Listado de Turnos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .header {
@@ -41,14 +40,15 @@ $result = $conn->query($sql);
         }
         .estado-inactivo {
             color: red;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="header">
+    <div class="header text-center">
         <div class="container">
-            <h1 class="text-center">Listado Completo de Turnos</h1>
-            <p class="text-center mb-0">Total de turnos registrados</p>
+            <h1>Listado de Turnos</h1>
+            <p>Total de turnos registrados</p>
         </div>
     </div>
     
@@ -59,32 +59,45 @@ $result = $conn->query($sql);
                     <thead class="table-primary">
                         <tr>
                             <th># Turno</th>
-                            <th>Nombre Completo</th>
-                            <th>Fecha de Atención</th>
-                            <th>Turno Asignado</th>
-                            <th>Estado</th>
-                            <th>Acción</th> <!-- Columna para el botón -->
+                            <th>Nombre del Paciente</th>
+                            <th>Estado de la Cita</th>
+                            <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php while($row = $result->fetch_assoc()): ?>
+                            <?php
+                                // Armar nombre completo del paciente en Turnos
+                                $nombreTurno = trim($row['PrimerNombrePac'] . ' ' . $row['SegundoNombrePac'] . ' ' . $row['PrimerApellidoPac'] . ' ' . $row['SegundoApellidoPac']);
+
+                                // Buscar en la tabla Paciente un nombre parecido
+                                $queryPac = $conn->prepare("
+                                    SELECT IdPaciente 
+                                    FROM Paciente 
+                                    WHERE CONCAT(IFNULL(NombreUno, ''), ' ', IFNULL(NombreDos, ''), ' ', IFNULL(PrimerApellido, ''), ' ', IFNULL(SegundoApellido, '')) 
+                                          LIKE CONCAT('%', ?, '%') 
+                                    LIMIT 1
+                                ");
+                                $queryPac->bind_param("s", $nombreTurno);
+                                $queryPac->execute();
+                                $resPac = $queryPac->get_result();
+                                $idPaciente = ($resPac->num_rows > 0) ? $resPac->fetch_assoc()['IdPaciente'] : 'no_encontrado';
+                            ?>
+
                             <tr>
                                 <td><?php echo $row['IdTurno']; ?></td>
-                                <td><?php echo $row['NombreCompleto']; ?></td>
-                                <td><?php echo date('d-m-Y H:i:s', strtotime($row['FechaAtencion'])); ?></td> <!-- Formatea la fecha -->
-                                <td><?php echo $row['IdTurnoAsignado']; ?></td>
-                                <td class="<?php echo ($row['Estado'] == 1) ? 'estado-activo' : 'estado-inactivo'; ?>">
-                                    <?php echo ($row['Estado'] == 1) ? 'Activo' : 'Inactivo'; ?>
+                                <td><?php echo $nombreTurno; ?></td>
+                                <td class="<?php echo ($row['EstadoCita'] === 'Activo') ? 'estado-activo' : 'estado-inactivo'; ?>">
+                                    <?php echo $row['EstadoCita']; ?>
                                 </td>
                                 <td>
-                                      <!-- Botón para ir a diagnóstico -->
-                                        <a href="Diagnostico.php?turno=<?php echo $row['IdTurno']; ?>" class="btn btn-primary btn-sm">Diagnóstico</a>
-
-                                        <!-- Botón para ir a formulario_recetas.php enviando el IdPaciente -->
-                                         <a href="formulario_receta.php?id_paciente=<?php echo $row['IdPaciente']; ?>" class="btn btn-success btn-sm mt-1">Recetar</a>
-                                         <!-- Botón para ir a formulario_recetas.php enviando el IdPaciente -->
-
-                                         <a href="LaboratoriosP.php?id_paciente=<?php echo $row['IdPaciente']; ?>" class="btn btn btn-info btn-sm mt-1">Laboratorios</a>
+                                    <?php if ($idPaciente !== 'no_encontrado'): ?>
+                                        <a href="Diagnostico.php?id_paciente=<?php echo $idPaciente; ?>" class="btn btn-primary btn-sm">Diagnóstico</a>
+                                        <a href="formulario_receta.php?id_paciente=<?php echo $idPaciente; ?>" class="btn btn-success btn-sm mt-1">Recetar</a>
+                                        <a href="LaboratoriosP.php?id_paciente=<?php echo $idPaciente; ?>" class="btn btn-info btn-sm mt-1">Laboratorios</a>
+                                    <?php else: ?>
+                                        <span class="text-danger">Paciente no encontrado</span>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
@@ -98,8 +111,8 @@ $result = $conn->query($sql);
         <?php endif; ?>
     </div>
 
-    <footer class="mt-5 py-3 bg-light">
-        <div class="container text-center">
+    <footer class="mt-5 py-3 bg-light text-center">
+        <div class="container">
             <p class="mb-0">Sistema de Gestión de Turnos - <?php echo date('Y'); ?></p>
         </div>
     </footer>
@@ -107,7 +120,3 @@ $result = $conn->query($sql);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-<?php
-$conn->close();
-?>

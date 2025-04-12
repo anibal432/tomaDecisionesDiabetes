@@ -89,6 +89,7 @@ $conn->close();
         <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> <span>Asignar Turno</span></a></li>
         <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> <span>Datos del Paciente</span></a></li>
         <li><a href="../Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> <span>Tipos de Diabetes</span></a></li>
+        <li><a href="Medico/Pacientes_Turno.php"><i class="fa-solid fa-users-rectangle"></i> <span>Consultas</span></a></li>
         <?php if ($esJefeMedico): ?>
             <li><a href="insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
         <?php endif; ?>
@@ -99,7 +100,7 @@ $conn->close();
 <div class="main-content">
     <div class="welcome-card compact">
         <div class="greeting-container">
-        <h1><i class="fas fa-stethoscope"></i> <span id="greeting-text"></span>mi amor, Dr. <?php echo htmlspecialchars($nombreMedico); ?></h1>
+        <h1><i class="fas fa-stethoscope"></i> <span id="greeting-text"></span> Dr. <?php echo htmlspecialchars($nombreMedico); ?></h1>
             <div id="live-clock" class="clock"></div>
         </div>
     </div>

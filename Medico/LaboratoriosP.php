@@ -130,45 +130,49 @@ if (isset($_GET['term']) && $_GET['type'] === 'medico') {
             }
         });
 
-                $('#examenForm').on('submit', function(e) {
-            e.preventDefault();
 
-            // Verificar si se seleccionó un paciente (ahora usando IdPaciente)
-            if ($('#IdPaciente').val() === "") {
-                alert("El campo Paciente es requerido.");
-                return;
-            }
+            $('#examenForm').on('submit', function(e) {
+        e.preventDefault();
 
-            $.ajax({
-                url: 'guardar_examen.php',
-                type: 'POST',
-                data: $(this).serialize(),
-                dataType: 'json',
-                beforeSend: function() {
-                    $('button[type="submit"]').prop('disabled', true).html('Enviando...');
-                },
-                success: function(response) {
-                    if (response.success) {
-                        alert(response.message);
-                        $('#examenForm')[0].reset();
-                        $('#IdPaciente, #IdMedico').val(null).trigger('change');
-                    } else {
-                        alert('Error: ' + (response.message || 'Error desconocido'));
-                    }
-                },
-                error: function(xhr) {
-                    let errorMsg = 'Error en la conexión';
-                    try {
-                        const response = JSON.parse(xhr.responseText);
-                        errorMsg = response.message || errorMsg;
-                    } catch (e) {}
-                    alert(errorMsg);
-                },
-                complete: function() {
-                    $('button[type="submit"]').prop('disabled', false).html('Enviar Solicitud');
-                }
-            });
-        });
+        // Verificar si se seleccionó un paciente (ahora usando IdPaciente)
+        if ($('#IdPaciente').val() === "") {
+            alert("El campo Paciente es requerido.");
+            return;
+        }
+
+        $.ajax({
+            url: 'guardar_examen.php',
+            type: 'POST',
+            data: $(this).serialize(),
+            dataType: 'json',
+            beforeSend: function() {
+                $('button[type="submit"]').prop('disabled', true).html('Enviando...');
+            },
+            success: function(response) {
+                if (response.success) {
+                    alert(response.message);
+                    $('#examenForm')[0].reset();
+                    $('#IdPaciente, #IdMedico').val(null).trigger('change');
+                    // Redirección a otra página
+                    window.location.href = 'Pacientes_Turno.php';
+                } else {
+                    alert('Error: ' + (response.message || 'Error desconocido'));
+                }
+            },
+            error: function(xhr) {
+                let errorMsg = 'Error en la conexión';
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    errorMsg = response.message || errorMsg;
+                } catch (e) {}
+                alert(errorMsg);
+            },
+            complete: function() {
+                $('button[type="submit"]').prop('disabled', false).html('Enviar Solicitud');
+            }
+        });
+    });
+
     </script>
 </body>
 </html>
