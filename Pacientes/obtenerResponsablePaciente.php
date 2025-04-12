@@ -1,44 +1,29 @@
 <?php
 include '../conexionDiabetes.php';
 
-header('Content-Type: application/json');
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_paciente = $_POST['id_paciente'];
+    $response = ['success' => false, 'error' => ''];
+    $id_responsable = $_POST['id_responsable'];
 
-    $sql = "SELECT * FROM ResponsablePaciente WHERE IdPaciente = ?";
+    $sql = "SELECT IdResponsable, IdPaciente, PrimerNombre, SegundoNombre, TercerNombre, 
+                   PrimerApellido, SegundoApellido, NoDpi, Telefono, Email 
+            FROM ResponsablePaciente 
+            WHERE IdResponsable = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id_paciente);
+    $stmt->bind_param("i", $id_responsable);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        
-        // Estructura de respuesta corregida
-        $response = [
-            'success' => true,
-            'data' => [
-                'id_responsable' => $row['IdResponsable'],
-                'id_paciente' => $row['IdPaciente'],
-                'primer_nombre' => $row['PrimerNombre'],
-                'segundo_nombre' => $row['SegundoNombre'] ?? '',
-                'tercer_nombre' => $row['TercerNombre'] ?? '',
-                'primer_apellido' => $row['PrimerApellido'],
-                'segundo_apellido' => $row['SegundoApellido'] ?? '',
-                'no_dpi' => $row['NoDpi'],
-                'telefono' => $row['Telefono'],
-                'email' => $row['Email']
-            ]
-        ];
-        
-        echo json_encode($response);
+        $response['success'] = true;
+        $response['responsable'] = $result->fetch_assoc();
     } else {
-        echo json_encode(['success' => false, 'error' => 'No se encontró responsable']);
+        $response['error'] = 'No se encontró el responsable';
     }
 
     $stmt->close();
     $conn->close();
+    echo json_encode($response);
 } else {
     echo json_encode(['success' => false, 'error' => 'Método no permitido']);
 }

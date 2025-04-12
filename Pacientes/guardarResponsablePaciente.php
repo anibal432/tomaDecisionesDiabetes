@@ -18,9 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if ($id_responsable) {
             $sql = "UPDATE ResponsablePaciente 
-                    SET PrimerNombre = ?, SegundoNombre = ?, TercerNombre = ?,
-                        PrimerApellido = ?, SegundoApellido = ?, NoDpi = ?,
-                        Telefono = ?, Email = ?
+                    SET PrimerNombre = ?, SegundoNombre = ?, TercerNombre = ?, 
+                        PrimerApellido = ?, SegundoApellido = ?, NoDpi = ?, 
+                        Telefono = ?, Email = ? 
                     WHERE IdResponsable = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param(
@@ -36,13 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $id_responsable
             );
         } else {
-            $sql = "INSERT INTO ResponsablePaciente 
-                    (PrimerNombre, SegundoNombre, TercerNombre, PrimerApellido, 
-                     SegundoApellido, NoDpi, Telefono, Email, IdPaciente) 
+            $sql = "INSERT INTO ResponsablePaciente (IdPaciente, PrimerNombre, SegundoNombre, TercerNombre, PrimerApellido, SegundoApellido, NoDpi, Telefono, Email) 
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param(
-                "ssssssssi",
+                "issssssss",
+                $id_paciente,
                 $primer_nombre,
                 $segundo_nombre,
                 $tercer_nombre,
@@ -50,8 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $segundo_apellido,
                 $no_dpi,
                 $telefono,
-                $email,
-                $id_paciente
+                $email
             );
         }
 
