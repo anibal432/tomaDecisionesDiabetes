@@ -16,7 +16,8 @@ include '../conexionDiabetes.php';
     <link rel="stylesheet" href="../css/nav.css">
   
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
+    <!-- Add before closing </head> tag -->
+<script src="../js/responsable.js"></script>
     <!--Bootstrap JS y dependencias (Popper.js y jQuery) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -467,93 +468,71 @@ include '../conexionDiabetes.php';
         </div>
     </div>
 
-<!-- Modal para Responsable del Paciente -->
-<div class="modal fade" id="responsablePacienteModal" tabindex="-1" aria-labelledby="responsableModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<!--modal para responsable paciente-->
+<div class="modal fade" id="responsableModal" tabindex="-1">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="responsableModalLabel">
-                    <i class="fas fa-user-shield me-2"></i> Responsable del Paciente
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header">
+                <h5 class="modal-title">Responsable del Paciente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="formResponsablePaciente" method="POST" action="guardarResponsablePaciente.php" autocomplete="off">
-                    <!-- Campos ocultos -->
+                <form id="formResponsable" method="POST" action="guardarResponsable.php">
                     <input type="hidden" name="id_responsable" id="id_responsable">
                     <input type="hidden" name="id_paciente" id="id_paciente_responsable">
                     
-                    <div class="row g-3">
-                        <!-- Nombres -->
+                    <!-- Campos del formulario -->
+                    <div class="row mb-2">
                         <div class="col-md-4">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="primer_nombre" name="primer_nombre" placeholder="Primer nombre" required>
-                                <label for="primer_nombre">Primer Nombre *</label>
-                            </div>
+                            <label for="primer_nombre" class="form-label">Primer Nombre</label>
+                            <input type="text" class="form-control" id="primer_nombre" name="primer_nombre" required>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="segundo_nombre" name="segundo_nombre" placeholder="Segundo nombre">
-                                <label for="segundo_nombre">Segundo Nombre</label>
-                            </div>
+                            <label for="segundo_nombre" class="form-label">Segundo Nombre</label>
+                            <input type="text" class="form-control" id="segundo_nombre" name="segundo_nombre">
                         </div>
                         <div class="col-md-4">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="tercer_nombre" name="tercer_nombre" placeholder="Tercer nombre">
-                                <label for="tercer_nombre">Tercer Nombre</label>
-                            </div>
-                        </div>
-                        
-                        <!-- Apellidos -->
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" placeholder="Primer apellido" required>
-                                <label for="primer_apellido">Primer Apellido *</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido" placeholder="Segundo apellido">
-                                <label for="segundo_apellido">Segundo Apellido</label>
-                            </div>
-                        </div>
-                        
-                        <!-- Datos de contacto -->
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="no_dpi" name="no_dpi" placeholder="Número de DPI" required pattern="[0-9]{13}" title="El DPI debe contener 13 dígitos">
-                                <label for="no_dpi">No. DPI *</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Teléfono" required pattern="[0-9]{8}" title="El teléfono debe contener 8 dígitos">
-                                <label for="telefono">Teléfono *</label>
-                            </div>
-                        </div>
-                        
-                        <!-- Email -->
-                        <div class="col-12">
-                            <div class="form-floating">
-                                <input type="email" class="form-control" id="email" name="email" placeholder="correo@ejemplo.com" required>
-                                <label for="email">Correo Electrónico *</label>
-                            </div>
+                            <label for="tercer_nombre" class="form-label">Tercer Nombre</label>
+                            <input type="text" class="form-control" id="tercer_nombre" name="tercer_nombre">
                         </div>
                     </div>
                     
-                    <div class="modal-footer mt-4">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="fas fa-times me-1"></i> Cancelar
-                        </button>
-                        <button type="submit" id="btnGuardarResponsablePaciente" class="btn btn-primary">
-                            <i class="fas fa-save me-1"></i> Guardar
-                        </button>
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <label for="primer_apellido" class="form-label">Primer Apellido</label>
+                            <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
+                            <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido">
+                        </div>
                     </div>
+                    
+                    <div class="mb-2">
+                        <label for="no_dpi" class="form-label">Número de DPI</label>
+                        <input type="text" class="form-control" id="no_dpi" name="no_dpi" required>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="tel" class="form-control" id="telefono" name="telefono" required>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    
+                    <button type="submit" id="btnGuardarResponsable" class="btn btn-primary w-100">Guardar</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
+    
+
     <!-- MODAL para Historia Clínica -->
     <div class="modal fade" id="historiaClinicaModal" tabindex="-1">
         <div class="modal-dialog">
@@ -818,15 +797,17 @@ include '../conexionDiabetes.php';
                             </div>
                               </td>";
                         echo "<td>
-                               <div class='d-flex justify-content-center'>
-    <button class='btn btn-info me-2' onclick='abrirModalResponsablePaciente(" . $row['IdPaciente'] . ")'>
-        <i class='fas fa-plus'></i> 
-    </button>
-    <button class='btn btn-warning me-2' onclick='abrirModalEditarResponsablePaciente(" . $row['IdPaciente'] . ")'>
-        <i class='fas fa-eye'></i>
-    </button>
-</div>
-                              </td>";
+                            
+    <div class='d-flex justify-content-center'>
+            <button class='btn btn-info me-2' onclick='abrirModalResponsablePaciente(" . $row['IdPaciente'] . ", null)'>
+                <i class='fas fa-plus'></i> 
+            </button>
+            <button class='btn btn-warning me-2' onclick='abrirModalEditarResponsablePaciente(" . $row['IdPaciente'] . ")'>
+                <i class='fas fa-eye'></i>
+            </button>
+        </div>
+
+</td>";
                               echo "<td>
                               <div class='d-flex justify-content-center'>
                                   <button class='btn btn-info me-2' onclick='abrirModalHistoriaClinica(" . $row['IdPaciente'] . ", null)'>
@@ -938,6 +919,95 @@ function abrirModalEditarDatosVitales(idPaciente) {
     });
 }
 
+// Función para abrir modal de nuevo responsable
+// Función para abrir modal de nuevo responsable
+function abrirModalResponsablePaciente(idPaciente) {
+    console.log('Abriendo modal para el paciente:', idPaciente);
+    $('#formResponsable')[0].reset();
+    $('#id_paciente_responsable').val(idPaciente);
+    $('#id_responsable').val('');
+    $('#btnGuardarResponsable').text('Guardar');
+    
+    const modal = new bootstrap.Modal(document.getElementById('responsableModal'));
+    modal.show();
+}
+
+// Función para abrir modal de edición
+function abrirModalEditarResponsablePaciente(idPaciente) {
+    console.log('Buscando responsable para paciente ID:', idPaciente);
+    
+    $.ajax({
+        url: 'obtenerResponsablePaciente.php',
+        method: 'POST',
+        data: { id_paciente: idPaciente },
+        success: function(response) {
+            console.log('Respuesta del servidor:', response);
+            
+            try {
+                const responsable = typeof response === 'string' ? JSON.parse(response) : response;
+                
+                if (responsable && !responsable.error) {
+                    console.log('Datos completos del responsable:', responsable);
+                    
+                    // Asegúrate de que los IDs coinciden con tu formulario HTML
+                    $('#id_responsable').val(responsable.IdResponsable || '');
+                    $('#id_paciente_responsable').val(responsable.IdPaciente || '');
+                    $('#primer_nombre').val(responsable.PrimerNombre || '');
+                    $('#segundo_nombre').val(responsable.SegundoNombre || '');
+                    $('#tercer_nombre').val(responsable.TercerNombre || '');
+                    $('#primer_apellido').val(responsable.PrimerApellido || '');
+                    $('#segundo_apellido').val(responsable.SegundoApellido || '');
+                    $('#no_dpi').val(responsable.NoDpi || '');
+                    $('#telefono').val(responsable.Telefono || '');
+                    $('#email').val(responsable.Email || '');
+
+                    $('#btnGuardarResponsable').text('Guardar Cambios');
+                    
+                    const modal = new bootstrap.Modal(document.getElementById('responsableModal'));
+                    modal.show();
+                } else {
+                    console.warn('No se encontró responsable o hubo un error:', responsable);
+                    alert(responsable.error || 'No se encontró responsable registrado');
+                    abrirModalResponsablePaciente(idPaciente);
+                }
+            } catch (e) {
+                console.error('Error al procesar respuesta:', e);
+                alert('Error al cargar datos del responsable');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error en la solicitud:', status, error);
+            console.log('Respuesta completa:', xhr.responseText);
+            alert('Error al conectarse al servidor');
+        }
+    });
+}
+
+// Manejo del formulario
+$(document).ready(function() {
+    $('#formResponsable').on('submit', function(event) {
+        event.preventDefault();
+
+        $.ajax({
+            url: 'guardarResponsablePaciente.php',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                const result = JSON.parse(response);
+                if (result.success) {
+                    alert('Responsable guardado exitosamente!');
+                    bootstrap.Modal.getInstance(document.getElementById('responsableModal')).hide();
+                    location.reload();
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Error en la solicitud: ' + error);
+            }
+        });
+    });
+});
 
 function abrirModalDatosVitales(idPaciente) {
     // Limpiar el formulario
@@ -1168,63 +1238,9 @@ $(document).ready(function() {
     });
 });
 
-function abrirModalEditarResponsablePaciente(idPaciente) {
-    console.log('Solicitando datos para paciente:', idPaciente);
-    
-    // Configurar el modal
-    const modal = new bootstrap.Modal('#responsablePacienteModal');
-    const $btn = $('#btnGuardarResponsablePaciente');
-    
-    // Mostrar estado de carga
-    $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Cargando...');
-    
-    // Realizar la petición AJAX
-    $.ajax({
-        url: 'obtenerResponsablePaciente.php',
-        method: 'POST',
-        dataType: 'json',
-        data: { id_paciente: idPaciente },
-        success: function(response) {
-            console.log('Respuesta recibida:', response);
-            
-            if (response.success && response.data) {
-                const responsable = response.data;
-                
-                // Llenar el formulario
-                $('#id_responsable').val(responsable.IdResponsable);
-                $('#id_paciente_responsable').val(responsable.IdPaciente);
-                $('#primer_nombre').val(responsable.PrimerNombre);
-                $('#segundo_nombre').val(responsable.SegundoNombre);
-                $('#tercer_nombre').val(responsable.TercerNombre);
-                $('#primer_apellido').val(responsable.PrimerApellido);
-                $('#segundo_apellido').val(responsable.SegundoApellido);
-                $('#no_dpi').val(responsable.NoDpi);
-                $('#telefono').val(responsable.Telefono);
-                $('#email').val(responsable.Email);
-                
-                // Cambiar texto del botón
-                $btn.html('<i class="fas fa-save me-1"></i> Actualizar');
-                
-                // Mostrar el modal
-                modal.show();
-            } else {
-                alert(response.message || 'No se encontraron datos del responsable');
-                // Abrir modal en blanco para nuevo registro
-                $('#formResponsablePaciente')[0].reset();
-                $('#id_paciente_responsable').val(idPaciente);
-                $btn.html('<i class="fas fa-save me-1"></i> Guardar');
-                modal.show();
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error en la petición:', error);
-            alert('Error al cargar los datos: ' + error);
-        },
-        complete: function() {
-            $btn.prop('disabled', false);
-        }
-    });
-}
+
+
+
 //funcion para historial clinica
 function abrirModalHistoriaClinica(idPaciente) {
     console.log('Abriendo modal para el paciente:', idPaciente); // Depuración
@@ -1410,7 +1426,11 @@ $(document).ready(function() {
     });
 });
 
+
+
+
 </script>
 
 </body>
+
 </html>
