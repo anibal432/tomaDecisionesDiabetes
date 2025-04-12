@@ -1,6 +1,8 @@
 <?php
 include '../conexionDiabetes.php';
 
+header('Content-Type: application/json');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_paciente = $_POST['id_paciente'];
 
@@ -12,16 +14,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        // Depuración: Registrar los datos que se están enviando
-        error_log("Datos del responsable: " . print_r($row, true));
-        echo json_encode($row);
+        
+        // Estructura de respuesta corregida
+        $response = [
+            'success' => true,
+            'data' => [
+                'id_responsable' => $row['IdResponsable'],
+                'id_paciente' => $row['IdPaciente'],
+                'primer_nombre' => $row['PrimerNombre'],
+                'segundo_nombre' => $row['SegundoNombre'] ?? '',
+                'tercer_nombre' => $row['TercerNombre'] ?? '',
+                'primer_apellido' => $row['PrimerApellido'],
+                'segundo_apellido' => $row['SegundoApellido'] ?? '',
+                'no_dpi' => $row['NoDpi'],
+                'telefono' => $row['Telefono'],
+                'email' => $row['Email']
+            ]
+        ];
+        
+        echo json_encode($response);
     } else {
-        echo json_encode(['error' => 'No se encontró responsable']);
+        echo json_encode(['success' => false, 'error' => 'No se encontró responsable']);
     }
 
     $stmt->close();
     $conn->close();
 } else {
-    echo json_encode(['error' => 'Método no permitido']);
+    echo json_encode(['success' => false, 'error' => 'Método no permitido']);
 }
 ?>

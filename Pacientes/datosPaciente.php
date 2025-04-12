@@ -9,244 +9,15 @@ include '../conexionDiabetes.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>Formulario de Pacientes</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="stilos.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/nav.css">
-  
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <!-- Add before closing </head> tag -->
-<script src="../js/responsable.js"></script>
-    <!--Bootstrap JS y dependencias (Popper.js y jQuery) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="stylesheet" href="../css/nav.css">
     
-    <style>
-        
-    /* Estilos generales */
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f5f5f5;
-        display: flex;
-        min-height: 100vh;
-    }
-
-    /* Estilos para la barra de navegación lateral */
-    .navbar {
-        width: 250px;
-        color: white;
-        height: 100vh;
-        position: fixed;
-        padding: 20px 0;
-        transition: all 0.3s;
-        z-index: 1000;
-    }
-
-    .navbar-icon {
-        text-align: center;
-        font-size: 2.5rem;
-        margin-bottom: 20px;
-        color: #3498db;
-    }
-
-    .logo {
-        text-align: center;
-        font-size: 1.5rem;
-        font-weight: bold;
-        margin-bottom: 30px;
-        padding: 0 15px;
-        color: #ecf0f1;
-    }
-
-    .navbar ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }   
-
-    .navbar ul li a {
-        color: #ecf0f1;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-    }
-
-    .navbar ul li a i {
-        margin-right: 10px;
-        font-size: 1.2rem;
-    }
-
-    .navbar ul li a span {
-        font-size: 0.95rem;
-    }
-
-    .navbar ul li a.active {
-        color: #3498db;
-        font-weight: bold;
-    }
-
-    /* Contenido principal */
-    .main-content {
-        margin-left: 250px;
-        padding: 20px;
-        width: calc(100% - 250px);
-        background-color: #fff;
-        min-height: 100vh;
-    }
-
-    /* Estilos para el layout de dos columnas */
-    .content-wrapper {
-        display: flex;
-        gap: 20px;
-    }
-
-    .form-container {
-        flex: 1;
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-    }
-
-    .table-container {
-        flex: 2;
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-    }
-
-    /* Estilos para los títulos */
-    h4 {
-        margin-bottom: 20px;
-        font-weight: 600;
-        border-bottom: 2px solid #3498db;
-        padding-bottom: 10px;
-    }
-
-    /* Estilos para los botones */
-    .btn {
-        padding: 8px 15px;
-        border-radius: 4px;
-        font-weight: 500;
-        transition: all 0.3s;
-    }
-
-    .btn i {
-        margin-right: 5px;
-    }
-
-    /* Estilos para la tabla */
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .table th {
-        background-color: #3498db;
-        color: white;
-        padding: 12px;
-        text-align: left;
-    }
-
-    .table td {
-        padding: 12px;
-        border-bottom: 1px solid #eee;
-        vertical-align: middle;
-    }
-
-    .table tr:hover {
-        background-color: #f8f9fa;
-    }
-
-    /* Estilos para los modales */
-    .modal-header {
-        background-color: #3498db;
-        color: white;
-    }
-
-    .modal-content {
-        border-radius: 8px;
-        overflow: hidden;
-    }
-
-    /* Estilos para el buscador */
-    .search-container {
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    #searchPaciente {
-        border-radius: 20px;
-        padding: 8px 15px;
-        border: 1px solid #ddd;
-        width: 300px;
-    }
-
-    /* Estilos responsivos */
-    @media (max-width: 992px) {
-        .content-wrapper {
-            flex-direction: column;
-        }
-        
-        .navbar {
-            width: 70px;
-            overflow: hidden;
-        }
-        
-        .navbar .logo, .navbar ul li span {
-            display: none;
-        }
-        
-        .navbar ul li {
-            text-align: center;
-        }
-        
-        .navbar ul li a i {
-            margin-right: 0;
-            font-size: 1.5rem;
-        }
-        
-        .main-content {
-            margin-left: 70px;
-            width: calc(100% - 70px);
-        }
-    }
-
-    @media (max-width: 768px) {
-        .navbar {
-            width: 100%;
-            height: auto;
-            position: relative;
-        }
-        
-        .navbar ul {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        
-        .navbar ul li {
-            flex: 1 0 auto;
-            border-bottom: none;
-        }
-        
-        .main-content {
-            margin-left: 0;
-            width: 100%;
-        }
-        
-        #searchPaciente {
-            width: 100%;
-        }
-    }
-</style>
+    
 </head>
 <body>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <nav class="navbar">
     <div class="navbar-icon"><i class="fa-solid fa-user-doctor"></i></div>
         <div class="logo">Diabetes Log</div>
@@ -339,7 +110,7 @@ include '../conexionDiabetes.php';
                                 <option value="Otro">Otro</option>
                             </select>
                         </div>
-                        <button type="submit" id="btnGuardarPaciente" class="btn btn-primary w-100">Guardar Cambios</button>
+                        <button type="submit" id="btnGuardarPaciente" class="btn btn-custom w-100">Guardar Cambios</button>
                     </form>
                 </div>
             </div>
@@ -510,10 +281,10 @@ include '../conexionDiabetes.php';
                     
                     <div class="mb-2">
                         <label for="no_dpi" class="form-label">Número de DPI</label>
-                        <input type="text" class="form-control" id="no_dpi" name="no_dpi" required>
+                        <input type="number" class="form-control" id="no_dpi" name="no_dpi" required>
                     </div>
                     
-                    <div class="mb-2">
+                    <div class="mb-2"> 
                         <label for="telefono" class="form-label">Teléfono</label>
                         <input type="tel" class="form-control" id="telefono" name="telefono" required>
                     </div>
@@ -677,7 +448,7 @@ include '../conexionDiabetes.php';
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="guardarDatosVitales()">Guardar Cambios</button>
+                    <button type="button" class="btn btn-custom w-100" onclick="guardarDatosVitales()">Guardar Cambios</button>
                 </div>
             </div>
         </div>
@@ -728,10 +499,11 @@ include '../conexionDiabetes.php';
     </div>
 
     <!--Tabla de los datos del paciente-->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="mb-0 class=responsive">Datos del Paciente</h4>
+    <div class="container-fluid px-0"> <!-- Elimina el padding horizontal del contenedor -->
+    <div class="d-flex justify-content-between align-items-center mb-2 mt-2"> <!-- Reduje el margen inferior y superior -->
+        <h4 class="mb-0">Datos del Paciente</h4>
         <div>
-            <input type="text" id="searchPaciente" class="form-control" placeholder="Buscar Paciente" style="width: 300px; display: inline-block;" oninput="buscarPaciente()">
+            <input type="text" id="searchPaciente" class="form-control form-control-sm" placeholder="Buscar Paciente" style="width: 250px; display: inline-block;" oninput="buscarPaciente()">
         </div>
     </div>
 
@@ -761,7 +533,7 @@ include '../conexionDiabetes.php';
                         echo "<td>
                                 <div class='d-flex justify-content-between align-items-center'>
                         <span>" . htmlspecialchars($row['NombreCompleto']) . "</span>
-                        <button class='btn btn-warning me-2' onclick='abrirModalEditarPaciente(" . $row['IdPaciente'] . ")'>
+                        <button class='btn btn-primary me-2' onclick='abrirModalEditarPaciente(" . $row['IdPaciente'] . ")'>
                             <i class='fas fa-edit'></i>
                         </button>
                     </div>
@@ -920,7 +692,6 @@ function abrirModalEditarDatosVitales(idPaciente) {
 }
 
 // Función para abrir modal de nuevo responsable
-// Función para abrir modal de nuevo responsable
 function abrirModalResponsablePaciente(idPaciente) {
     console.log('Abriendo modal para el paciente:', idPaciente);
     $('#formResponsable')[0].reset();
@@ -934,54 +705,59 @@ function abrirModalResponsablePaciente(idPaciente) {
 
 // Función para abrir modal de edición
 function abrirModalEditarResponsablePaciente(idPaciente) {
-    console.log('Buscando responsable para paciente ID:', idPaciente);
+    console.log('Iniciando carga para paciente:', idPaciente);
+    
+    // 1. Limpiar el formulario primero
+    $('#formResponsable')[0].reset();
     
     $.ajax({
         url: 'obtenerResponsablePaciente.php',
         method: 'POST',
+        dataType: 'json',
         data: { id_paciente: idPaciente },
         success: function(response) {
-            console.log('Respuesta del servidor:', response);
+            console.log('Respuesta completa:', response);
             
-            try {
-                const responsable = typeof response === 'string' ? JSON.parse(response) : response;
+            if (response && response.success && response.data) {
+                const data = response.data;
                 
-                if (responsable && !responsable.error) {
-                    console.log('Datos completos del responsable:', responsable);
-                    
-                    // Asegúrate de que los IDs coinciden con tu formulario HTML
-                    $('#id_responsable').val(responsable.IdResponsable || '');
-                    $('#id_paciente_responsable').val(responsable.IdPaciente || '');
-                    $('#primer_nombre').val(responsable.PrimerNombre || '');
-                    $('#segundo_nombre').val(responsable.SegundoNombre || '');
-                    $('#tercer_nombre').val(responsable.TercerNombre || '');
-                    $('#primer_apellido').val(responsable.PrimerApellido || '');
-                    $('#segundo_apellido').val(responsable.SegundoApellido || '');
-                    $('#no_dpi').val(responsable.NoDpi || '');
-                    $('#telefono').val(responsable.Telefono || '');
-                    $('#email').val(responsable.Email || '');
+                // 2. Asignación directa de valores
+                $('#id_responsable').val(data.id_responsable);
+                $('#id_paciente_responsable').val(data.id_paciente);
+                $('#primer_nombre').val(data.primer_nombre);
+                $('#segundo_nombre').val(data.segundo_nombre);
+                $('#tercer_nombre').val(data.tercer_nombre);
+                $('#primer_apellido').val(data.primer_apellido);
+                $('#segundo_apellido').val(data.segundo_apellido);
+                $('#no_dpi').val(data.no_dpi);
+                $('#telefono').val(data.telefono);
+                $('#email').val(data.email);
 
-                    $('#btnGuardarResponsable').text('Guardar Cambios');
-                    
-                    const modal = new bootstrap.Modal(document.getElementById('responsableModal'));
-                    modal.show();
-                } else {
-                    console.warn('No se encontró responsable o hubo un error:', responsable);
-                    alert(responsable.error || 'No se encontró responsable registrado');
-                    abrirModalResponsablePaciente(idPaciente);
-                }
-            } catch (e) {
-                console.error('Error al procesar respuesta:', e);
-                alert('Error al cargar datos del responsable');
+                // 3. Cambiar texto del botón
+                $('#btnGuardarResponsable').html('<i class="fas fa-save"></i> Actualizar');
+                
+                // 4. Mostrar modal con Bootstrap 5
+                const modal = new bootstrap.Modal(document.getElementById('responsableModal'));
+                modal.show();
+                
+                console.log('Modal mostrado correctamente con datos');
+            } else {
+                console.warn('No se encontró responsable:', response);
+                alert(response.error || 'No se encontró responsable registrado');
+                abrirModalResponsablePaciente(idPaciente);
             }
         },
         error: function(xhr, status, error) {
-            console.error('Error en la solicitud:', status, error);
-            console.log('Respuesta completa:', xhr.responseText);
-            alert('Error al conectarse al servidor');
+            console.error('Error en la solicitud:', {
+                status: status,
+                error: error,
+                response: xhr.responseText
+            });
+            alert('Error al cargar datos. Ver consola para detalles.');
         }
     });
 }
+
 
 // Manejo del formulario
 $(document).ready(function() {
