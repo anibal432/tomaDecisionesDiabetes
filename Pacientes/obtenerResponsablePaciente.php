@@ -2,26 +2,29 @@
 include '../conexionDiabetes.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_paciente = $_POST['id_paciente'];
+    $response = ['success' => false, 'error' => ''];
+    $id_responsable = $_POST['id_responsable'];
 
-    $sql = "SELECT * FROM ResponsablePaciente WHERE IdPaciente = ?";
+    $sql = "SELECT IdResponsable, IdPaciente, PrimerNombre, SegundoNombre, TercerNombre, 
+                   PrimerApellido, SegundoApellido, NoDpi, Telefono, Email 
+            FROM ResponsablePaciente 
+            WHERE IdResponsable = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id_paciente);
+    $stmt->bind_param("i", $id_responsable);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        // Depuración: Registrar los datos que se están enviando
-        error_log("Datos del responsable: " . print_r($row, true));
-        echo json_encode($row);
+        $response['success'] = true;
+        $response['responsable'] = $result->fetch_assoc();
     } else {
-        echo json_encode(['error' => 'No se encontró responsable']);
+        $response['error'] = 'No se encontró el responsable';
     }
 
     $stmt->close();
     $conn->close();
+    echo json_encode($response);
 } else {
-    echo json_encode(['error' => 'Método no permitido']);
+    echo json_encode(['success' => false, 'error' => 'Método no permitido']);
 }
 ?>

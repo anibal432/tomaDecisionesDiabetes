@@ -1,0 +1,15 @@
+.button {
+    background-color: #B2EBF2; /* Celeste suave */
+    color: #FFFFFF;            /* Blanco */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button:hover {
+    background-color: #80DEEA; /* Celeste medio */
+    transform: scale(1.05);    /* Efecto de aumento al pasar el ratón */
+}
