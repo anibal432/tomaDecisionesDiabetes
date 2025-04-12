@@ -18,6 +18,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST['correo'];
     $contrasena = $_POST['contrasena'];
 
+    $sql_verificar_desactivado = "SELECT d.IdMedico, d.IdSecre 
+                                 FROM Desactivado d
+                                 LEFT JOIN Medico m ON d.IdMedico = m.IdMedico AND m.CorreoMedico = ?
+                                 LEFT JOIN Secretarias s ON d.IdSecre = s.IdSecre AND s.CorreoSecre = ?
+                                 WHERE m.CorreoMedico IS NOT NULL OR s.CorreoSecre IS NOT NULL";
+    
+    $stmt_verificar_desactivado = $conn->prepare($sql_verificar_desactivado);
+    $stmt_verificar_desactivado->bind_param("ss", $correo, $correo);
+    $stmt_verificar_desactivado->execute();
+    $stmt_verificar_desactivado->store_result();
+    
+    if ($stmt_verificar_desactivado->num_rows > 0) {
+        $_SESSION['error'] = 'Usuario inactivo. Por favor verifique con el Jefe de su área.';
+        header("Location: index.php");
+        exit();
+    }
+    $stmt_verificar_desactivado->close();
+
     $sql_verificar_login = "CALL VerificarLogin(?, ?)";
     $stmt_verificar_login = $conn->prepare($sql_verificar_login);
     
@@ -49,6 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_guardar_codigo->bind_param("ss", $codigo_verificacion, $correo);
         $stmt_guardar_codigo->execute();
         $stmt_guardar_codigo->close();
+        
         $mail = new PHPMailer(true);
         try {            
             $mail->isSMTP();
@@ -85,6 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 }
+
 if (isset($conn) && $conn) {
     mysqli_close($conn);
 }

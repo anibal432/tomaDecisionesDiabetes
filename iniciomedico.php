@@ -1,11 +1,16 @@
 <?php
 session_start();
+if (!isset($_SESSION['correo'])) {
+    header("Location: index.php");
+    exit();
+}
 include('conexionL.php');
 
 $nombreMedico = 'Invitado';
 $esJefeMedico = false;
 $citasHoy = 0;
 $citasProximas = 0;
+$totalPacientes = 0; 
 $idMedico = null;
 
 if (!empty($_SESSION['correo'])) {
@@ -19,6 +24,7 @@ if (!empty($_SESSION['correo'])) {
         
         $stmt->free_result();
         $stmt->close();
+        
         $stmt_jefe = $conn->prepare("SELECT IdJefeM FROM JefeMed WHERE IdMedico = ?");
         $stmt_jefe->bind_param("i", $idMedico);
         $stmt_jefe->execute();
@@ -45,6 +51,14 @@ if (!empty($_SESSION['correo'])) {
         $stmtProximas->bind_result($citasProximas);
         $stmtProximas->fetch();
         $stmtProximas->close();
+        
+        $queryPacientes = "SELECT COUNT(*) FROM Turnos WHERE IdMedico = ?";
+        $stmtPacientes = $conn->prepare($queryPacientes);
+        $stmtPacientes->bind_param("i", $idMedico);
+        $stmtPacientes->execute();
+        $stmtPacientes->bind_result($totalPacientes);
+        $stmtPacientes->fetch();
+        $stmtPacientes->close();
     } else {
         $stmt->close();
     }
@@ -61,7 +75,9 @@ $conn->close();
     <title>Inicio | Diabetes Log</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/medico.css">
 </head>
 <body>
 <nav class="navbar">
@@ -80,7 +96,7 @@ $conn->close();
     </ul>
 </nav>
     
-    <div class="main-content">
+<div class="main-content">
     <div class="welcome-card compact">
         <div class="greeting-container">
         <h1><i class="fas fa-stethoscope"></i> <span id="greeting-text"></span>mi amor, Dr. <?php echo htmlspecialchars($nombreMedico); ?></h1>
@@ -89,26 +105,81 @@ $conn->close();
     </div>
 
     <div class="cards-container compact">
+    <?php if ($citasHoy > 0): ?>
         <div class="med-card today compact">
             <i class="fas fa-calendar-day"></i>
             <h3>Citas Hoy</h3>
             <p class="count"><?php echo $citasHoy; ?></p>
             <a href="../Consultas/AsignarTurno.php" class="med-link">Ver</a>
         </div>
-        
-        <div class="med-card upcoming compact">
-            <i class="fas fa-calendar-week"></i>
-            <h3>Próximas</h3>
-            <p class="count"><?php echo $citasProximas; ?></p>
+    <?php else: ?>
+        <div class="med-card today compact" onclick="mostrarModalPacientes()">
+            <i class="fas fa-users"></i>
+            <h3>Pacientes</h3>
+            <p class="count"><?php echo $totalPacientes; ?></p>
+            <a href="#" class="med-link">Ver</a>
         </div>
+    <?php endif; ?>
+    
+    <div class="med-card upcoming compact">
+        <i class="fas fa-calendar-week"></i>
+        <h3>Próximas</h3>
+        <p class="count"><?php echo $citasProximas; ?></p>
     </div>
+</div>
 
     <div class="chart-container">
     <h2><i class="fas fa-chart-bar"></i> Distribución de Pacientes por Tipo de Diabetes</h2>
     <canvas id="diabetesChart"></canvas>
     <p class="chart-note">Total de pacientes: <span id="total-pacientes">0</span></p>
 </div>
+<div id="modalPacientes" class="modal-pacientes">
+    <div class="modal-content-pacientes">
+        <span class="close-modal-pacientes" onclick="cerrarModalPacientes()">&times;</span>
+        <h2><i class="fas fa-users"></i> Gestión de Pacientes</h2>
+        
+        <div class="tab-section-pacientes">
+            <h3><i class="fas fa-user-clock"></i> Pacientes en Proceso</h3>
+            <div class="table-container-pacientes">
+                <table class="table-pacientes">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre Completo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaProcesoBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="tab-section-pacientes">
+            <h3><i class="fas fa-list"></i> Pacientes Pendientes</h3>
+            <div class="table-container-pacientes">
+                <table class="table-pacientes">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaPendientesBody">
+                        <!-- Se llenará con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+</div>
+
+
 <script>
 function updateGreetingAndClock() {
     const now = new Date();
@@ -213,5 +284,158 @@ function mostrarDatosEjemplo() {
 }
 </script>
 
+<script>
+function mostrarModalPacientes() {
+    document.getElementById('modalPacientes').style.display = 'block';
+    cargarPacientes();
+}
+
+function cerrarModalPacientes() {
+    Swal.fire({
+        title: '¿Cerrar ventana?',
+        text: '¿Estás seguro de que quieres cerrar la gestión de pacientes?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3a7bd5',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, cerrar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('modalPacientes').style.display = 'none';
+        }
+    });
+}
+
+window.addEventListener('click', function(event) {
+    if (event.target === document.getElementById('modalPacientes')) {
+        cerrarModalPacientes();
+    }
+});
+
+async function cargarPacientes() {
+    try {
+        const response = await fetch(`obtener_pacientes.php?idMedico=<?php echo $idMedico; ?>`);
+        
+        if (!response.ok) {
+            throw new Error('Error al obtener los datos');
+        }
+        
+        const pacientes = await response.json();
+        
+        const tablaProceso = document.getElementById('tablaProcesoBody');
+        const tablaPendientes = document.getElementById('tablaPendientesBody');
+        
+        tablaProceso.innerHTML = '';
+        tablaPendientes.innerHTML = '';
+        
+        pacientes.forEach(paciente => {
+            const nombreCompleto = `${paciente.PrimerNombrePac} ${paciente.SegundoNombrePac || ''} ${paciente.PrimerApellidoPac} ${paciente.SegundoApellidoPac || ''}`;
+            
+            if (paciente.EstadoCita === 'Adelante' || paciente.EstadoCita === 'Atendiendo') {
+                tablaProceso.innerHTML += `
+                    <tr>
+                        <td>${paciente.IdTurno}</td>
+                        <td>${nombreCompleto}</td>
+                        <td><span class="estado-badge-pacientes ${paciente.EstadoCita.toLowerCase()}">${paciente.EstadoCita}</span></td>
+                        <td>
+                            <select class="estado-select-pacientes" data-id="${paciente.IdTurno}">
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Adelante" ${paciente.EstadoCita === 'Adelante' ? 'selected' : ''}>Adelante</option>
+                                <option value="Atendiendo" ${paciente.EstadoCita === 'Atendiendo' ? 'selected' : ''}>Atendiendo</option>
+                                <option value="Atendido">Atendido</option>
+                            </select>
+                            <button class="btn-actualizar-pacientes" data-id="${paciente.IdTurno}">
+                                <i class="fas fa-save"></i> Actualizar
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            if (paciente.EstadoCita === 'Pendiente') {
+                tablaPendientes.innerHTML += `
+                    <tr>
+                        <td>${paciente.IdTurno}</td>
+                        <td>${paciente.PrimerNombrePac}</td>
+                        <td>${paciente.PrimerApellidoPac}</td>
+                        <td><span class="estado-badge-pacientes pendiente">${paciente.EstadoCita}</span></td>
+                        <td>
+                            <select class="estado-select-pacientes" data-id="${paciente.IdTurno}">
+                                <option value="Pendiente" selected>Pendiente</option>
+                                <option value="Adelante">Adelante</option>
+                                <option value="Atendiendo">Atendiendo</option>
+                                <option value="Atendido">Atendido</option>
+                            </select>
+                            <button class="btn-actualizar-pacientes" data-id="${paciente.IdTurno}">
+                                <i class="fas fa-save"></i> Actualizar
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }
+        });
+        
+        document.querySelectorAll('.btn-actualizar-pacientes').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const idTurno = this.getAttribute('data-id');
+                const select = document.querySelector(`.estado-select-pacientes[data-id="${idTurno}"]`);
+                const nuevoEstado = select.value;
+                
+                try {
+                    const response = await fetch('actualizar_estado.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            idTurno: idTurno,
+                            estado: nuevoEstado
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    if (result.success) {
+                        await Swal.fire({
+                            icon: 'success',
+                            title: 'Actualizado',
+                            text: 'El estado se ha actualizado correctamente',
+                            confirmButtonColor: '#3a7bd5',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                        cargarPacientes();
+                    } else {
+                        await Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.message || 'Error al actualizar el estado',
+                            confirmButtonColor: '#3a7bd5'
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    await Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Ocurrió un error al actualizar el estado',
+                        confirmButtonColor: '#3a7bd5'
+                    });
+                }
+            });
+        });
+        
+    } catch (error) {
+        console.error('Error al cargar pacientes:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo cargar la lista de pacientes',
+            confirmButtonColor: '#3a7bd5'
+        });
+    }
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@ include('conexionL.php');
 
 $date = $_GET['date'];
 $dayOfWeek = date('D', strtotime($date));
-$dayAbbrMap = ['Mon' => 'Lun', 'Tue' => 'Mar', 'Wed' => 'Mie', 'Thu' => 'Jue', 'Fri' => 'Vie', 'Sat' => 'Sab', 'Sun' => 'Dom'];
+$dayAbbrMap = ['Mon' => 'Lun', 'Tue' => 'Mar', 'Wed' => 'Mié', 'Thu' => 'Jue', 'Fri' => 'Vie', 'Sat' => 'Sáb', 'Sun' => 'Dom'];
 $dayAbbr = $dayAbbrMap[$dayOfWeek];
 
 $disponibilidad = [];
