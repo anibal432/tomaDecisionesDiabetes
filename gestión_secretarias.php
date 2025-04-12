@@ -62,9 +62,9 @@ $stmt->close();
         <div class="navbar-icon"><i class="fa-solid fa-clipboard-user"></i></div>
         <div class="logo">Admin Log</div>
         <ul>            
-            <li><a href="../iniciosecre.php" class="active"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+            <li><a href="iniciosecre.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
             <li><a href="insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
-            <li><a href="gestión_secretarias.php"><i class="fa-solid fa-id-card"></i> <span>Ingresar Secre</span></a></li>
+            <li><a href="gestión_secretarias.php" class="active"><i class="fa-solid fa-id-card"></i> <span>Ingresar Secre</span></a></li>
             <li><a href="Citas.php"><i class="fa-solid fa-calendar-days"></i> <span>Agendar Cita</span></a></li>
             <li><a href="turnospacientes.php"><i class="fa-solid fa-ticket"></i><span>Turnos de Pacientes</span></a></li>
             <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>

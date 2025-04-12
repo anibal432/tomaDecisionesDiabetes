@@ -3,27 +3,42 @@ session_start();
 include('conexionL.php');
 
 $nombreSecre = 'Invitado';
-$esJefeSecretaria = false; 
+$esJefeSecretaria = false;
+$citasHoy = 0;
+$citasProximas = 0;
 
 if (!empty($_SESSION['correo'])) {
-    $stmt = $conn->prepare("SELECT IdSecre, PrimerNombre FROM Secretarias WHERE CorreoSecre = ?");
+    $query = "SELECT s.IdSecre, s.PrimerNombre, 
+              (SELECT COUNT(*) FROM JefeSec js WHERE js.IdSecre = s.IdSecre) AS es_jefe
+              FROM Secretarias s WHERE s.CorreoSecre = ?";
+    
+    $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $_SESSION['correo']);
     $stmt->execute();
-    $stmt->bind_result($idSecre, $nombre);
+    $stmt->bind_result($idSecre, $nombre, $es_jefe);
     
     if ($stmt->fetch()) {
         $nombreSecre = $nombre;
-        $stmt_jefe = $conn->prepare("SELECT IdJefeS FROM JefeSec WHERE IdSecre = ?");
-        $stmt_jefe->bind_param("i", $idSecre);
-        $stmt_jefe->execute();
-        $stmt_jefe->store_result();
-        
-        if ($stmt_jefe->num_rows > 0) {
-            $esJefeSecretaria = true;
-        }
-        $stmt_jefe->close();
+        $esJefeSecretaria = ($es_jefe > 0);
     }
     $stmt->close();
+
+    $hoy = date('Y-m-d');
+    $queryHoy = "SELECT COUNT(*) FROM citas WHERE fecha = ?";
+    $stmtHoy = $conn->prepare($queryHoy);
+    $stmtHoy->bind_param("s", $hoy);
+    $stmtHoy->execute();
+    $stmtHoy->bind_result($citasHoy);
+    $stmtHoy->fetch();
+    $stmtHoy->close();
+    
+    $queryProximas = "SELECT COUNT(*) FROM citas WHERE fecha > ?";
+    $stmtProximas = $conn->prepare($queryProximas);
+    $stmtProximas->bind_param("s", $hoy);
+    $stmtProximas->execute();
+    $stmtProximas->bind_result($citasProximas);
+    $stmtProximas->fetch();
+    $stmtProximas->close();
 }
 $conn->close();
 ?>
@@ -65,15 +80,13 @@ $conn->close();
         <div class="med-card today compact">
             <i class="fas fa-calendar-day"></i>
             <h3>Citas Totales Hoy</h3>
-            <p class="count">--.--</p>
-            <a href="../Consultas/AsignarTurno.php" class="med-link">Ver</a>
+            <p class="count"><?php echo $citasHoy; ?></p>
         </div>
         
         <div class="med-card upcoming compact">
             <i class="fas fa-calendar-week"></i>
             <h3>Citas Proximas Totales</h3>
-            <p class="count">--.--</p>
-            <a href="../Consultas/AsignarTurno.php" class="med-link">Ver</a>
+            <p class="count"><?php echo $citasProximas; ?></p>
         </div>
     </div>
 

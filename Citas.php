@@ -2,6 +2,22 @@
 session_start();
 include('conexionL.php');
 
+$esJefaSecretaria = false;
+$correo_secretaria = $_SESSION['correo'] ?? '';
+
+if (!empty($correo_secretaria)) {
+    $query_jefa = "SELECT js.IdJefeS FROM JefeSec js
+                  JOIN Secretarias s ON js.IdSecre = s.IdSecre
+                  WHERE s.CorreoSecre = ?";
+    $stmt_jefa = $conn->prepare($query_jefa);
+    $stmt_jefa->bind_param("s", $correo_secretaria);
+    $stmt_jefa->execute();
+    $result_jefa = $stmt_jefa->get_result();
+    
+    $esJefaSecretaria = ($result_jefa->num_rows > 0);
+    $stmt_jefa->close();
+}
+
 $query_medicos = "SELECT IdMedico, CONCAT(PrimerNombre, ' ', PrimerApellido) AS nombre_completo, CorreoMedico FROM Medico";
 $result_medicos = $conn->query($query_medicos);
 $medicos = $result_medicos->fetch_all(MYSQLI_ASSOC);
@@ -13,8 +29,8 @@ $disponibilidad = [];
 if (file_exists('Disponible.json')) {
     $disponibilidad = json_decode(file_get_contents('Disponible.json'), true);
 }
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -31,9 +47,11 @@ if (file_exists('Disponible.json')) {
     <div class="navbar-icon"><i class="fa-solid fa-clipboard-user"></i></div>
     <div class="logo">Admin Log</div>
     <ul>            
-        <li><a href="../iniciosecre.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
-        <li><a href="insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
-        <li><a href="gestión_secretarias.php"><i class="fa-solid fa-id-card"></i> <span>Ingresar Secre</span></a></li>
+        <li><a href="iniciosecre.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+        <?php if ($esJefaSecretaria): ?>
+            <li><a href="insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
+            <li><a href="gestión_secretarias.php"><i class="fa-solid fa-id-card"></i> <span>Ingresar Secre</span></a></li>
+        <?php endif; ?>
         <li><a href="Citas.php" class="active"><i class="fa-solid fa-calendar-days"></i> <span>Agendar Cita</span></a></li>
         <li><a href="turnospacientes.php"><i class="fa-solid fa-ticket"></i><span>Turnos de Pacientes</span></a></li>
         <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
@@ -578,7 +596,6 @@ clearBtn.addEventListener('click', function() {
     loadCitas();
     searchInput.focus();
 });
-
 </script>
 </body>
 </html>

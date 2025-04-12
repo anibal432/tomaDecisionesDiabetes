@@ -1,7 +1,10 @@
 {
     "escobar66.gonzales12@gmail.com": {
-        "Lun": "available",
-        "Mar": "booked",
-        "Jue": "booked"
+        "Jue": "available",
+        "Mi\u00e9": "booked",
+        "S\u00e1b": "booked"
+    },
+    "talcorreo@gmail.com": {
+        "Lun": "available"
     }
 }
