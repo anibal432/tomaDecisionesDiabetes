@@ -2,13 +2,13 @@
 session_start();
 include('conexionL.php');
 
-$correo_medico_logeado = $_SESSION['correo'] ?? '';
+$correo_usuario_logeado = $_SESSION['correo'] ?? '';
 
 $tipo_usuario = '';
-if (!empty($correo_medico_logeado)) {
+if (!empty($correo_usuario_logeado)) {
     $query_medico = "SELECT IdMedico FROM Medico WHERE CorreoMedico = ?";
     $stmt_medico = $conn->prepare($query_medico);
-    $stmt_medico->bind_param("s", $correo_medico_logeado);
+    $stmt_medico->bind_param("s", $correo_usuario_logeado);
     $stmt_medico->execute();
     $result_medico = $stmt_medico->get_result();
     
@@ -17,7 +17,7 @@ if (!empty($correo_medico_logeado)) {
     } else {
         $query_secre = "SELECT IdSecre FROM Secretarias WHERE CorreoSecre = ?";
         $stmt_secre = $conn->prepare($query_secre);
-        $stmt_secre->bind_param("s", $correo_medico_logeado);
+        $stmt_secre->bind_param("s", $correo_usuario_logeado);
         $stmt_secre->execute();
         $result_secre = $stmt_secre->get_result();
         
@@ -29,25 +29,25 @@ if (!empty($correo_medico_logeado)) {
 
 $mostrar_desactivados = isset($_GET['mostrar_desactivados']) && $_GET['mostrar_desactivados'] == '1';
 $busqueda = $_GET['busqueda'] ?? '';
-$query = "SELECT m.IdMedico, m.PrimerNombre, m.PrimerApellido, m.CorreoMedico, m.NoColegiado, 
-          (d.IdMedico IS NOT NULL) AS desactivado
-          FROM Medico m
-          LEFT JOIN Desactivado d ON m.IdMedico = d.IdMedico
-          WHERE m.CorreoMedico != ? 
-          AND (m.PrimerNombre LIKE ? OR m.PrimerApellido LIKE ? OR m.CorreoMedico LIKE ? OR m.NoColegiado LIKE ?)";
+$query = "SELECT s.IdSecre, s.PrimerNombre, s.PrimerApellido, s.CorreoSecre, 
+          (d.IdSecre IS NOT NULL) AS desactivado
+          FROM Secretarias s
+          LEFT JOIN Desactivado d ON s.IdSecre = d.IdSecre
+          WHERE s.CorreoSecre != ? 
+          AND (s.PrimerNombre LIKE ? OR s.PrimerApellido LIKE ? OR s.CorreoSecre LIKE ?)";
           
 if (!$mostrar_desactivados) {
-    $query .= " AND d.IdMedico IS NULL";
+    $query .= " AND d.IdSecre IS NULL";
 }
 
-$query .= " ORDER BY m.PrimerNombre, m.PrimerApellido";
+$query .= " ORDER BY s.PrimerNombre, s.PrimerApellido";
 
 $stmt = $conn->prepare($query);
 $busqueda_param = "%$busqueda%";
-$stmt->bind_param("sssss", $correo_medico_logeado, $busqueda_param, $busqueda_param, $busqueda_param, $busqueda_param);
+$stmt->bind_param("ssss", $correo_usuario_logeado, $busqueda_param, $busqueda_param, $busqueda_param);
 $stmt->execute();
 $result = $stmt->get_result();
-$medicos = $result->fetch_all(MYSQLI_ASSOC);
+$secretarias = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 ?>
 
@@ -56,7 +56,7 @@ $stmt->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Médicos | Diabetes Log</title>
+    <title>Gestión de Secretarias | Diabetes Log</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/nav.css">
@@ -88,7 +88,7 @@ $stmt->close();
         <ul>            
             <li><a href="../iniciosecre.php" class="active"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
             <li><a href="insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
-            <li><a href="insertusuarios.php"><i class="fa-solid fa-id-card"></i> <span>Ingresar Secre</span></a></li>
+            <li><a href="gestión_secretarias.php"><i class="fa-solid fa-id-card"></i> <span>Ingresar Secre</span></a></li>
             <li><a href="Citas.php"><i class="fa-solid fa-calendar-days"></i> <span>Agendar Cita</span></a></li>
             <li><a href="turnospacientes.php"><i class="fa-solid fa-ticket"></i><span>Turnos de Pacientes</span></a></li>
             <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
@@ -96,11 +96,16 @@ $stmt->close();
     </nav>
 
 <?php else: ?>
-    <nav class="navbar">
-        <div class="navbar-icon"><i class="fa-solid fa-user"></i></div>
-        <div class="logo">Sistema</div>
-        <ul>
-            <li><a href="Login.php"><i class="fas fa-sign-in-alt"></i> <span>Login</span></a></li>
+ <nav class="navbar">
+        <div class="navbar-icon"><i class="fa-solid fa-clipboard-user"></i></div>
+        <div class="logo">Admin Log</div>
+        <ul>            
+            <li><a href="../iniciosecre.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+            <li><a href="insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
+            <li><a href="gestión_secretarias.php" class="active"><i class="fa-solid fa-id-card"></i> <span>Ingresar Secre</span></a></li>
+            <li><a href="Citas.php"><i class="fa-solid fa-calendar-days"></i> <span>Agendar Cita</span></a></li>
+            <li><a href="turnospacientes.php"><i class="fa-solid fa-ticket"></i><span>Turnos de Pacientes</span></a></li>
+            <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
         </ul>
     </nav>
 <?php endif; ?>
@@ -108,13 +113,13 @@ $stmt->close();
 <main class="main-content">
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-user-md"></i> Gestión de Médicos</h1>
+            <h1><i class="fas fa-user-tie"></i> Gestión de Secretarias</h1>
             
             <div class="search-container">
                 <form method="GET" class="search-form">
                 <div class="search-group">
     <i class="fas fa-search search-icon"></i>
-    <input type="text" name="busqueda" class="search-input" placeholder="Buscar médicos..." value="<?= htmlspecialchars($busqueda) ?>">
+    <input type="text" name="busqueda" class="search-input" placeholder="Buscar secretarias..." value="<?= htmlspecialchars($busqueda) ?>">
     <?php if(!empty($busqueda)): ?>
         <button type="button" class="clear-search" onclick="resetSearch()">
             <i class="fas fa-times"></i>
@@ -129,7 +134,7 @@ $stmt->close();
                         <label class="filter-toggle">
                             <input type="checkbox" name="mostrar_desactivados" value="1" 
                                 <?= $mostrar_desactivados ? 'checked' : '' ?> onchange="this.form.submit()">
-                            <span class="filter-label">Mostrar desactivados</span>
+                            <span class="filter-label">Mostrar desactivadas</span>
                         </label>
                     </div>
                 </form>
@@ -142,38 +147,32 @@ $stmt->close();
                     <tr>
                         <th>Nombre</th>
                         <th>Correo</th>
-                        <th>No. Colegiado</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (empty($medicos)): ?>
+                    <?php if (empty($secretarias)): ?>
                         <tr>
-                            <td colspan="5" class="no-results">No se encontraron médicos</td>
+                            <td colspan="4" class="no-results">No se encontraron secretarias</td>
                         </tr>
                     <?php else: ?>
-                        <?php foreach ($medicos as $medico): ?>
+                        <?php foreach ($secretarias as $secretaria): ?>
                             <tr>
-                                <td><?= htmlspecialchars($medico['PrimerNombre'] . ' ' . $medico['PrimerApellido']) ?></td>
-                                <td><?= htmlspecialchars($medico['CorreoMedico']) ?></td>
-                                <td><?= htmlspecialchars($medico['NoColegiado']) ?></td>
+                                <td><?= htmlspecialchars($secretaria['PrimerNombre'] . ' ' . $secretaria['PrimerApellido']) ?></td>
+                                <td><?= htmlspecialchars($secretaria['CorreoSecre']) ?></td>
                                 <td>
-                                    <span class="status-badge <?= $medico['desactivado'] ? 'status-inactive' : 'status-active' ?>">
-                                        <?= $medico['desactivado'] ? 'Inactivo' : 'Activo' ?>
+                                    <span class="status-badge <?= $secretaria['desactivado'] ? 'status-inactive' : 'status-active' ?>">
+                                        <?= $secretaria['desactivado'] ? 'Inactiva' : 'Activa' ?>
                                     </span>
                                 </td>
                                 <td class="action-buttons">
-                                    <button class="action-btn edit-btn" onclick="editarMedico(<?= $medico['IdMedico'] ?>)">
+                                    <button class="action-btn edit-btn" onclick="editarSecretaria(<?= $secretaria['IdSecre'] ?>)">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="action-btn toggle-btn <?= $medico['desactivado'] ? 'inactive' : '' ?>" 
-                                            onclick="toggleMedico(<?= $medico['IdMedico'] ?>, <?= $medico['desactivado'] ? '0' : '1' ?>)">
-                                        <i class="fas <?= $medico['desactivado'] ? 'fa-user-check' : 'fa-user-slash' ?>"></i>
-                                        <?= $medico['desactivado'] ? '' : '' ?>
-                                    </button>
-                                    <button class="action-btn schedule-btn" onclick="openScheduleModal('<?= $medico['CorreoMedico'] ?>')">
-                                      <i class="fas fa-calendar-alt"></i>
+                                    <button class="action-btn toggle-btn <?= $secretaria['desactivado'] ? 'inactive' : '' ?>" 
+                                            onclick="toggleSecretaria(<?= $secretaria['IdSecre'] ?>, <?= $secretaria['desactivado'] ? '0' : '1' ?>)">
+                                        <i class="fas <?= $secretaria['desactivado'] ? 'fa-user-check' : 'fa-user-slash' ?>"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -188,8 +187,8 @@ $stmt->close();
 <div id="createModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeCreateModal()">&times;</span>
-        <h2><i class="fas fa-user-plus"></i> Nuevo Médico</h2>
-        <form id="createForm" method="POST" action="insertar_medico.php">
+        <h2><i class="fas fa-user-plus"></i> Nueva Secretaria</h2>
+        <form id="createForm" method="POST" action="insert_secre.php">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="primerNombre">Primer Nombre*</label>
@@ -212,21 +211,17 @@ $stmt->close();
                     <input type="text" id="segundoApellido" name="segundoApellido">
                 </div>
                 <div class="form-group">
-                    <label for="correoMedico">Correo Electrónico*</label>
-                    <input type="email" id="correoMedico" name="correoMedico" required>
+                    <label for="correoSecre">Correo Electrónico*</label>
+                    <input type="email" id="correoSecre" name="correoSecre" required>
                 </div>
                 <div class="form-group">
-                    <label for="contraMedico">Contraseña*</label>
-                    <input type="password" id="contraMedico" name="contraMedico" required>
-                </div>
-                <div class="form-group">
-                    <label for="noColegiado">Número de Colegiado*</label>
-                    <input type="text" id="noColegiado" name="noColegiado" required>
+                    <label for="contraSecre">Contraseña*</label>
+                    <input type="password" id="contraSecre" name="contraSecre" required>
                 </div>
             </div>
             <div class="form-footer">
                 <button type="button" class="cancel-btn" onclick="closeCreateModal()">Cancelar</button>
-                <button type="submit" class="submit-btn">Guardar Médico</button>
+                <button type="submit" class="submit-btn">Guardar Secretaria</button>
             </div>
         </form>
     </div>
@@ -235,9 +230,9 @@ $stmt->close();
 <div id="editModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeEditModal()">&times;</span>
-        <h2><i class="fas fa-user-edit"></i> Editar Médico</h2>
-        <form id="editForm" method="POST" action="editar_medico.php">
-            <input type="hidden" id="editIdMedico" name="idMedico">
+        <h2><i class="fas fa-user-edit"></i> Editar Secretaria</h2>
+        <form id="editForm" method="POST" action="editar_secre.php">
+            <input type="hidden" id="editIdSecre" name="idSecre">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="editPrimerNombre">Primer Nombre*</label>
@@ -268,29 +263,9 @@ $stmt->close();
     </div>
 </div>
 
-<div id="scheduleModal" class="modal">
-    <div class="modal-content" style="max-width: 500px;">
-        <span class="close" onclick="closeScheduleModal()">&times;</span>
-        <h3 id="scheduleUserEmail" style="text-align: center; margin-bottom: 10px;"></h3>
-        <hr style="margin-bottom: 20px;">
-        <div class="days-container">
-            <div class="day-box" data-day="Lun" onclick="toggleDay(this)">Lun</div>
-            <div class="day-box" data-day="Mar" onclick="toggleDay(this)">Mar</div>
-            <div class="day-box" data-day="Mie" onclick="toggleDay(this)">Mie</div>
-            <div class="day-box" data-day="Jue" onclick="toggleDay(this)">Jue</div>
-            <div class="day-box" data-day="Vie" onclick="toggleDay(this)">Vie</div>
-            <div class="day-box" data-day="Sab" onclick="toggleDay(this)">Sab</div>
-            <div class="day-box" data-day="Dom" onclick="toggleDay(this)">Dom</div>
-        </div>
-        <div class="modal-footer">
-            <button class="save-btn" onclick="saveSchedule()">Guardar</button>
-        </div>
-    </div>
-</div>
-
 <script>
-    function toggleMedico(id, desactivar) {
-        const confirmMsg = desactivar ? '¿Desactivar este médico?' : '¿Activar este médico?';
+    function toggleSecretaria(id, desactivar) {
+        const confirmMsg = desactivar ? '¿Desactivar esta secretaria?' : '¿Activar esta secretaria?';
 
         Swal.fire({
             title: confirmMsg,
@@ -300,7 +275,7 @@ $stmt->close();
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch('toggle_medico.php', {
+                fetch('toggle_secre.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -353,15 +328,15 @@ $stmt->close();
         const formData = new FormData(this);
         
         Swal.fire({
-            title: '¿Crear nuevo médico?',
-            text: 'Por favor confirme que desea registrar un nuevo médico',
+            title: '¿Crear nueva secretaria?',
+            text: 'Por favor confirme que desea registrar una nueva secretaria',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Sí, crear',
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch('insertar_medico.php', {
+                fetch('insert_secre.php', {
                     method: 'POST',
                     body: formData
                 })
@@ -370,7 +345,7 @@ $stmt->close();
                     if (data.success) {
                         Swal.fire({
                             title: 'Éxito',
-                            text: data.message || 'Médico creado correctamente',
+                            text: data.message || 'Secretaria creada correctamente',
                             icon: 'success'
                         }).then(() => {
                             closeCreateModal();
@@ -379,7 +354,7 @@ $stmt->close();
                     } else {
                         Swal.fire({
                             title: 'Error',
-                            text: data.message || 'Error al crear el médico',
+                            text: data.message || 'Error al crear la secretaria',
                             icon: 'error'
                         });
                     }
@@ -395,22 +370,22 @@ $stmt->close();
         });
     });
 
-    function editarMedico(idMedico) {
-        fetch('obtener_medico.php?id=' + idMedico)
+    function editarSecretaria(idSecre) {
+        fetch('obtener_secre.php?id=' + idSecre)
             .then(response => response.json())
             .then(data => {
                 if(data.success) {
-                    document.getElementById('editIdMedico').value = data.medico.IdMedico;
-                    document.getElementById('editPrimerNombre').value = data.medico.PrimerNombre;
-                    document.getElementById('editSegundoNombre').value = data.medico.SegundoNombre || '';
-                    document.getElementById('editTercerNombre').value = data.medico.TercerNombre || '';
-                    document.getElementById('editPrimerApellido').value = data.medico.PrimerApellido;
-                    document.getElementById('editSegundoApellido').value = data.medico.SegundoApellido || '';
+                    document.getElementById('editIdSecre').value = data.secretaria.IdSecre;
+                    document.getElementById('editPrimerNombre').value = data.secretaria.PrimerNombre;
+                    document.getElementById('editSegundoNombre').value = data.secretaria.SegundoNombre || '';
+                    document.getElementById('editTercerNombre').value = data.secretaria.TercerNombre || '';
+                    document.getElementById('editPrimerApellido').value = data.secretaria.PrimerApellido;
+                    document.getElementById('editSegundoApellido').value = data.secretaria.SegundoApellido || '';
                     document.getElementById('editModal').style.display = 'block';
                 } else {
                     Swal.fire({
                         title: 'Error',
-                        text: 'Error al cargar los datos del médico',
+                        text: 'Error al cargar los datos de la secretaria',
                         icon: 'error'
                     });
                 }
@@ -419,7 +394,7 @@ $stmt->close();
                 console.error('Error:', error);
                 Swal.fire({
                     title: 'Error',
-                    text: 'Error al cargar los datos del médico',
+                    text: 'Error al cargar los datos de la secretaria',
                     icon: 'error'
                 });
             });
@@ -436,14 +411,14 @@ $stmt->close();
         
         Swal.fire({
             title: '¿Guardar cambios?',
-            text: 'Por favor confirme que desea actualizar los datos del médico',
+            text: 'Por favor confirme que desea actualizar los datos de la secretaria',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Sí, guardar',
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch('editar_medico.php', {
+                fetch('editar_secre.php', {
                     method: 'POST',
                     body: formData
                 })
@@ -452,7 +427,7 @@ $stmt->close();
                     if (data.success) {
                         Swal.fire({
                             title: 'Éxito',
-                            text: data.message || 'Médico actualizado correctamente',
+                            text: data.message || 'Secretaria actualizada correctamente',
                             icon: 'success'
                         }).then(() => {
                             closeEditModal();
@@ -461,7 +436,7 @@ $stmt->close();
                     } else {
                         Swal.fire({
                             title: 'Error',
-                            text: data.message || 'Error al actualizar el médico',
+                            text: data.message || 'Error al actualizar la secretaria',
                             icon: 'error'
                         });
                     }
@@ -490,101 +465,5 @@ $stmt->close();
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-let currentUserEmail = '';
-let scheduleData = {};
-function openScheduleModal(email) {
-    currentUserEmail = email;
-    document.getElementById('scheduleUserEmail').textContent = email;
-    document.getElementById('scheduleModal').style.display = 'block';
-
-    fetch('Disponible.json')
-        .then(response => response.json())
-        .then(data => {
-            scheduleData = data;
-            loadUserSchedule();
-        })
-        .catch(error => {
-            console.error('Error cargando horarios:', error);
-            scheduleData = {};
-        });
-}
-
-function closeScheduleModal() {
-    document.getElementById('scheduleModal').style.display = 'none';
-}
-
-function loadUserSchedule() {
-    const userSchedule = scheduleData[currentUserEmail] || {};
-    const days = ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'];
-    
-    days.forEach(day => {
-        const dayElement = document.querySelector(`.day-box[data-day="${day}"]`);
-        dayElement.className = 'day-box';
-        
-        if (userSchedule[day] === 'available') {
-            dayElement.classList.add('available');
-        } else if (userSchedule[day] === 'booked') {
-            dayElement.classList.add('booked');
-        }
-    });
-}
-
-function toggleDay(element) {
-    const day = element.getAttribute('data-day');
-    
-    if (!scheduleData[currentUserEmail]) {
-        scheduleData[currentUserEmail] = {};
-    }
-    
-    const currentState = scheduleData[currentUserEmail][day] || '';
-
-    if (!currentState) {
-        scheduleData[currentUserEmail][day] = 'available';
-        element.classList.add('available');
-    } else if (currentState === 'available') {
-        scheduleData[currentUserEmail][day] = 'booked';
-        element.classList.remove('available');
-        element.classList.add('booked');
-    } else {
-        delete scheduleData[currentUserEmail][day];
-        element.className = 'day-box';
-    }
-}
-
-function saveSchedule() {
-    fetch('save_schedule.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(scheduleData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire({
-                title: 'Éxito',
-                text: 'Horario guardado correctamente',
-                icon: 'success'
-            });
-            closeScheduleModal();
-        } else {
-            Swal.fire({
-                title: 'Error',
-                text: data.message || 'Error al guardar el horario',
-                icon: 'error'
-            });
-        }
-    })
-    .catch(error => {
-        Swal.fire({
-            title: 'Error',
-            text: 'Error en la conexión',
-            icon: 'error'
-        });
-    });
-}
-</script>
 </body>
 </html>

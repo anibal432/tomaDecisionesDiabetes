@@ -41,7 +41,6 @@
     font-size: 1.4rem;
 }
 
-/* Barra de búsqueda */
 .search-container {
     margin-bottom: 25px;
 }
@@ -341,7 +340,6 @@
     font-size: 0.9rem;
 }
 
-/* Estilos del Modal */
 .modal {
     display: none;
     position: fixed;
@@ -390,7 +388,6 @@
     color: #333;
 }
 
-/* Formulario */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -473,7 +470,6 @@
     }
 }
 
-/* Estilos para el botón de turnos */
 .action-btn.schedule-btn {
     background-color: #6c757d;
     color: white;
@@ -483,7 +479,6 @@
     background-color: #5a6268;
 }
 
-/* Estilos para el modal de turnos */
 .days-container {
     display: grid;
     grid-template-columns: repeat(7, 1fr);

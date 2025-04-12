@@ -40,7 +40,6 @@
     gap: 10px;
 }
 
-/* Botones de navegación */
 .nav-button {
     background: #3498db;
     color: white;
@@ -63,7 +62,6 @@
     cursor: not-allowed;
 }
 
-/* Grid del calendario - Versión mejorada */
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -71,7 +69,6 @@
     width: 100%;
 }
 
-/* Encabezados de días */
 .calendar-day-header {
     text-align: center;
     font-weight: 600;
@@ -81,9 +78,8 @@
     font-size: 0.9em;
 }
 
-/* Celdas de días - Versión mejorada */
 .calendar-day {
-    aspect-ratio: 1/1; /* Hace que las celdas sean cuadradas */
+    aspect-ratio: 1/1;
     min-height: 80px;
     padding: 8px;
     border-radius: 5px;
@@ -331,7 +327,6 @@
     text-decoration: line-through;
 }
 
-/* Estilos para el modal de eliminación de citas */
 .delete-modal {
     display: none;
     position: fixed;
@@ -345,12 +340,12 @@
 
 .delete-modal-content {
     background-color: white;
-    margin: 2% auto; /* Reducimos el margen superior para pantallas pequeñas */
+    margin: 2% auto;
     padding: 20px;
     border-radius: 10px;
-    width: 90%; /* Más adaptable a diferentes pantallas */
+    width: 90%;
     max-width: 900px;
-    max-height: 80vh; /* Límite de altura */
+    max-height: 80vh;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     display: flex;
     flex-direction: column;
@@ -457,8 +452,8 @@
 }
 
 .citas-table-container {
-    overflow-y: auto; /* Scroll vertical cuando sea necesario */
-    max-height: calc(80vh - 150px); /* Altura máxima menos espacio para header y búsqueda */
+    overflow-y: auto;
+    max-height: calc(80vh - 150px);
     margin-top: 15px;
     border: 1px solid #eee;
     border-radius: 5px;
