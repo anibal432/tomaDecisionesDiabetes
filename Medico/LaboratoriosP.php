@@ -103,7 +103,7 @@ if (isset($_GET['term']) && $_GET['type'] === 'medico') {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-        // Configuración de Select2 para médicos
+        
         $('#medicoSelect').select2({
             placeholder: "Buscar médico...",
             minimumInputLength: 2,
@@ -134,7 +134,7 @@ if (isset($_GET['term']) && $_GET['type'] === 'medico') {
             $('#examenForm').on('submit', function(e) {
         e.preventDefault();
 
-        // Verificar si se seleccionó un paciente (ahora usando IdPaciente)
+        
         if ($('#IdPaciente').val() === "") {
             alert("El campo Paciente es requerido.");
             return;
