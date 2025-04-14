@@ -1,10 +1,10 @@
 <?php
 require_once 'conexion.php';
 
-// Obtener el id_paciente desde la URL
+
 $idPaciente = isset($_GET['id_paciente']) ? $_GET['id_paciente'] : null;
 
-// Ajustar la consulta si se pasa el id_paciente
+
 $sql = "
     SELECT 
         rp.IdResultado,
@@ -18,9 +18,9 @@ $sql = "
     INNER JOIN Paciente p ON se.IdPaciente = p.IdPaciente
 ";
 
-// Filtrar por id_paciente si es proporcionado
+
 if ($idPaciente) {
-    $sql .= " WHERE se.IdPaciente = " . intval($idPaciente); // Se asegura de que sea un número entero para evitar inyecciones SQL
+    $sql .= " WHERE se.IdPaciente = " . intval($idPaciente); 
 }
 
 $sql .= " ORDER BY rp.FechaSubida DESC";
@@ -45,7 +45,7 @@ $resultado = $conn->query($sql);
 <div class="container">
     <h2 class="mb-4">Resultados de Pacientes</h2>
     
-    <!-- Búsqueda en tiempo real -->
+   
     <input type="text" id="buscador" class="form-control mb-3" placeholder="Buscar por nombre del paciente...">
 
     <div class="table-responsive table-container">
@@ -82,7 +82,7 @@ $resultado = $conn->query($sql);
     </div>
 </div>
 
-<!-- JS para filtrar en tiempo real -->
+
 <script>
 document.getElementById('buscador').addEventListener('keyup', function() {
     const filtro = this.value.toLowerCase();
