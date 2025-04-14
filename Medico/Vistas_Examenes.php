@@ -20,7 +20,7 @@ $sql = "
 
 
 if ($idPaciente) {
-    $sql .= " WHERE se.IdPaciente = " . intval($idPaciente); // Se asegura de que sea un número entero para evitar inyecciones SQL
+    $sql .= " WHERE se.IdPaciente = " . intval($idPaciente); 
 }
 
 $sql .= " ORDER BY rp.FechaSubida DESC";
