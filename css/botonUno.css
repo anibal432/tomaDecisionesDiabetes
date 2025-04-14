@@ -26,3 +26,142 @@ border-color: var(--title-color); /* Café oscuro */
 color: var(--container-color); /* Blanco */
 transform: scale(1.05); /* Agrandar ligeramente el botón al pasar el ratón */
 }
+
+
+
+/*vino tinto*/
+.btn-wine {
+    background-color: #722f37;  /* Vino tinto */
+    color: white;
+    border: 2px solid #58151c;  /* Borde vino oscuro */
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-wine:hover {
+    background-color: #5a232a;  /* Vino más oscuro al pasar ratón */
+    border-color: #3d0d13;     /* Borde más oscuro */
+    transform: scale(1.05);
+}
+
+/*verde*/
+.btn-green {
+    background-color: #28a745;  /* Verde éxito */
+    color: white;
+    border: 2px solid #1e7e34;  /* Borde verde oscuro */
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-green:hover {
+    background-color: #218838;  /* Verde oscuro al pasar ratón */
+    border-color: #155724;      /* Borde más oscuro */
+    transform: scale(1.05);
+}
+
+/*gris*/
+
+.btn-gray {
+    background-color: #6c757d;  /* Gris profesional */
+    color: white;
+    border: 2px solid #495057;  /* Borde gris oscuro */
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-gray:hover {
+    background-color: #5a6268;  /* Gris oscuro al pasar ratón */
+    border-color: #343a40;      /* Borde más oscuro */
+    transform: scale(1.05);
+}
+
+/*coral*/
+
+.btn-coral {
+    background-color: #FF6B6B;  /* Coral vibrante */
+    color: white;
+    border: 2px solid #FF4757;  /* Coral oscuro */
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.btn-coral:hover {
+    background-color: #FF4757;
+    border-color: #FF0000;
+    transform: scale(1.05);
+}
+
+/*lavanda*/
+.btn-lavanda {
+    background-color: #9B59B6;  /* Lavanda suave */
+    color: white;
+    border: 2px solid #8E44AD;  /* Lavanda oscuro */
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.btn-lavanda:hover {
+    background-color: #8E44AD;
+    border-color: #6C3483;
+    transform: scale(1.05);
+}
+
+/*menta*/
+.btn-menta {
+    background-color: #48CFAD;  /* Menta brillante */
+    color: white;
+    border: 2px solid #37BC9B;  /* Menta oscuro */
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.btn-menta:hover {
+    background-color: #37BC9B;
+    border-color: #2E856E;
+    transform: scale(1.05);
+}
+/*dorado*/
+.btn-dorado {
+    background-color: #FFD700;  /* Dorado */
+    color: #333333;            /* Texto oscuro para legibilidad */
+    border: 2px solid #D4AF37; /* Dorado oscuro */
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.btn-dorado:hover {
+    background-color: #D4AF37;
+    border-color: #B8860B;
+    transform: scale(1.05);
+}

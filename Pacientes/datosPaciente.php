@@ -13,7 +13,7 @@ include '../conexionDiabetes.php';
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <link rel="stylesheet" href="../css/nav.css">
-<link rel="stylesheet" href="../css/botones.css">
+<link rel="stylesheet" href="../css/botonUno.css">
     
     
 </head>
@@ -562,37 +562,37 @@ include '../conexionDiabetes.php';
                         echo "<td>
                                 <div class='d-flex justify-content-between align-items-center'>
                         <span>" . htmlspecialchars($row['NombreCompleto']) . "</span>
-                        <button class='btn btn-primary me-2' onclick='abrirModalEditarPaciente(" . $row['IdPaciente'] . ")'>
+                        <button class='btn btn-custom me-2' onclick='abrirModalEditarPaciente(" . $row['IdPaciente'] . ")'>
                             <i class='fas fa-edit'></i>
                         </button>
                     </div>
                               </td>";
                         echo "<td>
                                 <div class='d-flex justify-content-center'>
-                                    <button class='btn btn-info me-2' onclick='abrirModalDatosVitales(" . $row['IdPaciente'] . ")'>
+                                    <button class='btn btn-wine me-2' onclick='abrirModalDatosVitales(" . $row['IdPaciente'] . ")'>
                                         <i class='fas fa-plus'></i> 
                                     </button>
-                                    <button class='btn btn-warning me-2' onclick='abrirModalEditarDatosVitales(" . $row['IdPaciente'] . ")'>
+                                    <button class='btn btn-green me-2' onclick='abrirModalEditarDatosVitales(" . $row['IdPaciente'] . ")'>
                                         <i class='fas fa-eye'></i>
                                     </button>
                                 </div>
                               </td>";
                         echo "<td>
                                 <div class='d-flex justify-content-center'>
-                                    <button class='btn btn-info me-2' onclick='abrirModalAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
+                                    <button class='btn btn-wine me-2' onclick='abrirModalAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
                                 <i class='fas fa-plus'></i> 
                                     </button>
-                                    <button class='btn btn-warning me-2' onclick='abrirModalEditarAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
+                                    <button class='btn btn-green me-2' onclick='abrirModalEditarAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
                                 <i class='fas fa-eye'></i>
                                     </button>
                                 </div>
                               </td>";
                         echo "<td>
                                 <div class='d-flex justify-content-center'>
-                                <button class='btn btn-info me-2' onclick='abrirModalAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
+                                <button class='btn btn-wine me-2' onclick='abrirModalAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
                                 <i class='fas fa-plus'></i> 
                                 </button>
-                                <button class='btn btn-warning me-2' onclick='abrirModalEditarAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
+                                <button class='btn btn-green me-2' onclick='abrirModalEditarAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
                             <i class='fas fa-eye'></i>
                             </button>
                             </div>
@@ -600,20 +600,20 @@ include '../conexionDiabetes.php';
                         echo "<td>
                             
     <div class='d-flex justify-content-center'>
-    <button class='btn btn-info me-2' onclick='abrirModalResponsable(" . $row['IdPaciente'] . ")'>
+    <button class='btn btn-wine me-2' onclick='abrirModalResponsable(" . $row['IdPaciente'] . ")'>
         <i class='fas fa-plus'></i> 
     </button>
-    <button class='btn btn-warning me-2' onclick='abrirModalEditarResponsable(" . $row['IdPaciente'] . ")'>
+    <button class='btn btn-green me-2' onclick='abrirModalEditarResponsable(" . $row['IdPaciente'] . ")'>
         <i class='fas fa-eye'></i>
     </button>
 </div>
 </td>";
                               echo "<td>
                               <div class='d-flex justify-content-center'>
-                                  <button class='btn btn-info me-2' onclick='abrirModalHistoriaClinica(" . $row['IdPaciente'] . ", null)'>
+                                  <button class='btn btn-wine me-2' onclick='abrirModalHistoriaClinica(" . $row['IdPaciente'] . ", null)'>
                                       <i class='fas fa-plus'></i> 
                                   </button>
-                                  <button class='btn btn-warning me-2' onclick='abrirModalEditarHistoriaClinica(" . $row['IdPaciente'] . ")'>
+                                  <button class='btn btn-green me-2' onclick='abrirModalEditarHistoriaClinica(" . $row['IdPaciente'] . ")'>
                                         <i class='fas fa-eye'></i>
                                     </button>
                               </div>
