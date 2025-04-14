@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once 'conexion.php';
 
-// Consulta directa a la tabla Turnos
+
 $sql = "SELECT 
             IdTurno,
             PrimerNombrePac,
@@ -67,10 +67,10 @@ $result = $conn->query($sql);
                     <tbody>
                         <?php while($row = $result->fetch_assoc()): ?>
                             <?php
-                                // Armar nombre completo del paciente en Turnos
+                                
                                 $nombreTurno = trim($row['PrimerNombrePac'] . ' ' . $row['SegundoNombrePac'] . ' ' . $row['PrimerApellidoPac'] . ' ' . $row['SegundoApellidoPac']);
 
-                                // Buscar en la tabla Paciente un nombre parecido
+                                
                                 $queryPac = $conn->prepare("
                                     SELECT IdPaciente 
                                     FROM Paciente 
