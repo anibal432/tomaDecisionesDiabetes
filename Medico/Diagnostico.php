@@ -21,8 +21,8 @@ if (isset($_POST['search'])) {
 
 
 if (isset($_POST['insertDiagnosticos'])) {
-    $diagnosticos = $_POST['diagnosticos'];  // Recibe el array de diagnósticos seleccionados
-    $idPaciente = $_POST['idPaciente'];  // ID del paciente (esto debe venir del formulario o de la sesión)
+    $diagnosticos = $_POST['diagnosticos'];  
+    $idPaciente = $_POST['idPaciente']; 
 
     
     foreach ($diagnosticos as $idCIE10) {
