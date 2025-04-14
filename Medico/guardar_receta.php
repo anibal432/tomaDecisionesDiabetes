@@ -14,14 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    // Insertar receta
+
     $stmt = $conn->prepare("INSERT INTO Receta (IdPaciente, FechaReceta, Observaciones) VALUES (?, CURDATE(), ?)");
     $stmt->bind_param("is", $id_paciente, $observaciones);
     
     if ($stmt->execute()) {
         $id_receta = $stmt->insert_id;
 
-        // Insertar cada medicamento como detalle
+
         $stmt_detalle = $conn->prepare("INSERT INTO DetalleReceta (IdReceta, Medicamento, Cantidad, Observacion) VALUES (?, ?, ?, ?)");
 
         foreach ($medicamentos as $i => $med) {
