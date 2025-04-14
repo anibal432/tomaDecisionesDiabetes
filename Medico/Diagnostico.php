@@ -19,12 +19,12 @@ if (isset($_POST['search'])) {
     exit;
 }
 
-// Insertar diagnósticos en la tabla Diagnostico
+
 if (isset($_POST['insertDiagnosticos'])) {
     $diagnosticos = $_POST['diagnosticos'];  // Recibe el array de diagnósticos seleccionados
     $idPaciente = $_POST['idPaciente'];  // ID del paciente (esto debe venir del formulario o de la sesión)
 
-    // Insertar los diagnósticos seleccionados
+    
     foreach ($diagnosticos as $idCIE10) {
         $sql = "INSERT INTO Diagnostico (IdPaciente, IdCIE10, FechaDiagnostico) VALUES (?, ?, NOW())";
         $stmt = $conn->prepare($sql);
@@ -76,7 +76,7 @@ if (isset($_POST['insertDiagnosticos'])) {
                     <div class="mt-3">
                         <label for="selectedDiagnosticos" class="form-label">Diagnósticos Seleccionados</label>
                         <ul id="selectedDiagnosticos" class="list-group">
-                            <!-- Diagnósticos seleccionados se agregarán aquí -->
+                           
                         </ul>
                     </div>
 
@@ -88,7 +88,7 @@ if (isset($_POST['insertDiagnosticos'])) {
 
     <script>
         $(document).ready(function() {
-            // Buscar diagnósticos mientras el usuario escribe
+            
             $('#search').on('input', function() {
                 var searchTerm = $(this).val();
                 if (searchTerm.length > 2) {
@@ -109,28 +109,28 @@ if (isset($_POST['insertDiagnosticos'])) {
                 }
             });
 
-            // Seleccionar diagnóstico
+            
             $('#searchResults').on('click', 'li', function() {
                 var idCIE10 = $(this).data('id');
                 var text = $(this).text();
                 var selectedList = $('#selectedDiagnosticos');
 
-                // Agregar al listado de seleccionados si no está ya
+               
                 if (selectedList.children().length < 5 && !$('#selectedDiagnosticos li[data-id="'+idCIE10+'"]').length) {
                     selectedList.append('<li class="list-group-item" data-id="'+idCIE10+'">'+text+' <button class="btn btn-danger btn-sm float-end remove-diagnostic">Eliminar</button></li>');
                 }
 
-                // Limpiar resultados de búsqueda
+                
                 $('#searchResults').empty();
                 $('#search').val('');
             });
 
-            // Eliminar diagnóstico de la lista seleccionada
+            
             $('#selectedDiagnosticos').on('click', '.remove-diagnostic', function() {
                 $(this).closest('li').remove();
             });
 
-            // Enviar formulario para insertar los diagnósticos seleccionados
+           
             $('#diagnosticForm').submit(function(e) {
                 e.preventDefault();
 
@@ -140,7 +140,7 @@ if (isset($_POST['insertDiagnosticos'])) {
                 });
 
                 if (diagnosticos.length > 0) {
-                    var idPaciente = 1; // Asegúrate de reemplazar esto por el ID del paciente actual
+                    var idPaciente = 1; 
                     $.ajax({
                         url: '',
                         type: 'POST',
@@ -148,7 +148,6 @@ if (isset($_POST['insertDiagnosticos'])) {
                         success: function(response) {
                             var data = JSON.parse(response);
                             alert(data.message);
-                            // Limpiar lista de seleccionados
                             $('#selectedDiagnosticos').empty();
                         }
                     });
