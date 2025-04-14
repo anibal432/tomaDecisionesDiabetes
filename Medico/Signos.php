@@ -1,5 +1,5 @@
 <?php
-require 'conexion.php'; // Archivo con la conexión a la base de datos
+require 'conexion.php'; 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $peso = $_POST['peso'];
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->bind_param("ddssddddi", $peso, $talla, $presion, $imc, $temperatura, $frecuenciaCardiaca, $oxigenacion, $frecuenciaRespiratoria, $idPaciente);
     $stmt->execute();
     
-    header("Location: ingreso_signos.php"); // Redirige para evitar reenvíos
+    header("Location: ingreso_signos.php"); 
     exit();
 }
 ?>
