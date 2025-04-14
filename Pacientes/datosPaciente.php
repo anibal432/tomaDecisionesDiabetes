@@ -184,7 +184,7 @@ include '../conexionDiabetes.php';
                                 <option value="Otro">Otro</option>
                             </select>
                         </div>
-                        <button type="submit" id="btnGuardarPaciente" class="btn btn-primary w-100">Guardar</button>
+                        <button type="submit" id="btnGuardarPaciente" class="btn btn-custom w-100">Guardar</button>
                     </form>
                 </div>
             </div>
@@ -226,7 +226,7 @@ include '../conexionDiabetes.php';
                             <label for="vicios_manias" class="form-label">Vicios y Manías</label>
                             <textarea class="form-control" id="vicios_manias" name="vicios_manias"></textarea>
                         </div>
-                        <button type="submit" id="btnGuardarAntecedentes" class="btn btn-primary w-100">Guardar</button>
+                        <button type="submit" id="btnGuardarAntecedentes" class="btn btn-custom w-100">Guardar</button>
                     </form>
                 </div>
             </div>
@@ -277,7 +277,7 @@ include '../conexionDiabetes.php';
                             <input type="email" class="form-control" id="email" name="email" required>
                         </div>
                     </div>
-                    <button type="submit" id="btnGuardarResponsable" class="btn btn-primary w-100 mt-3">Guardar</button>
+                    <button type="submit" id="btnGuardarResponsable" class="btn btn-custom w-100 mt-3">Guardar</button>
                 </form>
             </div>
         </div>
@@ -332,7 +332,7 @@ include '../conexionDiabetes.php';
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="guardarResponsable()">Guardar Cambios</button>
+                <button type="button" class="btn btn-custom" onclick="guardarResponsable()">Guardar Cambios</button>
             </div>
         </div>
     </div>
@@ -379,7 +379,7 @@ include '../conexionDiabetes.php';
                             <label for="estudios_laboratorio" class="form-label">Estudios de Laboratorio</label>
                             <textarea class="form-control" id="estudios_laboratorio" name="estudios_laboratorio" required></textarea>
                         </div>
-                        <button type="submit" id="btnGuardarHistoriaClinica" class="btn btn-primary w-100">Guardar</button>
+                        <button type="submit" id="btnGuardarHistoriaClinica" class="btn btn-custom w-100">Guardar</button>
                     </form>
                 </div>
             </div>
@@ -428,7 +428,7 @@ include '../conexionDiabetes.php';
                             <label for="frecuenciaRespiratoria" class="form-label">Frecuencia Respiratoria (rpm)</label>
                             <input type="number" class="form-control" id="frecuenciaRespiratoria" name="frecuencia_respiratoria" placeholder="Ej. 16" required>
                         </div>
-                        <button type="submit" id="btnGuardarDatosVitales" class="btn btn-primary w-100">Guardar</button>
+                        <button type="submit" id="btnGuardarDatosVitales" class="btn btn-custom w-100">Guardar</button>
                     </form>
                 </div>
             </div>
@@ -521,7 +521,7 @@ include '../conexionDiabetes.php';
                             <label for="vicios_manias_fam" class="form-label">Vicios y Manías</label>
                             <textarea class="form-control" id="vicios_manias_fam" name="vicios_manias"></textarea>
                         </div>
-                        <button type="submit" id="btnGuardarAntecedentesFamiliares" class="btn btn-primary w-100">Guardar</button>
+                        <button type="submit" id="btnGuardarAntecedentesFamiliares" class="btn btn-custom w-100">Guardar</button>
                     </form>
                 </div>
             </div>
@@ -562,7 +562,7 @@ include '../conexionDiabetes.php';
                         echo "<td>
                                 <div class='d-flex justify-content-between align-items-center'>
                         <span>" . htmlspecialchars($row['NombreCompleto']) . "</span>
-                        <button class='btn btn-custom me-2' onclick='abrirModalEditarPaciente(" . $row['IdPaciente'] . ")'>
+                        <button class='btn btn-green me-2' onclick='abrirModalEditarPaciente(" . $row['IdPaciente'] . ")'>
                             <i class='fas fa-edit'></i>
                         </button>
                     </div>
@@ -572,7 +572,7 @@ include '../conexionDiabetes.php';
                                     <button class='btn btn-wine me-2' onclick='abrirModalDatosVitales(" . $row['IdPaciente'] . ")'>
                                         <i class='fas fa-plus'></i> 
                                     </button>
-                                    <button class='btn btn-green me-2' onclick='abrirModalEditarDatosVitales(" . $row['IdPaciente'] . ")'>
+                                    <button class='btn btn-custom me-2' onclick='abrirModalEditarDatosVitales(" . $row['IdPaciente'] . ")'>
                                         <i class='fas fa-eye'></i>
                                     </button>
                                 </div>
@@ -582,7 +582,7 @@ include '../conexionDiabetes.php';
                                     <button class='btn btn-wine me-2' onclick='abrirModalAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
                                 <i class='fas fa-plus'></i> 
                                     </button>
-                                    <button class='btn btn-green me-2' onclick='abrirModalEditarAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
+                                    <button class='btn btn-custom me-2' onclick='abrirModalEditarAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
                                 <i class='fas fa-eye'></i>
                                     </button>
                                 </div>
@@ -592,7 +592,7 @@ include '../conexionDiabetes.php';
                                 <button class='btn btn-wine me-2' onclick='abrirModalAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
                                 <i class='fas fa-plus'></i> 
                                 </button>
-                                <button class='btn btn-green me-2' onclick='abrirModalEditarAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
+                                <button class='btn btn-custom me-2' onclick='abrirModalEditarAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
                             <i class='fas fa-eye'></i>
                             </button>
                             </div>
@@ -603,7 +603,7 @@ include '../conexionDiabetes.php';
     <button class='btn btn-wine me-2' onclick='abrirModalResponsable(" . $row['IdPaciente'] . ")'>
         <i class='fas fa-plus'></i> 
     </button>
-    <button class='btn btn-green me-2' onclick='abrirModalEditarResponsable(" . $row['IdPaciente'] . ")'>
+    <button class='btn btn-custom me-2' onclick='abrirModalEditarResponsable(" . $row['IdPaciente'] . ")'>
         <i class='fas fa-eye'></i>
     </button>
 </div>
@@ -613,7 +613,7 @@ include '../conexionDiabetes.php';
                                   <button class='btn btn-wine me-2' onclick='abrirModalHistoriaClinica(" . $row['IdPaciente'] . ", null)'>
                                       <i class='fas fa-plus'></i> 
                                   </button>
-                                  <button class='btn btn-green me-2' onclick='abrirModalEditarHistoriaClinica(" . $row['IdPaciente'] . ")'>
+                                  <button class='btn btn-custom me-2' onclick='abrirModalEditarHistoriaClinica(" . $row['IdPaciente'] . ")'>
                                         <i class='fas fa-eye'></i>
                                     </button>
                               </div>

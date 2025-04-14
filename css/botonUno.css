@@ -165,3 +165,14 @@ transform: scale(1.05); /* Agrandar ligeramente el botón al pasar el ratón */
     border-color: #B8860B;
     transform: scale(1.05);
 }
+
+
+.btn-pastel-melocoton {
+    background-color: #FFDAC1;  /* Durazno claro */
+    color: #E67E22;
+    border: 2px solid #FFC4A3;
+}
+.btn-pastel-melocoton:hover {
+    background-color: #FFC4A3;
+    border-color: #FFA07A;
+}
