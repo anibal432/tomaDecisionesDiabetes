@@ -26,7 +26,6 @@ try {
         throw new Exception('Ya existe una cita para este médico en la fecha y hora seleccionada');
     }
 
-    // Ahora verificamos si el mismo paciente (mismo correo o mismos nombres y apellidos) ya tiene cita ese día
     $checkPacienteQuery = "SELECT COUNT(*) as count FROM citas 
                           WHERE fecha = ? 
                           AND (correo_electronico = ? 
