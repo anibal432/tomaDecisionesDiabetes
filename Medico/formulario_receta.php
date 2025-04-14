@@ -43,7 +43,7 @@ $pacientes = $conn->query("
                     </select>
                 </div>
 
-                <!-- Medicamentos dinámicos -->
+                
                 <div class="mb-3">
                     <label class="form-label">Medicamentos</label>
                     <div id="medicamentosContainer">
@@ -65,13 +65,10 @@ $pacientes = $conn->query("
                     <button type="button" class="btn btn-outline-secondary btn-sm mt-2" onclick="agregarMedicamento()">Agregar otro medicamento</button>
                 </div>
 
-                <!-- Observaciones -->
                 <div class="mb-3">
                     <label class="form-label">Observaciones</label>
                     <textarea name="observaciones" class="form-control" rows="3" placeholder="Detalles adicionales"></textarea>
                 </div>
-
-                <!-- Botón -->
                 <div class="d-grid">
                     <button type="submit" class="btn btn-success">Guardar receta</button>
                 </div>
@@ -80,7 +77,6 @@ $pacientes = $conn->query("
     </div>
 </div>
 
-<!-- JS Bootstrap y Script -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 function agregarMedicamento() {
