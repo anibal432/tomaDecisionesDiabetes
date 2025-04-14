@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    // Validar datos de entrada
+   
     if (empty($_POST['id_solicitud']) || empty($_POST['estado'])) {
         throw new Exception('ID de solicitud y estado son requeridos');
     }
@@ -18,13 +18,13 @@ try {
     $idSolicitud = intval($_POST['id_solicitud']);
     $estado = $_POST['estado'];
 
-    // Validar estado permitido
+    
     $estadosPermitidos = ['Pendiente', 'Completado', 'Cancelado'];
     if (!in_array($estado, $estadosPermitidos)) {
         throw new Exception('Estado no válido');
     }
 
-    // Actualizar estado en la base de datos
+    
     $stmt = $conn->prepare("UPDATE SolicitudExamenes SET Estado = ? WHERE IdSolicitud = ?");
     $stmt->bind_param("si", $estado, $idSolicitud);
     $stmt->execute();
