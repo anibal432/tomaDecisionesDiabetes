@@ -31,7 +31,6 @@ try {
         exit();
     }
 
-    // Sanitizar y validar datos
     $idPaciente = filter_var($_POST['IdPaciente'], FILTER_VALIDATE_INT);
     $idMedico = filter_var($_POST['IdMedico'], FILTER_VALIDATE_INT);
     $examenes = trim($_POST['ExamenesSolicitados']);
@@ -41,7 +40,6 @@ try {
         throw new Exception('ID de paciente o médico inválido');
     }
 
-    // Insertar en la base de datos con manejo de errores mejorado
     $stmt = $conn->prepare("INSERT INTO SolicitudExamenes 
                           (IdPaciente, IdMedico, ExamenesSolicitados, Instrucciones) 
                           VALUES (?, ?, ?, ?)");
