@@ -33,8 +33,8 @@ include '../conexionDiabetes.php';
     </nav>
 
 <div class="main-content">
-    <!-- Modal para Editar Paciente -->
-    <div class="modal fade" id="editarPacienteModal" tabindex="-1">
+
+<div class="modal fade" id="editarPacienteModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -43,15 +43,12 @@ include '../conexionDiabetes.php';
                 </div>
                 <div class="modal-body">
                     <form id="formEditarPaciente" method="POST" action="guardarUpdatePaciente.php">
-                        <!-- Campo oculto para el ID del paciente -->
                         <input type="hidden" name="id_paciente" id="id_paciente_editar">
 
-                        <!-- Campo para Tipo de Diabetes -->
                         <div class="mb-3">
                             <label for="tipo_diabetes" class="form-label">Tipo de Diabetes</label>
                             <select class="form-control" id="tipo_diabetes" name="tipo_diabetes" required>
                                 <?php
-                                // Obtener los tipos de diabetes desde la base de datos
                                 $sql = "SELECT IdDiabetes, DESCRIPCION FROM TipoDiabetes";
                                 $result = $conn->query($sql);
                                 while ($row = $result->fetch_assoc()) {
@@ -61,7 +58,6 @@ include '../conexionDiabetes.php';
                             </select>
                         </div>
 
-                        <!-- Resto de los campos del formulario -->
                         <div class="mb-3">
                             <label for="primer_nombre" class="form-label">Primer Nombre</label>
                             <input type="text" class="form-control" id="primer_nombre" name="primer_nombre" required>
@@ -118,7 +114,6 @@ include '../conexionDiabetes.php';
         </div>
     </div>
 
-    <!-- Modal para Agregar Paciente -->
     <div class="modal fade" id="pacienteModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -196,7 +191,6 @@ include '../conexionDiabetes.php';
         </div>
     </div>
 
-    <!-- Modal para Antecedentes Personales -->
     <div class="modal fade" id="antecedentesPersonalesModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -208,7 +202,6 @@ include '../conexionDiabetes.php';
                     <form id="formAntecedentesPersonales" method="POST" action="guardarAntecedentesPersonales.php">
                         <input type="hidden" name="id_ant_personal" id="id_ant_personal">
                         <input type="hidden" name="id_paciente" id="id_paciente_antecedentes">
-                        <!-- Campos del formulario -->
                         <div class="mb-2">
                             <label for="medicos" class="form-label">Médicos</label>
                             <textarea class="form-control" id="medicos" name="medicos"></textarea>
@@ -240,73 +233,112 @@ include '../conexionDiabetes.php';
         </div>
     </div>
 
-<!--modal para responsable paciente-->
-<!-- Modal para ResponsablePaciente -->
-<div class="modal fade" id="modalResponsablePaciente" tabindex="-1" aria-labelledby="modalResponsablePacienteLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="responsableModal" tabindex="-1">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalResponsablePacienteLabel">Responsable del Paciente</h5>
+                <h5 class="modal-title">Datos del Responsable</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formResponsable" method="POST" action="guardarResponsable.php">
+                    <input type="hidden" name="id_paciente" id="id_paciente_responsable" value="">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <label for="primer_nombre" class="form-label">Primer Nombre</label>
+                            <input type="text" class="form-control" id="primer_nombre" name="primer_nombre" required>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="segundo_nombre" class="form-label">Segundo Nombre</label>
+                            <input type="text" class="form-control" id="segundo_nombre" name="segundo_nombre">
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="tercer_nombre" class="form-label">Tercer Nombre</label>
+                            <input type="text" class="form-control" id="tercer_nombre" name="tercer_nombre">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="primer_apellido" class="form-label">Primer Apellido</label>
+                            <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" required>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="segundo_apellido" class="form-label">Segundo Apellido</label>
+                            <input type="text" class="form-control" id="segundo_apellido" name="segundo_apellido">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="dpi" class="form-label">DPI</label>
+                            <input type="text" class="form-control" id="dpi" name="dpi" required>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono" name="telefono" required>
+                        </div>
+                        <div class="col-12 mb-2">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                    </div>
+                    <button type="submit" id="btnGuardarResponsable" class="btn btn-primary w-100 mt-3">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editarResponsableModal" tabindex="-1" aria-labelledby="editarResponsableModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarResponsableModalLabel">Editar Responsable</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="formResponsablePaciente">
-                    <input type="hidden" id="IdResponsable" name="IdResponsable">
-                    <input type="hidden" id="IdPaciente" name="IdPaciente">
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="PrimerNombre" class="form-label">Primer Nombre*</label>
-                            <input type="text" class="form-control" id="PrimerNombre" name="PrimerNombre" required>
+                <form id="formEditarResponsable">
+                    <input type="hidden" name="id_responsable" id="id_responsable_editar" value="">
+                    <input type="hidden" name="id_paciente" id="id_paciente_editar_responsable" value="">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <label for="primer_nombre_editar" class="form-label">Primer Nombre</label>
+                            <input type="text" class="form-control" id="primer_nombre_editar" name="primer_nombre" required>
                         </div>
-                        <div class="col-md-4">
-                            <label for="SegundoNombre" class="form-label">Segundo Nombre</label>
-                            <input type="text" class="form-control" id="SegundoNombre" name="SegundoNombre">
+                        <div class="col-md-4 mb-2">
+                            <label for="segundo_nombre_editar" class="form-label">Segundo Nombre</label>
+                            <input type="text" class="form-control" id="segundo_nombre_editar" name="segundo_nombre">
                         </div>
-                        <div class="col-md-4">
-                            <label for="TercerNombre" class="form-label">Tercer Nombre</label>
-                            <input type="text" class="form-control" id="TercerNombre" name="TercerNombre">
+                        <div class="col-md-4 mb-2">
+                            <label for="tercer_nombre_editar" class="form-label">Tercer Nombre</label>
+                            <input type="text" class="form-control" id="tercer_nombre_editar" name="tercer_nombre">
                         </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="PrimerApellido" class="form-label">Primer Apellido*</label>
-                            <input type="text" class="form-control" id="PrimerApellido" name="PrimerApellido" required>
+                        <div class="col-md-6 mb-2">
+                            <label for="primer_apellido_editar" class="form-label">Primer Apellido</label>
+                            <input type="text" class="form-control" id="primer_apellido_editar" name="primer_apellido" required>
                         </div>
-                        <div class="col-md-6">
-                            <label for="SegundoApellido" class="form-label">Segundo Apellido</label>
-                            <input type="text" class="form-control" id="SegundoApellido" name="SegundoApellido">
+                        <div class="col-md-6 mb-2">
+                            <label for="segundo_apellido_editar" class="form-label">Segundo Apellido</label>
+                            <input type="text" class="form-control" id="segundo_apellido_editar" name="segundo_apellido">
                         </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="NoDpi" class="form-label">DPI*</label>
-                            <input type="text" class="form-control" id="NoDpi" name="NoDpi" required>
+                        <div class="col-md-6 mb-2">
+                            <label for="dpi_editar" class="form-label">DPI</label>
+                            <input type="text" class="form-control" id="dpi_editar" name="dpi" required>
                         </div>
-                        <div class="col-md-6">
-                            <label for="Telefono" class="form-label">Teléfono*</label>
-                            <input type="text" class="form-control" id="Telefono" name="Telefono" required>
+                        <div class="col-md-6 mb-2">
+                            <label for="telefono_editar" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono_editar" name="telefono" required>
                         </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="Email" class="form-label">Email*</label>
-                        <input type="email" class="form-control" id="Email" name="Email" required>
+                        <div class="col-12 mb-2">
+                            <label for="email_editar" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email_editar" name="email" required>
+                        </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="guardarResponsablePaciente()">Guardar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarResponsable()">Guardar Cambios</button>
             </div>
         </div>
     </div>
 </div>
     
 
-    <!-- MODAL para Historia Clínica -->
     <div class="modal fade" id="historiaClinicaModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -354,7 +386,6 @@ include '../conexionDiabetes.php';
         </div>
     </div>
 
-    <!-- MODAL para Signos Vitales -->
     <div class="modal fade" id="datosVitalesModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -404,7 +435,6 @@ include '../conexionDiabetes.php';
         </div>
     </div>
 
-    <!-- Modal para editar datos vitales-->
     <div class="modal fade" id="editarDatosVitalesModal" tabindex="-1" aria-labelledby="editarDatosVitalesModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -456,7 +486,6 @@ include '../conexionDiabetes.php';
         </div>
     </div>
 
-    <!-- Modal para Antecedentes Familiares -->
     <div class="modal fade" id="antecedentesFamiliaresModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -468,7 +497,6 @@ include '../conexionDiabetes.php';
                     <form id="formAntecedentesFamiliares" method="POST" action="guardarAntecedentesFamiliares.php">
                         <input type="hidden" name="id_ant_fam" id="id_ant_fam">
                         <input type="hidden" name="id_paciente" id="id_paciente_antecedentes_familiares">
-                        <!-- Campos del formulario -->
                         <div class="mb-2">
                             <label for="medicos_fam" class="form-label">Médicos</label>
                             <textarea class="form-control" id="medicos_fam" name="medicos"></textarea>
@@ -500,9 +528,8 @@ include '../conexionDiabetes.php';
         </div>
     </div>
 
-    <!--Tabla de los datos del paciente-->
-    <div class="container-fluid px-0"> <!-- Elimina el padding horizontal del contenedor -->
-    <div class="d-flex justify-content-between align-items-center mb-2 mt-2"> <!-- Reduje el margen inferior y superior -->
+    <div class="container-fluid px-0"> 
+    <div class="d-flex justify-content-between align-items-center mb-2 mt-2"> 
         <h4 class="mb-0">Datos del Paciente</h4>
         <div>
             <input type="text" id="searchPaciente" class="form-control form-control-sm" placeholder="Buscar Paciente" style="width: 250px; display: inline-block;" oninput="buscarPaciente()">
@@ -573,14 +600,13 @@ include '../conexionDiabetes.php';
                         echo "<td>
                             
     <div class='d-flex justify-content-center'>
-    <button class='btn btn-info me-2' onclick='abrirModalResponsablePaciente(" . $row['IdPaciente'] . ", null)'>
+    <button class='btn btn-info me-2' onclick='abrirModalResponsable(" . $row['IdPaciente'] . ")'>
         <i class='fas fa-plus'></i> 
     </button>
-    <button class='btn btn-warning me-2' onclick='abrirModalEditarResponsablePaciente(" . $row['IdPaciente'] . ")'>
+    <button class='btn btn-warning me-2' onclick='abrirModalEditarResponsable(" . $row['IdPaciente'] . ")'>
         <i class='fas fa-eye'></i>
     </button>
 </div>
-
 </td>";
                               echo "<td>
                               <div class='d-flex justify-content-center'>
@@ -612,22 +638,21 @@ include '../conexionDiabetes.php';
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!--funcion con ajax -->
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
     $('#formPaciente').on('submit', function(event) {
-        event.preventDefault(); // Prevenir el envío normal del formulario
+        event.preventDefault(); 
 
-        // Enviar la solicitud AJAX
+       
         $.ajax({
-            url: $(this).attr('action'), // URL del script PHP
-            type: $(this).attr('method'), // Método de envío (POST)
-            data: $(this).serialize(), // Serializar los datos del formulario
+            url: $(this).attr('action'), 
+            type: $(this).attr('method'), 
+            data: $(this).serialize(), 
             success: function(response) {
                 $('#mensaje').html('<div class="alert alert-success">Paciente guardado exitosamente!</div>');
-                $('#formPaciente')[0].reset(); // Reiniciar el formulario
+                $('#formPaciente')[0].reset(); 
             },
             error: function(xhr, status, error) {
                 $('#mensaje').html('<div class="alert alert-danger">Error al guardar el paciente. Intente de nuevo.</div>');
@@ -635,29 +660,28 @@ $(document).ready(function() {
         });
     });
 });
- //Funcion para Buscar el Paciente
- function buscarPaciente() {
+
+function buscarPaciente() {
     const searchValue = document.getElementById('searchPaciente').value.toLowerCase();
     const rows = document.querySelectorAll('tbody tr');
 
     rows.forEach(row => {
-        const name = row.cells[1].textContent.toLowerCase(); // Asumiendo que el nombre está en la segunda celda
+        const name = row.cells[1].textContent.toLowerCase(); 
         if (name.includes(searchValue)) {
-            row.style.display = ''; // Mostrar fila
+            row.style.display = ''; 
         } else {
-            row.style.display = 'none'; // Ocultar fila
+            row.style.display = 'none'; 
         }
     });
     
 }
 
-//modal para datos vitales
 function abrirModalDatosVitales(idPaciente) {
-    document.getElementById('id_paciente').value = idPaciente; // Asigna el ID al campo oculto
+    document.getElementById('id_paciente').value = idPaciente; 
     const modal = new bootstrap.Modal(document.getElementById('datosVitalesModal'));
     modal.show();
 }
-//editar datos vitales
+
 function abrirModalEditarDatosVitales(idPaciente) {
     $.ajax({
         url: 'obtenerDatosVitales.php',
@@ -666,7 +690,6 @@ function abrirModalEditarDatosVitales(idPaciente) {
         success: function(data) {
             const datos = JSON.parse(data);
             if (datos) {
-                // Rellenar los campos del modal con los datos obtenidos
                 $('#id_paciente').val(idPaciente);
                 $('#peso').val(datos.Peso);
                 $('#talla').val(datos.Talla);
@@ -677,10 +700,8 @@ function abrirModalEditarDatosVitales(idPaciente) {
                 $('#oxigenacion').val(datos.Oxigenacion);
                 $('#frecuenciaRespiratoria').val(datos.FrecuenciaRespiratoria);
 
-                // Cambiar el texto del botón de submit
                 $('#btnGuardarDatosVitales').text('Guardar Cambios');
 
-                // Mostrar el modal
                 const modal = new bootstrap.Modal(document.getElementById('datosVitalesModal'));
                 modal.show();
             } else {
@@ -693,120 +714,93 @@ function abrirModalEditarDatosVitales(idPaciente) {
     });
 }
 
-// Función para abrir modal para nuevo responsable
-function abrirModalResponsablePaciente(idPaciente, responsableData) {
-    const modal = new bootstrap.Modal(document.getElementById('modalResponsablePaciente'));
-    const form = document.getElementById('formResponsablePaciente');
-    
-    form.reset();
-    document.getElementById('IdPaciente').value = idPaciente;
-    
-    if (responsableData) {
-        // Modo edición
-        document.getElementById('modalResponsablePacienteLabel').textContent = 'Editar Responsable';
-        document.getElementById('IdResponsable').value = responsableData.IdResponsable;
-        document.getElementById('PrimerNombre').value = responsableData.PrimerNombre;
-        document.getElementById('SegundoNombre').value = responsableData.SegundoNombre || '';
-        document.getElementById('TercerNombre').value = responsableData.TercerNombre || '';
-        document.getElementById('PrimerApellido').value = responsableData.PrimerApellido;
-        document.getElementById('SegundoApellido').value = responsableData.SegundoApellido || '';
-        document.getElementById('NoDpi').value = responsableData.NoDpi;
-        document.getElementById('Telefono').value = responsableData.Telefono;
-        document.getElementById('Email').value = responsableData.Email;
-    } else {
-        // Modo creación
-        document.getElementById('modalResponsablePacienteLabel').textContent = 'Nuevo Responsable';
-        document.getElementById('IdResponsable').value = '';
-    }
-    
+function abrirModalResponsable(idPaciente) {
+    document.getElementById('id_paciente_responsable').value = idPaciente;
+    const modal = new bootstrap.Modal(document.getElementById('responsableModal'));
     modal.show();
 }
 
-// Función para abrir modal en modo edición
-function abrirModalEditarResponsablePaciente(idPaciente) {
-    fetch(`obtener_responsable_paciente.php?idPaciente=${idPaciente}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                abrirModalResponsablePaciente(idPaciente, data.responsable);
+function abrirModalEditarResponsable(idPaciente) {
+    $.ajax({
+        url: 'obtenerResponsable.php',
+        method: 'POST',
+        data: { id_paciente: idPaciente },
+        success: function(data) {
+            const responsable = JSON.parse(data);
+            if (responsable) {
+                $('#id_responsable_editar').val(responsable.IdResponsable);
+                $('#id_paciente_editar_responsable').val(idPaciente);
+                $('#primer_nombre_editar').val(responsable.PrimerNombre);
+                $('#segundo_nombre_editar').val(responsable.SegundoNombre);
+                $('#tercer_nombre_editar').val(responsable.TercerNombre);
+                $('#primer_apellido_editar').val(responsable.PrimerApellido);
+                $('#segundo_apellido_editar').val(responsable.SegundoApellido);
+                $('#dpi_editar').val(responsable.NoDpi);
+                $('#telefono_editar').val(responsable.Telefono);
+                $('#email_editar').val(responsable.Email);
+
+                const modal = new bootstrap.Modal(document.getElementById('editarResponsableModal'));
+                modal.show();
             } else {
-                alert(data.message || 'No se encontró un responsable para este paciente');
+                alert('No se encontró un responsable registrado para este paciente.');
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error al cargar los datos del responsable');
-        });
+        },
+        error: function(xhr, status, error) {
+            console.error('Error al obtener datos:', error);
+        }
+    });
 }
 
-// Función para guardar (crear o actualizar) responsable
-function guardarResponsablePaciente() {
-    const form = document.getElementById('formResponsablePaciente');
-    const formData = new FormData(form);
-    const idResponsable = document.getElementById('IdResponsable').value;
+function guardarResponsable() {
+    const formData = $('#formEditarResponsable').serialize();
     
-    const url = idResponsable ? 'actualizar_responsable_paciente.php' : 'crear_responsable_paciente.php';
-    
-    fetch(url, {
+    $.ajax({
+        url: 'guardarResponsable.php',
         method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Datos guardados correctamente');
-            const modal = bootstrap.Modal.getInstance(document.getElementById('modalResponsablePaciente'));
-            modal.hide();
-            // Recargar la página o actualizar la tabla según sea necesario
-            location.reload();
-        } else {
-            alert(data.message || 'Error al guardar los datos');
+        data: formData,
+        success: function(response) {
+            const result = JSON.parse(response);
+            if (result.success) {
+                alert('Datos del responsable actualizados correctamente');
+                $('#editarResponsableModal').modal('hide');
+            } else {
+                alert('Error al actualizar: ' + result.error);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error al guardar:', error);
+            alert('Error al guardar los cambios');
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error al guardar los datos');
     });
 }
 
 
 function abrirModalDatosVitales(idPaciente) {
-    // Limpiar el formulario
     $('#formDatosVitales')[0].reset();
-    // Establecer el ID del paciente en el formulario
     $('#id_paciente').val(idPaciente);
-    // Cambiar el texto del botón de submit
     $('#btnGuardarDatosVitales').text('Guardar');
-    // Mostrar el modal
     const modal = new bootstrap.Modal(document.getElementById('datosVitalesModal'));
     modal.show();
 }
 
-// Función para abrir el modal en modo "agregar"
 function abrirModalAntecedentesPersonales(idPaciente) {
-    console.log('Abriendo modal para el paciente:', idPaciente); // Depuración
-    // Limpiar el formulario
+    console.log('Abriendo modal para el paciente:', idPaciente); 
     $('#formAntecedentesPersonales')[0].reset();
-    // Establecer el ID del paciente en el formulario
     $('#id_paciente_antecedentes').val(idPaciente);
-    // Cambiar el texto del botón de submit
     $('#btnGuardarAntecedentes').text('Guardar');
-    // Mostrar el modal
     const modal = new bootstrap.Modal(document.getElementById('antecedentesPersonalesModal'));
     modal.show();
 }
 
-// Función para abrir el modal en modo "editar"
 function abrirModalEditarAntecedentesPersonales(idPaciente) {
-    console.log('Abriendo modal para editar antecedentes personales del paciente:', idPaciente); // Depuración
+    console.log('Abriendo modal para editar antecedentes personales del paciente:', idPaciente); 
     $.ajax({
-        url: 'obtenerAntecedentesPersonales.php', // Archivo PHP que obtiene los datos
+        url: 'obtenerAntecedentesPersonales.php', 
         method: 'POST',
-        data: { id_paciente: idPaciente }, // Envía el ID del paciente
+        data: { id_paciente: idPaciente }, 
         success: function(data) {
-            const antecedentes = JSON.parse(data); // Convierte la respuesta JSON en un objeto
+            const antecedentes = JSON.parse(data); 
             if (antecedentes) {
-                // Rellenar los campos del modal con los datos obtenidos
                 $('#id_ant_personal').val(antecedentes.IdAntPersonal);
                 $('#id_paciente_antecedentes').val(antecedentes.IdPaciente);
                 $('#medicos').val(antecedentes.Medicos);
@@ -816,10 +810,8 @@ function abrirModalEditarAntecedentesPersonales(idPaciente) {
                 $('#alergias').val(antecedentes.Alergias);
                 $('#vicios_manias').val(antecedentes.ViciosManias);
 
-                // Cambiar el texto del botón de submit
                 $('#btnGuardarAntecedentes').text('Guardar Cambios');
 
-                // Mostrar el modal
                 const modal = new bootstrap.Modal(document.getElementById('antecedentesPersonalesModal'));
                 modal.show();
             } else {
@@ -832,26 +824,24 @@ function abrirModalEditarAntecedentesPersonales(idPaciente) {
     });
 }
 
-// Manejar el envío del formulario
 $(document).ready(function() {
     $('#formAntecedentesPersonales').on('submit', function(event) {
-        event.preventDefault(); // Prevenir el envío normal del formulario
+        event.preventDefault(); 
 
-        const formData = $(this).serialize(); // Serializar los datos del formulario
+        const formData = $(this).serialize(); 
 
         $.ajax({
-            url: $(this).attr('action'), // URL del script PHP (guardarAntecedentesPersonales.php)
-            type: $(this).attr('method'), // Método de envío (POST)
+            url: $(this).attr('action'), 
+            type: $(this).attr('method'), 
             data: formData,
             success: function(response) {
                 const result = JSON.parse(response);
                 if (result.success) {
                     alert('Antecedentes personales guardados exitosamente!');
-                    // Cerrar el modal
                     const modal = bootstrap.Modal.getInstance(document.getElementById('antecedentesPersonalesModal'));
                     modal.hide();
-                    // Recargar la página o actualizar la tabla
-                    location.reload(); // Opcional: Recargar la página
+                   
+                    location.reload(); 
                 } else {
                     alert('Error al guardar los datos: ' + result.error);
                 }
@@ -864,29 +854,23 @@ $(document).ready(function() {
 });
 
 function abrirModalAntecedentesFamiliares(idPaciente) {
-    console.log('Abriendo modal para el paciente:', idPaciente); // Depuración
-    // Limpiar el formulario
+    console.log('Abriendo modal para el paciente:', idPaciente); 
     $('#formAntecedentesFamiliares')[0].reset();
-    // Establecer el ID del paciente en el formulario
     $('#id_paciente_antecedentes_familiares').val(idPaciente);
-    // Cambiar el texto del botón de submit
     $('#btnGuardarAntecedentesFamiliares').text('Guardar');
-    // Mostrar el modal
     const modal = new bootstrap.Modal(document.getElementById('antecedentesFamiliaresModal'));
     modal.show();
 }
 
-// Función para abrir el modal en modo "editar"
 function abrirModalEditarAntecedentesFamiliares(idPaciente) {
     console.log('Abriendo modal para editar antecedentes familiares del paciente:', idPaciente); // Depuración
     $.ajax({
-        url: 'obtenerAntecedentesFamiliares.php', // Archivo PHP que obtiene los datos
+        url: 'obtenerAntecedentesFamiliares.php', 
         method: 'POST',
-        data: { id_paciente: idPaciente }, // Envía el ID del paciente
+        data: { id_paciente: idPaciente }, 
         success: function(data) {
-            const antecedentes = JSON.parse(data); // Convierte la respuesta JSON en un objeto
+            const antecedentes = JSON.parse(data); 
             if (antecedentes) {
-                // Rellenar los campos del modal con los datos obtenidos
                 $('#id_ant_fam').val(antecedentes.IdAntFam);
                 $('#id_paciente_antecedentes_familiares').val(antecedentes.IdPaciente);
                 $('#medicos_fam').val(antecedentes.Medicos);
@@ -896,10 +880,8 @@ function abrirModalEditarAntecedentesFamiliares(idPaciente) {
                 $('#alergias_fam').val(antecedentes.Alergias);
                 $('#vicios_manias_fam').val(antecedentes.ViciosManias);
 
-                // Cambiar el texto del botón de submit
                 $('#btnGuardarAntecedentesFamiliares').text('Guardar Cambios');
 
-                // Mostrar el modal
                 const modal = new bootstrap.Modal(document.getElementById('antecedentesFamiliaresModal'));
                 modal.show();
             } else {
@@ -912,26 +894,23 @@ function abrirModalEditarAntecedentesFamiliares(idPaciente) {
     });
 }
 
-// Manejar el envío del formulario
 $(document).ready(function() {
     $('#formAntecedentesFamiliares').on('submit', function(event) {
-        event.preventDefault(); // Prevenir el envío normal del formulario
+        event.preventDefault(); 
 
-        const formData = $(this).serialize(); // Serializar los datos del formulario
+        const formData = $(this).serialize(); 
 
         $.ajax({
-            url: $(this).attr('action'), // URL del script PHP (guardarAntecedentesFamiliares.php)
-            type: $(this).attr('method'), // Método de envío (POST)
+            url: $(this).attr('action'), 
+            type: $(this).attr('method'), 
             data: formData,
             success: function(response) {
                 const result = JSON.parse(response);
                 if (result.success) {
                     alert('Antecedentes familiares guardados exitosamente!');
-                    // Cerrar el modal
                     const modal = bootstrap.Modal.getInstance(document.getElementById('antecedentesFamiliaresModal'));
                     modal.hide();
-                    // Recargar la página o actualizar la tabla
-                    location.reload(); // Opcional: Recargar la página
+                    location.reload(); 
                 } else {
                     alert('Error al guardar los datos: ' + result.error);
                 }
@@ -943,23 +922,22 @@ $(document).ready(function() {
     });
 });
 
-//funcion para guardar datos vitales
 
 function guardarDatosVitales() {
-    const formData = $('#formEditarDatosVitales').serialize(); // Serializa los datos del formulario
+    const formData = $('#formEditarDatosVitales').serialize(); 
 
     $.ajax({
-        url: 'guardarDatosVitales.php', // Asegúrate de que la ruta sea correcta
+        url: 'guardarDatosVitales.php', 
         method: 'POST',
         data: formData,
         success: function(response) {
             const result = JSON.parse(response);
             if (result.success) {
                 alert('Datos guardados exitosamente!');
-                // Cierra el modal
+                
                 const modal = bootstrap.Modal.getInstance(document.getElementById('editarDatosVitalesModal'));
                 modal.hide();
-                // Aquí podrías actualizar la tabla o los datos mostrados
+                
             } else {
                 alert('Error al guardar los datos: ' + result.error);
             }
@@ -972,22 +950,20 @@ function guardarDatosVitales() {
 
 $(document).ready(function() {
     $('#formDatosVitales').on('submit', function(event) {
-        event.preventDefault(); // Prevenir el envío normal del formulario
+        event.preventDefault(); 
 
-        const formData = $(this).serialize(); // Serializar los datos del formulario
+        const formData = $(this).serialize(); 
 
         $.ajax({
-            url: $(this).attr('action'), // URL del script PHP
-            type: $(this).attr('method'), // Método de envío (POST)
+            url: $(this).attr('action'), 
+            type: $(this).attr('method'), 
             data: formData,
             success: function(response) {
                 const result = JSON.parse(response);
                 if (result.success) {
                     alert('Datos guardados exitosamente!');
-                    // Cerrar el modal
                     const modal = bootstrap.Modal.getInstance(document.getElementById('datosVitalesModal'));
                     modal.hide();
-                    // Aquí podrías actualizar la tabla o los datos mostrados
                 } else {
                     alert('Error al guardar los datos: ' + result.error);
                 }
@@ -1002,30 +978,24 @@ $(document).ready(function() {
 
 
 
-//funcion para historial clinica
 function abrirModalHistoriaClinica(idPaciente) {
-    console.log('Abriendo modal para el paciente:', idPaciente); // Depuración
-    // Limpiar el formulario
+    console.log('Abriendo modal para el paciente:', idPaciente); 
     $('#formHistoriaClinica')[0].reset();
-    // Establecer el ID del paciente en el formulario
     $('#id_paciente_historia').val(idPaciente);
-    // Cambiar el texto del botón de submit
     $('#btnGuardarHistoriaClinica').text('Guardar');
-    // Mostrar el modal
     const modal = new bootstrap.Modal(document.getElementById('historiaClinicaModal'));
     modal.show();
 }
 
 function abrirModalEditarHistoriaClinica(idHistoriaClinica) {
-    console.log('Abriendo modal para editar historia clínica:', idHistoriaClinica); // Depuración
+    console.log('Abriendo modal para editar historia clínica:', idHistoriaClinica); 
     $.ajax({
-        url: 'obtenerHistoriaClinica.php', // Archivo PHP que obtiene los datos de la historia clínica
+        url: 'obtenerHistoriaClinica.php', 
         method: 'POST',
-        data: { id_historia_clinica: idHistoriaClinica }, // Envía el ID de la historia clínica
+        data: { id_historia_clinica: idHistoriaClinica }, 
         success: function(data) {
-            const historia = JSON.parse(data); // Convierte la respuesta JSON en un objeto
+            const historia = JSON.parse(data); 
             if (historia) {
-                // Rellenar los campos del modal con los datos obtenidos
                 $('#id_historia_clinica').val(historia.IdHistoriaClinica);
                 $('#id_paciente_historia').val(historia.IdPaciente);
                 $('#motivo_consulta').val(historia.MotivoConsulta);
@@ -1036,10 +1006,8 @@ function abrirModalEditarHistoriaClinica(idHistoriaClinica) {
                 $('#tratamiento').val(historia.Tratamiento);
                 $('#estudios_laboratorio').val(historia.EstudiosLaboratorio);
 
-                // Cambiar el texto del botón de submit
                 $('#btnGuardarHistoriaClinica').text('Guardar Cambios');
 
-                // Mostrar el modal
                 const modal = new bootstrap.Modal(document.getElementById('historiaClinicaModal'));
                 modal.show();
             } else {
@@ -1054,23 +1022,22 @@ function abrirModalEditarHistoriaClinica(idHistoriaClinica) {
 
 $(document).ready(function() {
     $('#formHistoriaClinica').on('submit', function(event) {
-        event.preventDefault(); // Prevenir el envío normal del formulario
+        event.preventDefault(); 
 
-        const formData = $(this).serialize(); // Serializar los datos del formulario
+        const formData = $(this).serialize(); 
 
         $.ajax({
-            url: $(this).attr('action'), // URL del script PHP (guardarHistoriaClinica.php)
-            type: $(this).attr('method'), // Método de envío (POST)
+            url: $(this).attr('action'), 
+            type: $(this).attr('method'), 
             data: formData,
             success: function(response) {
                 const result = JSON.parse(response);
                 if (result.success) {
                     alert('Historia clínica guardada exitosamente!');
-                    // Cerrar el modal
                     const modal = bootstrap.Modal.getInstance(document.getElementById('historiaClinicaModal'));
                     modal.hide();
-                    // Recargar la página o actualizar la tabla
-                    location.reload(); // Opcional: Recargar la página
+                    
+                    location.reload(); 
                 } else {
                     alert('Error al guardar los datos: ' + result.error);
                 }
@@ -1082,50 +1049,43 @@ $(document).ready(function() {
     });
 });
 
-//guardar paciente
 $(document).ready(function() {
     $('#formPaciente').on('submit', function(event) {
-        event.preventDefault(); // Prevenir el envío normal del formulario
-
-        // Enviar la solicitud AJAX
+        event.preventDefault(); 
         $.ajax({
-            url: 'guardar_paciente.php', // URL del script PHP
-            type: 'POST', // Método de envío
-            data: $(this).serialize(), // Serializar los datos del formulario
+            url: 'guardar_paciente.php', 
+            type: 'POST', 
+            data: $(this).serialize(), 
             success: function(response) {
-                const result = JSON.parse(response); // Parsear la respuesta JSON
+                const result = JSON.parse(response); 
 
                 if (result.status === 'success') {
-                    alert(result.message); // Mostrar mensaje de éxito
-                    window.location.href = 'pacientesPrueba.php'; // Redirigir a la página principal
+                    alert(result.message); 
+                    window.location.href = 'pacientesPrueba.php'; 
                 } else {
-                    alert(result.message); // Mostrar mensaje de error
+                    alert(result.message); 
                 }
             },
             error: function(xhr, status, error) {
-                alert('Error en la solicitud AJAX: ' + error); // Mostrar error de la solicitud
+                alert('Error en la solicitud AJAX: ' + error); 
             }
         });
     });
 });
 
-//editar paciente
 function abrirModalEditarPaciente(idPaciente) {
-    console.log('Abriendo modal para editar paciente:', idPaciente); // Depuración
+    console.log('Abriendo modal para editar paciente:', idPaciente); 
 
-    // Limpiar el formulario
     $('#formEditarPaciente')[0].reset();
 
-    // Obtener los datos del paciente
     $.ajax({
-        url: 'obtenerPaciente.php', // Archivo que obtiene los datos del paciente
+        url: 'obtenerPaciente.php', 
         method: 'POST',
         data: { id_paciente: idPaciente },
         success: function(data) {
-            console.log('Datos del paciente:', data); // Depuración
+            console.log('Datos del paciente:', data); 
             const paciente = JSON.parse(data);
             if (paciente) {
-                // Rellenar los campos del modal con los datos obtenidos
                 $('#id_paciente_editar').val(paciente.IdPaciente);
                 $('#primer_nombre').val(paciente.NombreUno);
                 $('#segundo_nombre').val(paciente.NombreDos);
@@ -1138,13 +1098,10 @@ function abrirModalEditarPaciente(idPaciente) {
                 $('#sexo').val(paciente.Sexo);
                 $('#grupo_etnico').val(paciente.GrupoEtnico);
 
-                // Seleccionar el tipo de diabetes del paciente
                 $('#tipo_diabetes').val(paciente.IdDiabetes);
 
-                // Cambiar el texto del botón de submit
                 $('#btnGuardarPaciente').text('Guardar Cambios');
 
-                // Mostrar el modal
                 const modal = new bootstrap.Modal(document.getElementById('editarPacienteModal'));
                 modal.show();
             } else {
@@ -1159,23 +1116,21 @@ function abrirModalEditarPaciente(idPaciente) {
 
 $(document).ready(function() {
     $('#formEditarPaciente').on('submit', function(event) {
-        event.preventDefault(); // Prevenir el envío normal del formulario
+        event.preventDefault(); 
 
-        const formData = $(this).serialize(); // Serializar los datos del formulario
+        const formData = $(this).serialize(); 
 
         $.ajax({
-            url: 'guardarUpdatePaciente.php', // Asegúrate de que la ruta sea correcta
-            type: 'POST', // Método de envío
+            url: 'guardarUpdatePaciente.php', 
+            type: 'POST', 
             data: formData,
             success: function(response) {
                 const result = JSON.parse(response);
                 if (result.success) {
                     alert('Datos del paciente actualizados exitosamente!');
-                    // Cerrar el modal
                     const modal = bootstrap.Modal.getInstance(document.getElementById('editarPacienteModal'));
                     modal.hide();
-                    // Recargar la página o actualizar la tabla
-                    location.reload(); // Opcional: Recargar la página
+                    location.reload(); 
                 } else {
                     alert('Error al guardar los datos: ' + result.error);
                 }
@@ -1186,8 +1141,6 @@ $(document).ready(function() {
         });
     });
 });
-
-
 
 
 </script>
