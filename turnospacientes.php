@@ -136,13 +136,7 @@ $conn->close();
 </div>
 
 <script>
-    function recargarPagina() {
-    setTimeout(function() {
-        location.reload(true); 
-    }, 10000);
-}
     document.addEventListener('DOMContentLoaded', function() {
-        recargarPagina();
         const modal = document.getElementById("modalTurno");
         const btnCrear = document.querySelector(".btn-crear");
         const span = document.getElementsByClassName("close-modal")[0];

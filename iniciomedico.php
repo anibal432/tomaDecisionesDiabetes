@@ -84,7 +84,7 @@ $conn->close();
     <div class="navbar-icon"><i class="fa-solid fa-user-doctor"></i></div>
     <div class="logo">Diabetes Log</div>
     <ul>            
-        <li><a href="../iniciomedico.php" class="active"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+        <li><a href="iniciomedico.php" class="active"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
         <li><a href="../Pacientes/pacientesPrueba.php"><i class="fas fa-user-plus"></i> <span>Ing. Paciente</span></a></li>
         <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> <span>Asignar Turno</span></a></li>
         <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> <span>Datos del Paciente</span></a></li>

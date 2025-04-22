@@ -1,67 +1,3 @@
-<?php
-session_start();
-include('conexionL.php');
-
-header("Cache-Control: private, max-age=3600");
-
-$esJefaSecretaria = false;
-$correo_secretaria = $_SESSION['correo'] ?? '';
-
-if (!empty($correo_secretaria)) {
-    $query_jefa = "SELECT js.IdJefeS FROM JefeSec js
-                  JOIN Secretarias s ON js.IdSecre = s.IdSecre
-                  WHERE s.CorreoSecre = ? LIMIT 1";
-    $stmt_jefa = $conn->prepare($query_jefa);
-    $stmt_jefa->bind_param("s", $correo_secretaria);
-    $stmt_jefa->execute();
-    $result_jefa = $stmt_jefa->get_result();
-    
-    $esJefaSecretaria = ($result_jefa->num_rows > 0);
-    $stmt_jefa->close();
-}
-
-$query_medicos = "SELECT IdMedico, PrimerNombre, PrimerApellido, CorreoMedico FROM Medico";
-$result_medicos = $conn->query($query_medicos);
-$medicos = $result_medicos->fetch_all(MYSQLI_ASSOC);
-$result_medicos->close();
-
-$currentMonth = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('n');
-$currentYear = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
-
-$disponibilidad = [];
-if (file_exists('Disponible.json')) {
-    $file = fopen('Disponible.json', 'r');
-    $disponibilidad = json_decode(stream_get_contents($file), true);
-    fclose($file);
-}
-
-$firstDayOfMonth = mktime(0, 0, 0, $currentMonth, 1, $currentYear);
-$firstDay = date('Y-m-01', $firstDayOfMonth);
-$lastDay = date('Y-m-t', $firstDayOfMonth);
-
-$query_citas = "SELECT IdMedico, fecha, COUNT(*) as count 
-               FROM citas 
-               WHERE fecha BETWEEN ? AND ?
-               GROUP BY IdMedico, fecha";
-$stmt_citas = $conn->prepare($query_citas);
-$stmt_citas->bind_param("ss", $firstDay, $lastDay);
-$stmt_citas->execute();
-$result_citas = $stmt_citas->get_result();
-$citas_por_dia = [];
-
-while ($row = $result_citas->fetch_assoc()) {
-    $citas_por_dia[$row['IdMedico']][$row['fecha']] = $row['count'];
-}
-$stmt_citas->close();
-
-$cache_file = 'cache/calendario_' . $currentMonth . '_' . $currentYear . '.json';
-if (file_exists($cache_file) && (time() - filemtime($cache_file) < 3600)) {
-    readfile($cache_file);
-    exit;
-}
-
-ob_start();
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -79,11 +15,7 @@ ob_start();
     <div class="logo">Admin Log</div>
     <ul>            
         <li><a href="iniciosecre.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
-        <?php if ($esJefaSecretaria): ?>
-            <li><a href="insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
-            <li><a href="gestión_secretarias.php"><i class="fa-solid fa-id-card"></i> <span>Ingresar Secre</span></a></li>
-        <?php endif; ?>
-        <li><a href="Citas.php" class="active"><i class="fa-solid fa-calendar-days"></i> <span>Agendar Cita</span></a></li>
+                <li><a href="Citas.php" class="active"><i class="fa-solid fa-calendar-days"></i> <span>Agendar Cita</span></a></li>
         <li><a href="turnospacientes.php"><i class="fa-solid fa-ticket"></i><span>Turnos de Pacientes</span></a></li>
         <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
     </ul>
@@ -93,12 +25,7 @@ ob_start();
     <div class="calendar-container">
         <div class="calendar-header">
             <h2 class="calendar-title">
-                <?php 
-                $monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
-                              "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-                echo $monthNames[$currentMonth - 1] . ' ' . $currentYear;
-                ?>
-            </h2>
+                Junio 2025            </h2>
             <div class="calendar-nav">
                 <button class="nav-button" id="delete-citas-btn" style="margin: 0 10px;">
                     <i class="fas fa-trash-alt"></i>
@@ -121,66 +48,7 @@ ob_start();
             <div class="calendar-day-header">Sáb</div>
             <div class="calendar-day-header">Dom</div>
             
-            <?php
-            $daysInMonth = date('t', $firstDayOfMonth);
-            $dayOfWeek = date('N', $firstDayOfMonth); 
-            
-            for ($i = 1; $i < $dayOfWeek; $i++) {
-                echo '<div class="calendar-day disabled-day"></div>';
-            }
-            
-            $currentDay = date('j');
-            $currentMonthNum = date('n');
-            $currentYearNum = date('Y');
-            
-            for ($day = 1; $day <= $daysInMonth; $day++) {
-                $date = date('Y-m-d', mktime(0, 0, 0, $currentMonth, $day, $currentYear));
-                $dayAbbr = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'][(date('N', mktime(0, 0, 0, $currentMonth, $day, $currentYear))) - 1];
-                
-                $dayClass = 'calendar-day';
-                $isPast = ($currentYear < $currentYearNum) || 
-                         ($currentYear == $currentYearNum && $currentMonth < $currentMonthNum) ||
-                         ($currentYear == $currentYearNum && $currentMonth == $currentMonthNum && $day < $currentDay);
-                $isToday = ($day == $currentDay && $currentMonth == $currentMonthNum && $currentYear == $currentYearNum);
-                
-                if ($isToday) {
-                    $dayClass .= ' current-day';
-                }
-                
-                $hasBookedAvailability = false;
-                foreach ($medicos as $medico) {
-                    $correo = $medico['CorreoMedico'];
-                    if (isset($disponibilidad[$correo][$dayAbbr]) && $disponibilidad[$correo][$dayAbbr] === 'booked') {
-                        $count = $citas_por_dia[$medico['IdMedico']][$date] ?? 0;
-                        if ($count < 5) {
-                            $hasBookedAvailability = true;
-                            break;
-                        }
-                    }
-                }
-                
-                if ($isPast) {
-                    $dayClass .= ' disabled-day';
-                } else if ($hasBookedAvailability) {
-                    $dayClass .= ' available-day';
-                } else {
-                    $dayClass .= ' disabled-day';
-                }
-                
-                echo '<div class="'.$dayClass.'" data-date="'.$date.'" onclick="handleDayClick(this)"><div class="day-number">'.$day.'</div></div>';
-                
-                if (date('N', mktime(0, 0, 0, $currentMonth, $day, $currentYear)) == 7 && $day != $daysInMonth) {
-                }
-            }
-
-            $lastDayOfWeek = date('N', mktime(0, 0, 0, $currentMonth, $daysInMonth, $currentYear));
-            if ($lastDayOfWeek != 7) {
-                for ($i = $lastDayOfWeek; $i < 7; $i++) {
-                    echo '<div class="calendar-day disabled-day"></div>';
-                }
-            }
-            ?>
-        </div>
+            <div class="calendar-day disabled-day"></div><div class="calendar-day disabled-day"></div><div class="calendar-day disabled-day"></div><div class="calendar-day disabled-day"></div><div class="calendar-day disabled-day"></div><div class="calendar-day disabled-day"></div><div class="calendar-day disabled-day" data-date="2025-06-01" onclick="handleDayClick(this)"><div class="day-number">1</div></div><div class="calendar-day available-day" data-date="2025-06-02" onclick="handleDayClick(this)"><div class="day-number">2</div></div><div class="calendar-day disabled-day" data-date="2025-06-03" onclick="handleDayClick(this)"><div class="day-number">3</div></div><div class="calendar-day available-day" data-date="2025-06-04" onclick="handleDayClick(this)"><div class="day-number">4</div></div><div class="calendar-day disabled-day" data-date="2025-06-05" onclick="handleDayClick(this)"><div class="day-number">5</div></div><div class="calendar-day disabled-day" data-date="2025-06-06" onclick="handleDayClick(this)"><div class="day-number">6</div></div><div class="calendar-day available-day" data-date="2025-06-07" onclick="handleDayClick(this)"><div class="day-number">7</div></div><div class="calendar-day disabled-day" data-date="2025-06-08" onclick="handleDayClick(this)"><div class="day-number">8</div></div><div class="calendar-day available-day" data-date="2025-06-09" onclick="handleDayClick(this)"><div class="day-number">9</div></div><div class="calendar-day disabled-day" data-date="2025-06-10" onclick="handleDayClick(this)"><div class="day-number">10</div></div><div class="calendar-day available-day" data-date="2025-06-11" onclick="handleDayClick(this)"><div class="day-number">11</div></div><div class="calendar-day disabled-day" data-date="2025-06-12" onclick="handleDayClick(this)"><div class="day-number">12</div></div><div class="calendar-day disabled-day" data-date="2025-06-13" onclick="handleDayClick(this)"><div class="day-number">13</div></div><div class="calendar-day available-day" data-date="2025-06-14" onclick="handleDayClick(this)"><div class="day-number">14</div></div><div class="calendar-day disabled-day" data-date="2025-06-15" onclick="handleDayClick(this)"><div class="day-number">15</div></div><div class="calendar-day available-day" data-date="2025-06-16" onclick="handleDayClick(this)"><div class="day-number">16</div></div><div class="calendar-day disabled-day" data-date="2025-06-17" onclick="handleDayClick(this)"><div class="day-number">17</div></div><div class="calendar-day available-day" data-date="2025-06-18" onclick="handleDayClick(this)"><div class="day-number">18</div></div><div class="calendar-day disabled-day" data-date="2025-06-19" onclick="handleDayClick(this)"><div class="day-number">19</div></div><div class="calendar-day disabled-day" data-date="2025-06-20" onclick="handleDayClick(this)"><div class="day-number">20</div></div><div class="calendar-day available-day" data-date="2025-06-21" onclick="handleDayClick(this)"><div class="day-number">21</div></div><div class="calendar-day disabled-day" data-date="2025-06-22" onclick="handleDayClick(this)"><div class="day-number">22</div></div><div class="calendar-day available-day" data-date="2025-06-23" onclick="handleDayClick(this)"><div class="day-number">23</div></div><div class="calendar-day disabled-day" data-date="2025-06-24" onclick="handleDayClick(this)"><div class="day-number">24</div></div><div class="calendar-day available-day" data-date="2025-06-25" onclick="handleDayClick(this)"><div class="day-number">25</div></div><div class="calendar-day disabled-day" data-date="2025-06-26" onclick="handleDayClick(this)"><div class="day-number">26</div></div><div class="calendar-day disabled-day" data-date="2025-06-27" onclick="handleDayClick(this)"><div class="day-number">27</div></div><div class="calendar-day available-day" data-date="2025-06-28" onclick="handleDayClick(this)"><div class="day-number">28</div></div><div class="calendar-day disabled-day" data-date="2025-06-29" onclick="handleDayClick(this)"><div class="day-number">29</div></div><div class="calendar-day available-day" data-date="2025-06-30" onclick="handleDayClick(this)"><div class="day-number">30</div></div><div class="calendar-day disabled-day"></div><div class="calendar-day disabled-day"></div><div class="calendar-day disabled-day"></div><div class="calendar-day disabled-day"></div><div class="calendar-day disabled-day"></div><div class="calendar-day disabled-day"></div>        </div>
     </div>
 </main>
 
@@ -290,8 +158,8 @@ ob_start();
     const timeSlots = ['07:00', '09:00', '11:00', '14:00', '16:00'];
     
     document.getElementById('prev-month').addEventListener('click', function() {
-        let prevMonth = <?= $currentMonth ?> - 1;
-        let prevYear = <?= $currentYear ?>;
+        let prevMonth = 6 - 1;
+        let prevYear = 2025;
         
         if (prevMonth < 1) {
             prevMonth = 12;
@@ -302,8 +170,8 @@ ob_start();
     });
 
     document.getElementById('next-month').addEventListener('click', function() {
-        let nextMonth = <?= $currentMonth ?> + 1;
-        let nextYear = <?= $currentYear ?>;
+        let nextMonth = 6 + 1;
+        let nextYear = 2025;
         
         if (nextMonth > 12) {
             nextMonth = 1;
@@ -320,7 +188,7 @@ ob_start();
         
         const prevButton = document.getElementById('prev-month');
         
-        if (<?= $currentYear ?> == currentYear && <?= $currentMonth ?> == currentMonth) {
+        if (2025 == currentYear && 6 == currentMonth) {
             prevButton.disabled = true;
         }
     });
@@ -623,13 +491,3 @@ ob_start();
 </script>
 </body>
 </html>
-<?php
-$output = ob_get_clean();
-
-if (!file_exists('cache')) {
-    mkdir('cache', 0755, true);
-}
-
-file_put_contents($cache_file, $output);
-echo $output;
-?>

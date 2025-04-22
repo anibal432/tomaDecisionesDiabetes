@@ -4,97 +4,129 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
 
-require 'PHPMailer-master/src/Exception.php';
-require 'PHPMailer-master/src/PHPMailer.php';
-require 'PHPMailer-master/src/SMTP.php';
+require_once 'PHPMailer-master/src/Exception.php';
+require_once 'PHPMailer-master/src/PHPMailer.php';
+require_once 'PHPMailer-master/src/SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\SMTP;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     include('conexionL.php');
-
-    $correo = $_POST['correo'];
+    
+    $correo = filter_input(INPUT_POST, 'correo', FILTER_SANITIZE_EMAIL);
     $contrasena = $_POST['contrasena'];
-
-    $sql_verificar_desactivado = "SELECT d.IdMedico, d.IdSecre 
-                                 FROM Desactivado d
-                                 LEFT JOIN Medico m ON d.IdMedico = m.IdMedico AND m.CorreoMedico = ?
-                                 LEFT JOIN Secretarias s ON d.IdSecre = s.IdSecre AND s.CorreoSecre = ?
-                                 WHERE m.CorreoMedico IS NOT NULL OR s.CorreoSecre IS NOT NULL";
     
-    $stmt_verificar_desactivado = $conn->prepare($sql_verificar_desactivado);
-    $stmt_verificar_desactivado->bind_param("ss", $correo, $correo);
-    $stmt_verificar_desactivado->execute();
-    $stmt_verificar_desactivado->store_result();
-    
-    if ($stmt_verificar_desactivado->num_rows > 0) {
-        $_SESSION['error'] = 'Usuario inactivo. Por favor verifique con el Jefe de su área.';
+    if (!$correo || !$contrasena) {
+        $_SESSION['error'] = 'Datos de entrada inválidos';
         header("Location: index.php");
         exit();
     }
-    $stmt_verificar_desactivado->close();
-
-    $sql_verificar_login = "CALL VerificarLogin(?, ?)";
-    $stmt_verificar_login = $conn->prepare($sql_verificar_login);
+    $sql = "SELECT 
+                d.IdMedico, 
+                d.IdSecre,
+                CASE 
+                    WHEN m.IdMedico IS NOT NULL THEN 'Medico'
+                    WHEN s.IdSecre IS NOT NULL THEN 'Secretaria'
+                    ELSE NULL
+                END AS tipo_usuario,
+                m.IdMedico AS id_usuario,
+                s.IdSecre AS id_secre
+            FROM Desactivado d
+            LEFT JOIN Medico m ON d.IdMedico = m.IdMedico AND m.CorreoMedico = ? AND m.ContraMedico = ?
+            LEFT JOIN Secretarias s ON d.IdSecre = s.IdSecre AND s.CorreoSecre = ? AND s.ContraSecre = ?
+            WHERE (m.CorreoMedico IS NOT NULL OR s.CorreoSecre IS NOT NULL)";
     
-    if ($stmt_verificar_login === false) {
-        die("Error en la preparación de la consulta: " . $conn->error);
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssss", $correo, $contrasena, $correo, $contrasena);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $_SESSION['error'] = 'Usuario inactivo. Por favor verifique con el Jefe de su área.';
+        $stmt->close();
+        header("Location: index.php");
+        exit();
+    }
+    $stmt->close();
+
+    $sql = "CALL VerificarLogin(?, ?)";
+    $stmt = $conn->prepare($sql);
+    
+    if (!$stmt) {
+        error_log("Error en la preparación de la consulta: " . $conn->error);
+        $_SESSION['error'] = 'Error en el sistema. Por favor intente más tarde.';
+        header("Location: index.php");
+        exit();
     }
     
-    $stmt_verificar_login->bind_param("ss", $correo, $contrasena);
-
-    if ($stmt_verificar_login->execute()) {
-        $stmt_verificar_login->store_result();
-        $stmt_verificar_login->bind_result($mensaje);
-        $stmt_verificar_login->fetch();
-        $stmt_verificar_login->free_result();
-        $stmt_verificar_login->close();
-    } else {
-        die("Error en la ejecución del procedimiento: " . $conn->error);
+    $stmt->bind_param("ss", $correo, $contrasena);
+    
+    if (!$stmt->execute()) {
+        error_log("Error en la ejecución del procedimiento: " . $conn->error);
+        $_SESSION['error'] = 'Error en el sistema. Por favor intente más tarde.';
+        header("Location: index.php");
+        exit();
     }
+    
+    $stmt->bind_result($mensaje);
+    $stmt->fetch();
+    $stmt->close();
 
     if (strpos($mensaje, 'Acceso concedido:') !== false) {
-        $codigo_verificacion = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
-        
+        $codigo_verificacion = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
         $tipo_usuario = (strpos($mensaje, 'Medico') !== false) ? 'Medico' : 'Secretaria';
+        
         $tabla = ($tipo_usuario == 'Medico') ? 'Medico' : 'Secretarias';
-        $campo_correo = ($tipo_usuario == 'Medico') ? 'CorreoMedico' : 'CorreoSecre';
+        $campo_id = ($tipo_usuario == 'Medico') ? 'IdMedico' : 'IdSecre';
         
-        $sql_guardar_codigo = "UPDATE $tabla SET CodigoContra = ? WHERE $campo_correo = ?";
-        $stmt_guardar_codigo = $conn->prepare($sql_guardar_codigo);
-        $stmt_guardar_codigo->bind_param("ss", $codigo_verificacion, $correo);
-        $stmt_guardar_codigo->execute();
-        $stmt_guardar_codigo->close();
+        $sql = "UPDATE $tabla SET CodigoContra = ? WHERE $campo_id = (
+                    SELECT $campo_id FROM (
+                        SELECT $campo_id FROM $tabla 
+                        WHERE " . ($tipo_usuario == 'Medico' ? 'CorreoMedico' : 'CorreoSecre') . " = ?
+                    ) AS temp
+                )";
         
-        $mail = new PHPMailer(true);
-        try {            
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ss", $codigo_verificacion, $correo);
+        $stmt->execute();
+        $stmt->close();
+        
+        try {
+            $mail = new PHPMailer(true);
             $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';
-            $mail->SMTPAuth   = true;
-            $mail->Username   = 'servidorumg677@gmail.com'; 
-            $mail->Password   = 'edbnxcguetbzwknl';        
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'servidorumg677@gmail.com';
+            $mail->Password = 'edbnxcguetbzwknl';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port       = 587;
-
+            $mail->Port = 587;
+            $mail->CharSet = 'UTF-8';
+            
             $mail->setFrom('servidorumg677@gmail.com', 'Equipo Tecnico');
             $mail->addAddress($correo);
-
+            $mail->Subject = 'Código de Verificación';
+            
             $mail->isHTML(true);
-            $mail->Subject = 'Codigo de Verificacion.';
-            $mail->Body    = "Tu codigo de verificacion para iniciar sesion es: <strong>$codigo_verificacion</strong>";
-            $mail->AltBody = "Tu codigo de verificacion para iniciar sesion es: $codigo_verificacion";
-
+            $mail->Body = sprintf(
+                '<p>Tu código de verificación para iniciar sesión es: <strong>%s</strong></p>',
+                $codigo_verificacion
+            );
+            $mail->AltBody = "Tu código de verificación para iniciar sesión es: $codigo_verificacion";
+            
+            session_write_close();
             $mail->send();
+            session_start();
             
             $_SESSION['correo_verificacion'] = $correo;
             $_SESSION['tipo_usuario'] = $tipo_usuario;
             $_SESSION['mostrar_modal_verificacion'] = true;
+            
             header("Location: index.php");
             exit();
         } catch (Exception $e) {
-            $_SESSION['error'] = "Error al enviar el código de verificación. Mailer Error: {$mail->ErrorInfo}";
+            error_log("Error al enviar correo: " . $e->getMessage());
+            $_SESSION['error'] = "Error al enviar el código de verificación. Por favor intente nuevamente.";
             header("Location: index.php");
             exit();
         }
@@ -106,6 +138,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 if (isset($conn) && $conn) {
-    mysqli_close($conn);
+    $conn->close();
 }
 ?>
