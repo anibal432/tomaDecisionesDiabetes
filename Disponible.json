@@ -1,16 +1,17 @@
 {
     "pruebaumg777@gmail.com": {
         "Lun": "booked",
-        "Mi\u00e9": "booked",
-        "Dom": "available"
+        "Dom": "available",
+        "Vie": "available",
+        "Jue": "available",
+        "S\u00e1b": "available",
+        "Mi\u00e9": "available"
     },
     "talcorreo@gmail.com": {
         "Mi\u00e9": "available"
     },
     "escobar66.gonzales12@gmail.com": {
-        "S\u00e1b": "booked",
         "Lun": "available",
-        "Mar": "available",
-        "Vie": "booked"
+        "Mar": "available"
     }
 }

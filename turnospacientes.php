@@ -51,45 +51,24 @@ $conn->close();
     <div class="turnos-container">
         <div class="turnos-header">
             <h1><i class="fas fa-ticket-alt"></i> Gestión de Turnos</h1>
-            <a href="crear_turno.php" class="btn-crear">Crear Turno</a>
+            <a href="#" class="btn-crear">Crear Turno</a>
         </div>
         
         <div class="tabla-turnos">
-            <table>
+            <table id="tablaTurnos">
                 <thead>
                     <tr>
-                        <th>ID Médico</th>
+                        <th>ID Turno</th>
+                        <th>Médico</th>
                         <th>Nombre Paciente</th>
-                        <th>Apellido Paciente</th>
-                        <th>Estado Cita</th>
+                        <th>DPI</th>
+                        <th>Teléfono</th>
+                        <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    include('conexionL.php');
-                    $query = "SELECT IdTurno, IdMedico, PrimerNombrePac, PrimerApellidoPac, EstadoCita FROM Turnos";
-                    $result = $conn->query($query);
-                    
-                    if ($result->num_rows > 0) {
-                        while($row = $result->fetch_assoc()) {
-                            echo "<tr>
-                                <td>".$row["IdMedico"]."</td>
-                                <td>".$row["PrimerNombrePac"]."</td>
-                                <td>".$row["PrimerApellidoPac"]."</td>
-                                <td>".$row["EstadoCita"]."</td>
-                                <td>
-                                    <button class='btn-eliminar' data-id='".$row["IdTurno"]."'>
-                                        <i class='fas fa-trash-alt'></i> Eliminar
-                                    </button>
-                                </td>
-                            </tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='5'>No hay turnos registrados</td></tr>";
-                    }
-                    $conn->close();
-                    ?>
+                    <!-- Los datos se cargarán dinámicamente -->
                 </tbody>
             </table>
         </div>
@@ -100,32 +79,75 @@ $conn->close();
     <div class="modal-content">
         <span class="close-modal">&times;</span>
         <h2><i class="fas fa-plus-circle"></i> Crear Nuevo Turno</h2>
-        <form id="formTurno" action="crear_turno.php" method="POST">
-            <div class="form-group">
-                <label for="idMedico">Médico:</label>
-                <select id="idMedico" name="idMedico" required>
-                    <option value="">Seleccione un médico</option>
-                </select>
+        <form id="formTurno">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="idMedico">Médico:</label>
+                    <select id="idMedico" name="idMedico" required>
+                        <option value="">Seleccione un médico</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="primerNombre">Primer Nombre:</label>
+                    <input type="text" id="primerNombre" name="primerNombre" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="segundoNombre">Segundo Nombre:</label>
+                    <input type="text" id="segundoNombre" name="segundoNombre">
+                </div>
             </div>
             
-            <div class="form-group">
-                <label for="primerNombre">Primer Nombre:</label>
-                <input type="text" id="primerNombre" name="primerNombre" required>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="tercerNombre">Tercer Nombre:</label>
+                    <input type="text" id="tercerNombre" name="tercerNombre">
+                </div>
+                
+                <div class="form-group">
+                    <label for="primerApellido">Primer Apellido:</label>
+                    <input type="text" id="primerApellido" name="primerApellido" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="segundoApellido">Segundo Apellido:</label>
+                    <input type="text" id="segundoApellido" name="segundoApellido">
+                </div>
             </div>
             
-            <div class="form-group">
-                <label for="segundoNombre">Segundo Nombre (opcional):</label>
-                <input type="text" id="segundoNombre" name="segundoNombre">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="noDpi">Número de DPI:</label>
+                    <input type="text" id="noDpi" name="noDpi" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="tel" id="telefono" name="telefono" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                </div>
             </div>
             
-            <div class="form-group">
-                <label for="primerApellido">Primer Apellido:</label>
-                <input type="text" id="primerApellido" name="primerApellido" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="segundoApellido">Segundo Apellido (opcional):</label>
-                <input type="text" id="segundoApellido" name="segundoApellido">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="sexo">Sexo:</label>
+                    <select id="sexo" name="sexo" required>
+                        <option value="">Seleccione</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Prefiero no decir">Prefiero no decir</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="grupoEtnico">Grupo Étnico:</label>
+                    <input type="text" id="grupoEtnico" name="grupoEtnico">
+                </div>
             </div>
             
             <input type="hidden" name="estadoCita" value="Pendiente">
@@ -135,73 +157,239 @@ $conn->close();
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const modal = document.getElementById("modalTurno");
-        const btnCrear = document.querySelector(".btn-crear");
-        const span = document.getElementsByClassName("close-modal")[0];
-        
-        btnCrear.addEventListener('click', function(e) {
-            e.preventDefault();
-            modal.style.display = "block";
-            cargarMedicosDisponibles();
-        });
-        
-        span.addEventListener('click', function() {
-            modal.style.display = "none";
-        });
-        
-        window.addEventListener('click', function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById("modalTurno");
+    const btnCrear = document.querySelector(".btn-crear");
+    const span = document.getElementsByClassName("close-modal")[0];
+    const formTurno = document.getElementById("formTurno");
+    
+    cargarTurnos();
+    
+    btnCrear.addEventListener('click', function(e) {
+        e.preventDefault();
+        modal.style.display = "block";
+        cargarMedicosDisponibles();
     });
     
-    async function cargarMedicosDisponibles() {
-        try {
-            const dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-            const hoy = new Date();
-            const diaActual = dias[hoy.getDay()];
-            
-            const response = await fetch('Disponible.json');
-            const disponibilidad = await response.json();
-            
-            const medicosResponse = await fetch('obtener_medicos.php');
-            const medicos = await medicosResponse.json();
-            
-            const medicosDisponibles = medicos.filter(medico => {
-                const disponibilidadMedico = disponibilidad[medico.CorreoMedico];
-                return disponibilidadMedico && disponibilidadMedico[diaActual] === "available";
-            });
-            
-            const select = document.getElementById('idMedico');
-            select.innerHTML = '<option value="">Seleccione un médico</option>';
-            
+    span.addEventListener('click', function() {
+        modal.style.display = "none";
+    });
+    
+    window.addEventListener('click', function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    });
+    
+    formTurno.addEventListener('submit', function(e) {
+        e.preventDefault();
+        crearTurno();
+    });
+    
+    setInterval(cargarTurnos, 5000);
+});
+
+async function cargarMedicosDisponibles() {
+    try {
+        const dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+        const hoy = new Date();
+        const diaActual = dias[hoy.getDay()];
+        console.log('Día actual:', diaActual);
+        
+        const disponibilidadResponse = await fetch('Disponible.json');
+        if (!disponibilidadResponse.ok) {
+            throw new Error('Error al cargar Disponible.json');
+        }
+        const disponibilidad = await disponibilidadResponse.json();
+        console.log('Disponibilidad:', disponibilidad);
+        
+        const medicosResponse = await fetch('obtener_medicos.php');
+        if (!medicosResponse.ok) {
+            throw new Error('Error al cargar médicos');
+        }
+        const medicos = await medicosResponse.json();
+        console.log('Médicos:', medicos);
+        
+        const medicosDisponibles = medicos.filter(medico => {
+            if (!disponibilidad[medico.CorreoMedico]) {
+                console.log('No se encontró disponibilidad para:', medico.CorreoMedico);
+                return false;
+            }
+            const disponible = disponibilidad[medico.CorreoMedico][diaActual] === "available";
+            console.log(`Médico ${medico.CorreoMedico} - ${diaActual}:`, disponible);
+            return disponible;
+        });
+        
+        console.log('Médicos disponibles:', medicosDisponibles);
+        
+        const select = document.getElementById('idMedico');
+        select.innerHTML = '<option value="">Seleccione un médico</option>';
+        
+        if (medicosDisponibles.length === 0) {
+            console.warn('No hay médicos disponibles hoy');
+            select.innerHTML += '<option value="" disabled>No hay médicos disponibles hoy</option>';
+        } else {
             medicosDisponibles.forEach(medico => {
                 const option = document.createElement('option');
                 option.value = medico.IdMedico;
                 option.textContent = `${medico.PrimerNombre} ${medico.PrimerApellido}`;
                 select.appendChild(option);
             });
-            
-        } catch (error) {
-            console.error('Error al cargar médicos:', error);
-            alert('Error al cargar médicos disponibles');
         }
+        
+    } catch (error) {
+        console.error('Error al cargar médicos:', error);
+        const select = document.getElementById('idMedico');
+        select.innerHTML = '<option value="">Error al cargar médicos</option>';
+        
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al cargar médicos disponibles: ' + error.message,
+            confirmButtonColor: '#3a7bd5'
+        });
     }
+}
+
+async function cargarTurnos() {
+    try {
+        const response = await fetch('obtener_turnos.php');
+        const turnos = await response.json();
+        const tbody = document.querySelector("#tablaTurnos tbody");
+        tbody.innerHTML = '';
+        
+        if (turnos.length > 0) {
+            turnos.forEach(turno => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${turno.IdTurno}</td>
+                    <td>${turno.NombreMedico}</td>
+                    <td>${turno.NombreCompletoPaciente}</td>
+                    <td>${turno.NoDpi}</td>
+                    <td>${turno.Telefono}</td>
+                    <td>${turno.EstadoCita}</td>
+                    <td>
+                        <button class='btn-eliminar' data-id='${turno.IdTurno}'>
+                            <i class='fas fa-trash-alt'></i> Eliminar
+                        </button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+            
+            document.querySelectorAll('.btn-eliminar').forEach(button => {
+                button.addEventListener('click', function() {
+                    const idTurno = this.getAttribute('data-id');
+                    Swal.fire({
+                        title: '¿Eliminar turno?',
+                        text: "¿Está seguro que desea eliminar este turno?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3a7bd5',
+                        cancelButtonColor: '#ff6b6b',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            eliminarTurno(idTurno);
+                        }
+                    });
+                });
+            });
+        } else {
+            tbody.innerHTML = '<tr><td colspan="7">No hay turnos registrados para hoy</td></tr>';
+        }
+    } catch (error) {
+        console.error('Error al cargar turnos:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al cargar los turnos',
+            confirmButtonColor: '#3a7bd5'
+        });
+    }
+}
+
+async function crearTurno() {
+    try {
+        const formData = new FormData(document.getElementById("formTurno"));
+        
+        const response = await fetch('crear_turno.php', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: result.message,
+                confirmButtonColor: '#3a7bd5'
+            }).then(() => {
+                document.getElementById("modalTurno").style.display = "none";
+                document.getElementById("formTurno").reset();
+                cargarTurnos();
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: result.message,
+                confirmButtonColor: '#3a7bd5'
+            });
+        }
+    } catch (error) {
+        console.error('Error al crear turno:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al crear el turno',
+            confirmButtonColor: '#3a7bd5'
+        });
+    }
+}
+
+async function eliminarTurno(idTurno) {
+    try {
+        const response = await fetch(`eliminar_turno.php?id=${idTurno}`);
+        const result = await response.json();
+        
+        if (result.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: result.message,
+                confirmButtonColor: '#3a7bd5'
+            }).then(() => {
+                cargarTurnos();
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: result.message,
+                confirmButtonColor: '#3a7bd5'
+            });
+        }
+    } catch (error) {
+        console.error('Error al eliminar turno:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al eliminar el turno',
+            confirmButtonColor: '#3a7bd5'
+        });
+    }
+}
 </script>
 
-<script>
-    document.querySelectorAll('.btn-eliminar').forEach(button => {
-        button.addEventListener('click', function() {
-            const idTurno = this.getAttribute('data-id');
-            if (confirm('¿Está seguro que desea eliminar este turno?')) {
-                window.location.href = 'eliminar_turno.php?id=' + idTurno;
-            }
-        });
-    });
-</script>
 
 
 </body>

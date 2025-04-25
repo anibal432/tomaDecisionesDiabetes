@@ -1,5 +1,34 @@
 <?php
+session_start();
 include '../conexionDiabetes.php'; 
+include('../conexionL.php');
+
+$esJefeMedico = false;
+
+if (!empty($_SESSION['correo'])) {
+    $stmt = $conn->prepare("SELECT IdMedico FROM Medico WHERE CorreoMedico = ?");
+    $stmt->bind_param("s", $_SESSION['correo']);
+    $stmt->execute();
+    $stmt->bind_result($idMedico);
+    
+    if ($stmt->fetch()) {
+        $stmt->free_result();
+        $stmt->close();
+        
+        $stmt_jefe = $conn->prepare("SELECT IdJefeM FROM JefeMed WHERE IdMedico = ?");
+        $stmt_jefe->bind_param("i", $idMedico);
+        $stmt_jefe->execute();
+        $stmt_jefe->store_result();
+        
+        if ($stmt_jefe->num_rows > 0) {
+            $esJefeMedico = true;
+        }
+        $stmt_jefe->close();
+    } else {
+        $stmt->close();
+    }
+}
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -8,32 +37,31 @@ include '../conexionDiabetes.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Pacientes</title>
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <!-- Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Estilos personalizados -->
     <link rel="stylesheet" href="../css/nav.css">
     <link rel="stylesheet" href="../css/botonUno.css">
     
 </head>
 <body>
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <nav class="navbar">
-        <div class="navbar-icon"><i class="fa-solid fa-user-doctor"></i></div>
-        <div class="logo">Diabetes Log</div>
-        <ul>            
-            <li><a href="../iniciomedico.php" class="fas user"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
-            <li><a href="../Pacientes/pacientesPrueba.php"><i class="fas fa-user-plus"></i> <span>Ing. Paciente</span></a></li>
-            <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> <span>Asignar Turno</span></a></li>
-            <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> <span>Datos del Paciente</span></a></li>
-            <li><a href="../Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> <span>Tipos de Diabetes</span></a></li>
-            <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
-        </ul>
-    </nav>
+    <div class="navbar-icon"><i class="fa-solid fa-user-doctor"></i></div>
+    <div class="logo">Diabetes Log</div>
+    <ul>            
+        <li><a href="../iniciomedico.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+        <li><a href="../Pacientes/pacientesPrueba.php" class="active"><i class="fas fa-user-plus"></i> <span>Ing. Paciente</span></a></li>
+        <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> <span>Asignar Turno</span></a></li>
+        <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> <span>Datos del Paciente</span></a></li>
+        <li><a href="../Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> <span>Tipos de Diabetes</span></a></li>
+        <li><a href="../Medico/Pacientes_Turno.php"><i class="fa-solid fa-users-rectangle"></i> <span>Consultas</span></a></li>
+        <?php if ($esJefeMedico): ?>
+            <li><a href="../insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
+        <?php endif; ?>
+        <li><a href="../Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
+    </ul>
+</nav>
 <br>
     <div class="container">
         <div class="row justify-content-center">
@@ -103,7 +131,6 @@ include '../conexionDiabetes.php';
         </div>
     </div>
 
-    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>

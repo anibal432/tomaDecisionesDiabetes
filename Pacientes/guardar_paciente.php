@@ -2,7 +2,6 @@
 include '../conexionDiabetes.php'; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Datos del paciente
     $nombreUno = $_POST['nombre'];
     $nombreDos = $_POST['nombredos'];
     $nombreTres = $_POST['nombretres'];
@@ -13,17 +12,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fechaNacimiento = $_POST['fechaNacimiento'];
     $sexo = $_POST['sexo'];
     $grupoEtnico = $_POST['grupoEtnico'];
-
-    // Insertar datos en la tabla Paciente (sin IdDiabetes)
+    
     $sqlPaciente = "INSERT INTO Paciente (NombreUno, NombreDos, NombreTres, PrimerApellido, SegundoApellido, NoDpi, Telefono, FechaNacimiento, Sexo, GrupoEtnico) 
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sqlPaciente);
     $stmt->bind_param("ssssssssss", $nombreUno, $nombreDos, $nombreTres, $primerApellido, $segundoApellido, $dpi, $telefono, $fechaNacimiento, $sexo, $grupoEtnico);
     
     if ($stmt->execute()) {
-        echo "<script>alert('Paciente registrado'); window.location.href='pacientesPrueba.php';</script>";
+        // Para AJAX
+        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            echo json_encode(['status' => 'success']);
+            exit;
+        }
+        // Para submit tradicional (por si acaso)
+        header("Location: datosPaciente.php?success=true");
+        exit;
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Error al guardar el paciente.']);
+        // Para AJAX
+        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            echo json_encode(['status' => 'error', 'message' => 'Error al guardar el paciente.']);
+            exit;
+        }
+        // Para submit tradicional (por si acaso)
+        echo "<script>alert('Error al guardar el paciente'); window.location.href='datosPaciente.php';</script>";
     }
 
     $stmt->close();

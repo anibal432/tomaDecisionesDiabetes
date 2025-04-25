@@ -94,18 +94,19 @@ $stmt->close();
 
 <?php if ($tipo_usuario == 'medico'): ?>
     <nav class="navbar">
-        <div class="navbar-icon"><i class="fa-solid fa-user-doctor"></i></div>
-        <div class="logo">Diabetes Log</div>
-        <ul>            
-            <li><a href="../iniciomedico.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
-            <li><a href="../Pacientes/pacientesPrueba.php"><i class="fas fa-user-plus"></i> <span>Ing. Paciente</span></a></li>
-            <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> <span>Asignar Turno</span></a></li>
-            <li><a href="../Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> <span>Datos del Paciente</span></a></li>
-            <li><a href="../Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> <span>Tipos de Diabetes</span></a></li>
-            <li><a href="insertusuarios.php" class="active"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
-            <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
-        </ul>
-    </nav>
+    <div class="navbar-icon"><i class="fa-solid fa-user-doctor"></i></div>
+    <div class="logo">Diabetes Log</div>
+    <ul>            
+        <li><a href="iniciomedico.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+        <li><a href="Pacientes/datosPaciente.php"><i class="fas fa-user-injured"></i> <span>Gestion de Pacientes</span></a></li>
+        <li><a href="Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> <span>Tipos de Diabetes</span></a></li>
+        <li><a href="Medico/Pacientes_Turno.php"><i class="fa-solid fa-users-rectangle"></i> <span>Consultas</span></a></li>
+        <?php if ($query_jefe): ?>
+            <li><a href="insertusuarios.php" class="active"><i class="fa-solid fa-user-plus"></i> <span>Gestion de Medico</span></a></li>
+        <?php endif; ?>
+        <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
+    </ul>
+</nav>
 <?php elseif ($tipo_usuario == 'secretaria'): ?>
     <nav class="navbar">
         <div class="navbar-icon"><i class="fa-solid fa-clipboard-user"></i></div>

@@ -1,0 +1,296 @@
+.patient-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin-bottom: -800px;
+    margin-left: -50px;
+    border: none;
+}
+
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.card-title i {
+    margin-right: 10px;
+    color: #3a7bd5;
+}
+
+.search-add-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.search-container {
+    position: relative;
+    flex-grow: 1;
+    max-width: 300px;
+}
+
+.search-container input {
+    padding: 8px 15px 8px 35px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    height: 38px; 
+}
+
+.search-container i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7f8c8d;
+}
+
+.btn-add-patient {
+    background-color: #3498db!important;
+    color: white!important;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 38px; 
+}
+
+.btn-add-patient:hover {
+    background-color: #2980b9!important;
+}
+
+.table thead tr {
+    background: #3a7bd5;
+    padding: 10px 12px;
+    color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.table tr:hover td {
+    background-color: #f1f1f1;
+}
+.table-custom thead th {
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 10px 12px;
+    border: none !important; 
+    background: #3a7bd5;
+    color: white;
+}
+
+.table-bordered {
+    border-radius: 8px;
+    overflow: hidden;
+    border-collapse: collapse;
+}
+
+.table-bordered th, 
+.table-bordered td {
+    border: none;
+}
+
+.table-bordered thead th:first-child {
+    border-radius: 8px 0 0 0;
+}
+
+.table-bordered thead th:last-child {
+    border-radius: 0 8px 0 0;
+}
+
+.btn-action {
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border: none;
+    margin: 0 3px;
+}
+
+.btn-edit {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #3da9f2;
+    color: white;
+}
+
+.btn-view {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.btn-view:hover {
+    background-color: #40e685;
+    color: white;
+}
+
+.btn-add {
+    background-color: #3a7bd5;
+    color: white;
+}
+.btn-add:hover {
+    background-color: #5288d5;
+    color: white;
+}
+
+
+.btn-action:hover {
+    opacity: 0.9;
+}
+
+
+.modal-title.text-primary {
+    color: #3a7bd5 !important;
+}
+
+.btn-primary {
+    background-color: #3a7bd5;
+    border-color: #3a7bd5;
+}
+
+.btn-primary:hover {
+    background-color: #2a6bc4;
+    border-color: #2a6bc4;
+}
+
+.btn-custom {
+    background-color: #2c6ed5;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn-custom:hover {
+    background-color: #1a56b7;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.btn-close:focus {
+    outline: none; 
+    box-shadow: none;
+}
+
+.table-scroll-container {
+    max-height: 500px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Estilo base de la tabla */
+.table-scroll-container table {
+    width: 100%;
+    margin-bottom: 0;
+    font-size: 0.92rem; /* Texto más pequeño */
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* Cabecera de la tabla */
+.table-scroll-container thead th {
+    position: sticky;
+    top: 0;
+    background-color: #3a7bd5;
+    color: white;
+    font-weight: 500;
+    padding: 10px 12px;
+    border: none;
+    z-index: 10;
+}
+
+/* Celdas del cuerpo */
+.table-scroll-container tbody td {
+    padding: 6px 12px; /* Espaciado reducido */
+    vertical-align: middle;
+}
+
+/* Filas alternadas para mejor legibilidad */
+.table-scroll-container tbody tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+/* Efecto hover en filas */
+.table-scroll-container tbody tr:hover td {
+    background-color: #f1f1f1;
+}
+
+/* Botones de acción */
+.table-scroll-container .btn-action {
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    border: none;
+    margin: 0 2px;
+    transition: all 0.2s;
+}
+
+/* Estilos específicos para cada tipo de botón */
+.table-scroll-container .btn-edit {
+    background-color: #3498db;
+    color: white;
+}
+
+.table-scroll-container .btn-view {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.table-scroll-container .btn-add {
+    background-color: #3a7bd5;
+    color: white;
+}
+
+/* Efectos hover para botones */
+.table-scroll-container .btn-action:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Personalización del scrollbar */
+.table-scroll-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.table-scroll-container::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb {
+    background-color: #3a7bd5;
+    border-radius: 4px;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb:hover {
+    background-color: #2a6bc4;
+}
+
+.table-scroll-container td:nth-child(2),
+.table-scroll-container th:nth-child(2) {
+    white-space: nowrap;
+    min-width: 250px;
+    width: auto;
+    max-width: none;
+}

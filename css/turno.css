@@ -1,9 +1,4 @@
 .main-content {
-    margin-left: 250px;
-    padding: 20px;
-    transition: all 0.3s;
-}
-.main-content {
     margin-left: 85px;
     padding: 25px;
     transition: margin-left 0.5s ease;
@@ -119,6 +114,7 @@ tr:hover {
     }
 }
 
+/* MODAL STYLES */
 .modal {
     display: none;
     position: fixed;
@@ -128,17 +124,17 @@ tr:hover {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    overflow: hidden;
+    overflow: auto;
 }
 
 .modal-content {
     background-color: #fff;
     margin: 5% auto;
-    padding: 25px;
+    padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     width: 90%;
-    max-width: 500px;
+    max-width: 800px; /* Aumentado para acomodar 3 columnas */
     position: relative;
     animation: modalopen 0.3s;
 }
@@ -164,7 +160,7 @@ tr:hover {
 
 .modal h2 {
     color: #3a7bd5;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -174,49 +170,77 @@ tr:hover {
     font-size: 24px;
 }
 
+/* FORM STYLES - MODIFIED FOR 3 COLUMNS */
+.form-rows-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
 .form-group {
-    margin-bottom: 10px;
+    flex: 1;
+    min-width: calc(33.333% - 14px); /* 3 columns with gap */
+    margin-bottom: 0;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     font-weight: 500;
     color: #555;
+    font-size: 14px;
 }
 
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 10px;
+    padding: 10px 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
-    transition: border-color 0.3s;
+    transition: all 0.3s;
 }
 
 .form-group input:focus,
 .form-group select:focus {
     border-color: #3a7bd5;
     outline: none;
+    box-shadow: 0 0 0 2px rgba(58, 123, 213, 0.2);
 }
 
 .btn-submit {
     background-color: #3a7bd5;
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 12px 20px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
     font-weight: 500;
-    width: 100%;
-    margin-top: 10px;
-    transition: background-color 0.3s;
+    width: auto;
+    min-width: 150px;
+    margin-top: 20px;
+    transition: all 0.3s;
+    display: block;
+    margin-left: auto;
 }
 
 .btn-submit:hover {
     background-color: #2c5fb3;
+    transform: translateY(-1px);
+}
+
+/* RESPONSIVE ADJUSTMENTS */
+@media (max-width: 900px) {
+    .form-group {
+        min-width: calc(50% - 10px); /* 2 columns on medium screens */
+    }
 }
 
 @media (max-width: 600px) {
@@ -224,5 +248,18 @@ tr:hover {
         margin: 10% auto;
         width: 95%;
         padding: 20px 15px;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .form-group {
+        min-width: 100%; /* 1 column on small screens */
+    }
+    
+    .btn-submit {
+        width: 100%;
     }
 }

@@ -1,6 +1,5 @@
 <?php
-require '../conexionDiabetes.php'; // Archivo de conexión a la base de datos
-
+require '../conexionDiabetes.php';
 if (isset($_GET['id'])) {
     $id_paciente = $_GET['id'];
 
