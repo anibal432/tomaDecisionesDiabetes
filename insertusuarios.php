@@ -102,8 +102,10 @@ $stmt->close();
         <li><a href="Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> <span>Tipos de Diabetes</span></a></li>
         <li><a href="Medico/Pacientes_Turno.php"><i class="fa-solid fa-users-rectangle"></i> <span>Consultas</span></a></li>
         <?php if ($query_jefe): ?>
-            <li><a href="insertusuarios.php" class="active"><i class="fa-solid fa-user-plus"></i> <span>Gestion de Medico</span></a></li>
+            <li><a href="insertusuarios.php" class="active"><i class="fa-solid fa-user-plus"></i> <span>Gestion de Medicos</span></a></li>
         <?php endif; ?>
+        
+        <li><a href="Medico/subir_resultados.php"><i class="fa-solid fa-flask-vial"></i> <span>Laboratorio</span></a></li>
         <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
     </ul>
 </nav>
@@ -113,8 +115,8 @@ $stmt->close();
         <div class="logo">Admin Log</div>
         <ul>            
             <li><a href="iniciosecre.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
-            <li><a href="insertusuarios.php" class="active"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
-            <li><a href="gestión_secretarias.php"><i class="fa-solid fa-id-card"></i> <span>Ingresar Secre</span></a></li>
+            <li><a href="insertusuarios.php" class="active"><i class="fa-solid fa-user-plus"></i> <span>Gestion de Medicos</span></a></li>
+            <li><a href="gestión_secretarias.php"><i class="fa-solid fa-id-card"></i> <span>Gestion de Secretaría</span></a></li>
             <li><a href="Citas.php"><i class="fa-solid fa-calendar-days"></i> <span>Agendar Cita</span></a></li>
             <li><a href="turnospacientes.php"><i class="fa-solid fa-ticket"></i><span>Turnos de Pacientes</span></a></li>
             <li><a href="Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>

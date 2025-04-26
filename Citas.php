@@ -80,8 +80,8 @@ ob_start();
     <ul>            
         <li><a href="iniciosecre.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
         <?php if ($esJefaSecretaria): ?>
-            <li><a href="insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
-            <li><a href="gestión_secretarias.php"><i class="fa-solid fa-id-card"></i> <span>Ingresar Secre</span></a></li>
+            <li><a href="insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Gestion de Medicos</span></a></li>
+            <li><a href="gestión_secretarias.php"><i class="fa-solid fa-id-card"></i> <span>Gestion de Secretaría</span></a></li>
         <?php endif; ?>
         <li><a href="Citas.php" class="active"><i class="fa-solid fa-calendar-days"></i> <span>Agendar Cita</span></a></li>
         <li><a href="turnospacientes.php"><i class="fa-solid fa-ticket"></i><span>Turnos de Pacientes</span></a></li>
@@ -214,6 +214,11 @@ ob_start();
                     <label for="segundoNombre">Segundo Nombre:</label>
                     <input type="text" id="segundoNombre">
                 </div>
+
+                <div class="form-group">
+                    <label for="tercerNombre">Tercer Nombre:</label>
+                    <input type="text" id="tercerNombre">
+                </div>
                 
                 <div class="form-group">
                     <label for="primerApellido">Primer Apellido:</label>
@@ -229,10 +234,41 @@ ob_start();
                     <label for="correoElectronico">Correo Electrónico:</label>
                     <input type="email" id="correoElectronico" required>
                 </div>
+
+                <div class="form-group">
+                    <label for="NoDpi">Número de DPI:</label>
+                    <input type="text" id="NoDpi" required>
+                </div>
                 
                 <div class="form-group">
                     <label for="numeroCelular">Número de Celular:</label>
                     <input type="tel" id="numeroCelular" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="FechaNacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" id="FechaNacimiento" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="Sexo">Sexo:</label>
+                    <select id="Sexo" class="form-control" required>
+                        <option value="">Seleccionar</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Prefiero no decir">Prefiero no decir</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="GrupoEtnico">Grupo Étnico:</label>
+                    <select id="GrupoEtnico" class="form-control" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Ladino">Ladino</option>
+                        <option value="Maya">Maya</option>
+                        <option value="Garifuna">Garifuna</option>
+                        <option value="Otro">Otro</option>
+                    </select>
                 </div>
             </div>
             
@@ -419,72 +455,153 @@ ob_start();
     }
     
     function saveAppointment() {
-        if (!selectedTime) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Por favor seleccione un horario',
-                icon: 'error'
-            });
-            return;
-        }
-        
-        const appointmentData = {
-            primerNombre: document.getElementById('primerNombre').value,
-            segundoNombre: document.getElementById('segundoNombre').value,
-            primerApellido: document.getElementById('primerApellido').value,
-            segundoApellido: document.getElementById('segundoApellido').value,
-            correoElectronico: document.getElementById('correoElectronico').value,
-            numeroCelular: document.getElementById('numeroCelular').value,
-            fecha: selectedDate,
-            hora: selectedTime,
-            IdMedico: selectedMedicoId,
-            estado: 'pendiente'
-        };
-        
-        if (!appointmentData.primerNombre || !appointmentData.primerApellido || 
-            !appointmentData.correoElectronico || !appointmentData.numeroCelular) {
-            Swal.fire({
-                title: 'Error',
-                text: 'Por favor complete todos los campos requeridos',
-                icon: 'error'
-            });
-            return;
-        }
-        
-        fetch('save_appointment.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(appointmentData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire({
-                    title: 'Éxito',
-                    text: 'Cita agendada correctamente',
-                    icon: 'success'
-                }).then(() => {
-                    closeModal();
-                    window.location.reload();
-                });
-            } else {
-                Swal.fire({
-                    title: 'Error',
-                    text: data.message || 'Error al agendar la cita',
-                    icon: 'error'
-                });
-            }
-        })
-        .catch(error => {
-            Swal.fire({
-                title: 'Error',
-                text: 'Error en la conexión: ' + error,
-                icon: 'error'
-            });
+    if (!selectedTime) {
+        Swal.fire({
+            title: 'Error',
+            text: 'Por favor seleccione un horario',
+            icon: 'error'
         });
+        return;
     }
+
+    const getElement = (id) => {
+        const element = document.getElementById(id);
+        if (!element) {
+            console.error(`Elemento con ID ${id} no encontrado`);
+            return null;
+        }
+        return element;
+    };
+
+    const formElements = {
+        primerNombre: getElement('primerNombre'),
+        segundoNombre: getElement('segundoNombre'),
+        tercerNombre: getElement('tercerNombre'),
+        primerApellido: getElement('primerApellido'),
+        segundoApellido: getElement('segundoApellido'),
+        correoElectronico: getElement('correoElectronico'),
+        NoDpi: getElement('NoDpi'),
+        numeroCelular: getElement('numeroCelular'),
+        FechaNacimiento: getElement('FechaNacimiento'),
+        Sexo: getElement('Sexo'),
+        GrupoEtnico: getElement('GrupoEtnico')
+    };
+
+    const requiredFields = {
+        'primerNombre': 'Primer Nombre',
+        'primerApellido': 'Primer Apellido',
+        'correoElectronico': 'Correo Electrónico',
+        'NoDpi': 'Número de DPI',
+        'numeroCelular': 'Número de Celular',
+        'FechaNacimiento': 'Fecha de Nacimiento',
+        'Sexo': 'Sexo',
+        'GrupoEtnico': 'Grupo Étnico'
+    };
+
+    for (const [field, name] of Object.entries(requiredFields)) {
+        if (!formElements[field] || !formElements[field].value.trim()) {
+            Swal.fire({
+                title: 'Error',
+                text: `El campo ${name} es requerido`,
+                icon: 'error'
+            });
+            formElements[field]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            formElements[field]?.focus();
+            return;
+        }
+    }
+
+    const appointmentData = {
+        primerNombre: formElements.primerNombre.value.trim(),
+        segundoNombre: formElements.segundoNombre?.value.trim() || '',
+        tercerNombre: formElements.tercerNombre?.value.trim() || '',
+        primerApellido: formElements.primerApellido.value.trim(),
+        segundoApellido: formElements.segundoApellido?.value.trim() || '',
+        correoElectronico: formElements.correoElectronico.value.trim(),
+        NoDpi: formElements.NoDpi.value.trim(),
+        numeroCelular: formElements.numeroCelular.value.trim(),
+        FechaNacimiento: formElements.FechaNacimiento.value,
+        Sexo: formElements.Sexo.value,
+        GrupoEtnico: formElements.GrupoEtnico.value,
+        fecha: selectedDate,
+        hora: selectedTime,
+        IdMedico: selectedMedicoId,
+        estado: 'pendiente'
+    };
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(appointmentData.correoElectronico)) {
+        Swal.fire({
+            title: 'Error',
+            text: 'Por favor ingrese un correo electrónico válido',
+            icon: 'error'
+        });
+        formElements.correoElectronico.focus();
+        return;
+    }
+
+    if (appointmentData.numeroCelular.replace(/\D/g, '').length < 8) {
+        Swal.fire({
+            title: 'Error',
+            text: 'El número de celular debe tener al menos 8 dígitos',
+            icon: 'error'
+        });
+        formElements.numeroCelular.focus();
+        return;
+    }
+
+    Swal.fire({
+        title: 'Procesando...',
+        html: 'Por favor espere mientras se agenda la cita',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    fetch('save_appointment.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(appointmentData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor');
+        }
+        return response.json();
+    })
+    .then(data => {
+        Swal.close();
+        if (data.success) {
+            Swal.fire({
+                title: '¡Cita agendada!',
+                text: data.message,
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                closeModal();
+                window.location.reload();
+            });
+        } else {
+            throw new Error(data.message || 'Error al agendar la cita');
+        }
+    })
+    .catch(error => {
+        Swal.fire({
+            title: 'Error',
+            text: error.message,
+            icon: 'error',
+            confirmButtonText: 'Entendido'
+        });
+        console.error('Error:', error);
+    });
+}
+
+function closeModal() {
+    document.getElementById('appointmentModal').style.display = 'none';
+}
     
     function closeModal() {
         document.getElementById('appointmentModal').style.display = 'none';

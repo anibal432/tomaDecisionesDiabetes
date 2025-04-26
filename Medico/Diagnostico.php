@@ -19,7 +19,6 @@ if (isset($_POST['search'])) {
     exit;
 }
 
-
 if (isset($_POST['insertDiagnosticos'])) {
     $diagnosticos = $_POST['diagnosticos'];  
     $idPaciente = $_POST['idPaciente']; 

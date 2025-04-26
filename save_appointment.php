@@ -14,6 +14,18 @@ try {
     if ($data === null) {
         throw new Exception('Datos de la cita no válidos');
     }
+
+    $checkDpiQuery = "SELECT COUNT(*) as count FROM citas WHERE NoDpi = ?";
+    $stmtDpi = $conn->prepare($checkDpiQuery);
+    $stmtDpi->bind_param("s", $data['NoDpi']);
+    $stmtDpi->execute();
+    $resultDpi = $stmtDpi->get_result();
+    $rowDpi = $resultDpi->fetch_assoc();
+
+    if ($rowDpi['count'] > 0) {
+        throw new Exception('El número de DPI ya está registrado en el sistema');
+    }
+
     $checkQuery = "SELECT COUNT(*) as count FROM citas 
                   WHERE IdMedico = ? AND fecha = ? AND hora = ?";
     $stmt = $conn->prepare($checkQuery);
@@ -28,21 +40,19 @@ try {
 
     $checkPacienteQuery = "SELECT COUNT(*) as count FROM citas 
                           WHERE fecha = ? 
-                          AND (correo_electronico = ? 
-                               OR (primer_nombre = ? AND primer_apellido = ?))";
+                          AND (correo_electronico = ? OR NoDpi = ?)";
     $stmtPaciente = $conn->prepare($checkPacienteQuery);
-    $stmtPaciente->bind_param("ssss", 
+    $stmtPaciente->bind_param("sss", 
         $data['fecha'],
         $data['correoElectronico'],
-        $data['primerNombre'],
-        $data['primerApellido']
+        $data['NoDpi']
     );
     $stmtPaciente->execute();
     $resultPaciente = $stmtPaciente->get_result();
     $rowPaciente = $resultPaciente->fetch_assoc();
 
     if ($rowPaciente['count'] > 0) {
-        throw new Exception('La cita no pudo agendarse debido a que ya existe una con los mismos datos para este día.');
+        throw new Exception('Ya tiene una cita agendada para este día');
     }
 
     $mail = new PHPMailer(true);
@@ -66,23 +76,31 @@ try {
                     <li><strong>Hora:</strong> {$data['hora']}</li>
                   </ul>
                   <p>Por favor llegue 15 minutos antes de su cita.</p>
-            <p>Si necesita cancelar o reprogramar, contáctenos con 24 horas de anticipación.</p>
-            <p>Atentamente,</p>
-            <p><strong>Equipo de Diabetes Log</strong></p>
-        ";
+                  <p>Si necesita cancelar o reprogramar, contáctenos con 24 horas de anticipación.</p>
+                  <p>Atentamente,</p>
+                  <p><strong>Equipo de Diabetes Log</strong></p>";
 
-    $query = "INSERT INTO citas (primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, 
-                                correo_electronico, numero_celular, fecha, hora, estado, IdMedico)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // Insertar la cita en la base de datos
+    $query = "INSERT INTO citas (
+                primer_nombre, segundo_nombre, tercer_nombre, 
+                primer_apellido, segundo_apellido, correo_electronico, 
+                NoDpi, numero_celular, FechaNacimiento, Sexo, GrupoEtnico,
+                fecha, hora, estado, IdMedico
+              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("sssssssssi", 
+    $stmt->bind_param("ssssssssssssssi", 
         $data['primerNombre'],
         $data['segundoNombre'],
+        $data['tercerNombre'],
         $data['primerApellido'],
         $data['segundoApellido'],
         $data['correoElectronico'],
+        $data['NoDpi'],
         $data['numeroCelular'],
+        $data['FechaNacimiento'],
+        $data['Sexo'],
+        $data['GrupoEtnico'],
         $data['fecha'],
         $data['hora'],
         $data['estado'],

@@ -28,6 +28,7 @@
     margin: 0;
     display: flex;
     align-items: center;
+    color:#3a7bd5;
 }
 
 .turnos-header h1 i {
@@ -170,7 +171,6 @@ tr:hover {
     font-size: 24px;
 }
 
-/* FORM STYLES - MODIFIED FOR 3 COLUMNS */
 .form-rows-container {
     display: flex;
     flex-direction: column;
@@ -185,7 +185,7 @@ tr:hover {
 
 .form-group {
     flex: 1;
-    min-width: calc(33.333% - 14px); /* 3 columns with gap */
+    min-width: calc(33.333% - 14px);
     margin-bottom: 0;
 }
 
@@ -236,10 +236,10 @@ tr:hover {
     transform: translateY(-1px);
 }
 
-/* RESPONSIVE ADJUSTMENTS */
+
 @media (max-width: 900px) {
     .form-group {
-        min-width: calc(50% - 10px); /* 2 columns on medium screens */
+        min-width: calc(50% - 10px);
     }
 }
 
@@ -256,7 +256,7 @@ tr:hover {
     }
     
     .form-group {
-        min-width: 100%; /* 1 column on small screens */
+        min-width: 100%;
     }
     
     .btn-submit {

@@ -38,8 +38,8 @@ $conn->close();
     <ul>            
         <li><a href="iniciosecre.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
         <?php if ($esJefeSecretaria): ?>
-            <li><a href="insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
-            <li><a href="gestión_secretarias.php"><i class="fa-solid fa-id-card"></i> <span>Ingresar Secre</span></a></li>
+            <li><a href="insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Gestion de Medicos</span></a></li>
+            <li><a href="gestión_secretarias.php"><i class="fa-solid fa-id-card"></i> <span>Gestion de Secretaría</span></a></li>
         <?php endif; ?>
         <li><a href="Citas.php"><i class="fa-solid fa-calendar-days"></i> <span>Agendar Cita</span></a></li>
         <li><a href="turnospacientes.php" class="active"><i class="fa-solid fa-ticket"></i><span>Turnos de Pacientes</span></a></li>
@@ -146,7 +146,14 @@ $conn->close();
                 
                 <div class="form-group">
                     <label for="grupoEtnico">Grupo Étnico:</label>
-                    <input type="text" id="grupoEtnico" name="grupoEtnico">
+                    <select class="form-control" id="grupoEtnico" name="grupoEtnico" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="Ladino">Ladino</option>
+                                    <option value="Mestizo">Mestizo</option>
+                                    <option value="Maya">Maya</option>
+                                    <option value="Garifuna">Garifuna</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
                 </div>
             </div>
             

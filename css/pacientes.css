@@ -8,7 +8,6 @@
     border: none;
 }
 
-
 .card-header {
     display: flex;
     justify-content: space-between;
@@ -18,13 +17,18 @@
     border-bottom: 1px solid #eee;
 }
 
+.card-header h2 {
+    color: #3a7bd5!important;
+    font-weight: bold;
+}
+
 .card-title {
     display: flex;
     align-items: center;
     font-size: 1.5rem;
-    color: #2c3e50;
     margin: 0;
 }
+
 
 .card-title i {
     margin-right: 10px;
@@ -49,7 +53,10 @@
     border: 1px solid #ddd;
     height: 38px; 
 }
-
+.table-responsive th{
+background-color: #3498db;
+color: white;
+}
 .search-container i {
     position: absolute;
     left: 12px;
@@ -85,7 +92,7 @@
     background-color: #f1f1f1;
 }
 .table-custom thead th {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 500;
     padding: 10px 12px;
     border: none !important; 
@@ -118,40 +125,6 @@
     font-size: 0.8rem;
     border: none;
     margin: 0 3px;
-}
-
-.btn-edit {
-    background-color: #3498db;
-    color: white;
-}
-
-.btn-edit:hover {
-    background-color: #3da9f2;
-    color: white;
-}
-
-.btn-view {
-    background-color: #2ecc71;
-    color: white;
-}
-
-.btn-view:hover {
-    background-color: #40e685;
-    color: white;
-}
-
-.btn-add {
-    background-color: #3a7bd5;
-    color: white;
-}
-.btn-add:hover {
-    background-color: #5288d5;
-    color: white;
-}
-
-
-.btn-action:hover {
-    opacity: 0.9;
 }
 
 
@@ -199,20 +172,18 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* Estilo base de la tabla */
 .table-scroll-container table {
     width: 100%;
     margin-bottom: 0;
-    font-size: 0.92rem; /* Texto más pequeño */
+    font-size: 0.92rem;
     border-collapse: separate;
     border-spacing: 0;
 }
 
-/* Cabecera de la tabla */
 .table-scroll-container thead th {
     position: sticky;
     top: 0;
-    background-color: #3a7bd5;
+    background-color: #3a7bd5!important;
     color: white;
     font-weight: 500;
     padding: 10px 12px;
@@ -220,23 +191,21 @@
     z-index: 10;
 }
 
-/* Celdas del cuerpo */
 .table-scroll-container tbody td {
-    padding: 6px 12px; /* Espaciado reducido */
+    padding: 6px 12px; 
     vertical-align: middle;
+    font-size: 0.85rem;
 }
 
-/* Filas alternadas para mejor legibilidad */
 .table-scroll-container tbody tr:nth-child(even) {
-    background-color: #f5f5f5;
+    background-color: #f8f8f8;
 }
 
-/* Efecto hover en filas */
 .table-scroll-container tbody tr:hover td {
-    background-color: #f1f1f1;
+    background-color: #e9e9e9;
+    cursor: pointer;
 }
 
-/* Botones de acción */
 .table-scroll-container .btn-action {
     border-radius: 4px;
     padding: 4px 8px;
@@ -246,8 +215,12 @@
     transition: all 0.2s;
 }
 
-/* Estilos específicos para cada tipo de botón */
 .table-scroll-container .btn-edit {
+    background-color: #3498db;
+    color: white;
+}
+
+.table-scroll-container .btn-documents {
     background-color: #3498db;
     color: white;
 }
@@ -262,13 +235,11 @@
     color: white;
 }
 
-/* Efectos hover para botones */
 .table-scroll-container .btn-action:hover {
     opacity: 0.9;
     transform: translateY(-1px);
 }
 
-/* Personalización del scrollbar */
 .table-scroll-container::-webkit-scrollbar {
     width: 8px;
 }
@@ -293,4 +264,32 @@
     min-width: 250px;
     width: auto;
     max-width: none;
+}
+
+.paciente-activo {
+    background-color: #b1e8b6;
+    border-left: 4px solid #2e7d32; 
+    transition: background-color 0.3s ease;
+}
+
+.paciente-activo td {
+    font-weight: 600;
+    border-top: 1px solid #c8e6c9;
+    border-bottom: 1px solid #c8e6c9;
+}
+
+.badge-consulta {
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+    background-color: #2e7d32;
+    color: white;
+    border-radius: 4px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.table-custom tbody tr.paciente-activo:hover td {
+    background-color: #90d996 !important; 
+    box-shadow: inset 0 0 10px rgba(46, 125, 50, 0.1);
+    cursor: pointer;
 }

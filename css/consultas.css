@@ -6,7 +6,6 @@
     --border: #e0e6ed;
 }
 
-/* Estructura básica */
 body {
     font-family: 'Open Sans', sans-serif;
     background-color: #f8fafc;
@@ -21,7 +20,6 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Contenedor principal */
 .card-container {
     background: white;
     border-radius: 8px;
@@ -30,7 +28,6 @@ body {
     margin-bottom: 20px;
 }
 
-/* Encabezado */
 .page-header {
     display: flex;
     align-items: center;
@@ -52,7 +49,6 @@ body {
     font-weight: 600;
 }
 
-/* Títulos de sección */
 .section-title {
     position: relative;
     color: var(--primary);
@@ -77,7 +73,6 @@ body {
     margin-right: 10px;
 }
 
-/* Tablas */
 .table-responsive {
     border: 1px solid var(--border);
     border-radius: 6px;
@@ -99,7 +94,7 @@ body {
 }
 
 .table tbody td {
-    padding: 12px 15px;
+    padding: 0.5rem 0.75rem;
     border-top: 1px solid var(--border);
     vertical-align: middle;
 }
@@ -108,7 +103,6 @@ body {
     background-color: var(--primary-light);
 }
 
-/* Estados */
 .estado {
     font-weight: 500;
     padding: 4px 8px;
@@ -122,7 +116,6 @@ body {
 .estado-atendido { background-color: #d4edda; color: #155724; }
 .estado-cancelado { background-color: #f8d7da; color: #721c24; }
 
-/* Botones de acciones */
 .btn-action {
     display: inline-flex;
     align-items: center;
@@ -265,3 +258,48 @@ body {
         margin-bottom: 8px;
     }
 }
+
+    .diagnosticos-container {
+        max-height: 250px;
+        overflow-y: auto;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        padding: 10px;
+    }
+    
+    .search-results {
+        max-height: 200px;
+        overflow-y: auto;
+        margin-bottom: 15px;
+    }
+    
+    .search-results li, #selectedDiagnosticos li {
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .search-results li:hover {
+        background-color: #f8f9fa;
+    }
+    
+    #selectedDiagnosticos li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .remove-diagnostic {
+        padding: 0.15rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    .nuevo-diagnostico {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 0.25rem;
+    }
+
+    .btn-close:focus{
+        outline: none;
+        box-shadow: none;
+    }

@@ -1,5 +1,5 @@
 <?php
-include '../conexionDiabetes.php'; // Asegúrate de incluir tu archivo de conexión a la base de datos
+include '../conexionDiabetes.php';
 
 if (isset($_POST['id_paciente'])) {
     $idPaciente = $_POST['id_paciente'];

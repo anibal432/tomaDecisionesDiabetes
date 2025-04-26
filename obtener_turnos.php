@@ -6,17 +6,18 @@ include('conexionL.php');
 $fechaActual = date('Y-m-d');
 
 $query = "SELECT t.IdTurno, 
-                 CONCAT(m.PrimerNombre, ' ', m.PrimerApellido) AS NombreMedico,
-                 CONCAT(t.PrimerNombrePac, ' ', 
-                        IFNULL(CONCAT(t.SegundoNombrePac, ' '), ''), 
-                        IFNULL(CONCAT(t.TercerNombrePac, ' '), ''),
-                        t.PrimerApellidoPac, ' ', 
-                        IFNULL(t.SegundoApellidoPac, '')) AS NombreCompletoPaciente,
-                 t.NoDpi, t.Telefono, t.EstadoCita
-          FROM Turnos t
-          JOIN Medico m ON t.IdMedico = m.IdMedico
-          WHERE t.FechaTurno = ?
-          ORDER BY t.IdTurno DESC";
+       CONCAT(m.PrimerNombre, ' ', m.PrimerApellido) AS NombreMedico,
+       CONCAT(t.PrimerNombrePac, ' ', 
+              IFNULL(CONCAT(t.SegundoNombrePac, ' '), ''), 
+              IFNULL(CONCAT(t.TercerNombrePac, ' '), ''),
+              t.PrimerApellidoPac, ' ', 
+              IFNULL(t.SegundoApellidoPac, '')) AS NombreCompletoPaciente,
+       t.NoDpi, t.Telefono, t.EstadoCita
+    FROM Turnos t
+    JOIN Medico m ON t.IdMedico = m.IdMedico
+    WHERE t.FechaTurno = ? 
+     AND t.EstadoCita != 'Atendido'
+    ORDER BY t.IdTurno DESC;";
 
 $stmt = $conn->prepare($query);
 $stmt->bind_param("s", $fechaActual);

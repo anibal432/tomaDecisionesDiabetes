@@ -1,8 +1,15 @@
 <?php
-include '../conexionDiabetes.php'; 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+include '../conexionDiabetes.php';
 include('../conexionL.php');
+session_start();
 
+// Inicializar variables
 $esJefeMedico = false;
+$idMedico = null;
+$pacienteEnAtencion = isset($_SESSION['paciente_actual']) ? $_SESSION['paciente_actual'] : null;
 
 if (!empty($_SESSION['correo'])) {
     $stmt = $conn->prepare("SELECT IdMedico FROM Medico WHERE CorreoMedico = ?");
@@ -52,13 +59,13 @@ if (!empty($_SESSION['correo'])) {
     <div class="logo">Diabetes Log</div>
     <ul>            
         <li><a href="../iniciomedico.php"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
-        <li><a href="../Consultas/AsignarTurno.php"><i class="fas fa-calendar-check"></i> <span>Asignar Turno</span></a></li>
         <li><a href="../Pacientes/datosPaciente.php" class="active"><i class="fas fa-user-injured"></i> <span>Gestion de Pacientes</span></a></li>
         <li><a href="../Consultas/TipoDiabetes.php"><i class="fas fa-vial"></i> <span>Tipos de Diabetes</span></a></li>
         <li><a href="../Medico/Pacientes_Turno.php"><i class="fa-solid fa-users-rectangle"></i> <span>Consultas</span></a></li>
         <?php if ($esJefeMedico): ?>
-            <li><a href="../insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Ingresar Medico</span></a></li>
+            <li><a href="../insertusuarios.php"><i class="fa-solid fa-user-plus"></i> <span>Gestion de Medicos</span></a></li>
         <?php endif; ?>
+        <li><a href="../Medico/subir_resultados.php"><i class="fa-solid fa-flask-vial"></i> <span>Laboratorio</span></a></li>
         <li><a href="../Logout.php"><i class="fas fa-sign-out-alt"></i> <span>LogOut</span></a></li>
     </ul>
 </nav>
@@ -725,6 +732,38 @@ if (!empty($_SESSION['correo'])) {
         </div>
     </div>
 </div>
+<!-- Modal para Resultados de Exámenes -->
+<div class="modal fade" id="modalResultados" tabindex="-1" aria-labelledby="modalResultadosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalResultadosLabel">Resultados de Exámenes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <input type="text" id="buscadorResultados" class="form-control mb-3" placeholder="Buscar por nombre de archivo...">
+                    
+                    <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                        <table class="table table-striped table-bordered" id="tablaResultadosModal">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Archivo</th>
+                                    <th>Tipo</th>
+                                    <th>Fecha</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cuerpoTablaResultados">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>        
+        </div>
+    </div>
+</div>
+
 
     <div class="main-content">
     <div class="container-fluid px-0">
@@ -748,98 +787,134 @@ if (!empty($_SESSION['correo'])) {
             </div>
             
             <div class="table-container-wrapper">
-    <div class="table-scroll-container">
-        <table class="table-custom">
-            <thead>
-                <tr>
-                    <th width="60px">No</th>
-                    <th>Nombre Paciente</th>
-                    <th width="140px">Signos Vitales</th>
-                    <th width="140px">Ant. Personales</th>
-                    <th width="140px">Ant. Familiares</th>
-                    <th width="140px">Responsable</th>
-                    <th width="140px">Historia Clínica</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                // Consulta para obtener todos los pacientes
-                $sql = "SELECT IdPaciente, CONCAT(NombreUno, ' ', NombreDos, ' ', NombreTres, ' ', PrimerApellido, ' ', SegundoApellido) AS NombreCompleto FROM Paciente";
-                $result = $conn->query($sql);
-                $no = 1;
+            <div class="table-scroll-container">
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th width="60px">No</th>
+                            <th>Nombre Paciente</th>
+                            <th width="140px">Signos Vitales</th>
+                            <th width="140px">Ant. Personales</th>
+                            <th width="140px">Ant. Familiares</th>
+                            <th width="140px">Responsable</th>
+                            <th width="140px">Historia Clínica</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $sql = "SELECT IdPaciente, 
+                                       CONCAT(NombreUno, ' ', 
+                                              IFNULL(NombreDos, ''), ' ', 
+                                              IFNULL(NombreTres, ''), ' ', 
+                                              PrimerApellido, ' ', 
+                                              IFNULL(SegundoApellido, '')) AS NombreCompleto 
+                                FROM Paciente
+                                ORDER BY 
+                                    CASE WHEN IdPaciente = ? THEN 0 ELSE 1 END,
+                                    NombreUno, PrimerApellido";
+                        
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param("i", $pacienteEnAtencion);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                        $no = 1;
 
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $no++ . "</td>";
-                        echo "<td>
-                                <div class='d-flex justify-content-between align-items-center'>
-                                    <span>" . htmlspecialchars($row['NombreCompleto']) . "</span>
-                                    <button class='btn btn-action btn-edit' onclick='abrirModalEditarPaciente(" . $row['IdPaciente'] . ")'>
-                                        <i class='fas fa-edit'></i>
-                                    </button>
-                                </div>
-                              </td>";
-                        echo "<td>
-                                <div class='d-flex justify-content-center'>
-                                    <button class='btn btn-action btn-add' onclick='abrirModalDatosVitales(" . $row['IdPaciente'] . ")'>
-                                        <i class='fas fa-plus'></i> 
-                                    </button>
-                                    <button class='btn btn-action btn-view' onclick='abrirModalEditarDatosVitales(" . $row['IdPaciente'] . ")'>
-                                        <i class='fas fa-eye'></i>
-                                    </button>
-                                </div>
-                              </td>";
-                        echo "<td>
-                                <div class='d-flex justify-content-center'>
-                                    <button class='btn btn-action btn-add' onclick='abrirModalAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
-                                        <i class='fas fa-plus'></i> 
-                                    </button>
-                                    <button class='btn btn-action btn-view' onclick='abrirModalEditarAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
-                                        <i class='fas fa-eye'></i>
-                                    </button>
-                                </div>
-                              </td>";
-                        echo "<td>
-                                <div class='d-flex justify-content-center'>
-                                    <button class='btn btn-action btn-add' onclick='abrirModalAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
-                                        <i class='fas fa-plus'></i> 
-                                    </button>
-                                    <button class='btn btn-action btn-view' onclick='abrirModalEditarAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
-                                        <i class='fas fa-eye'></i>
-                                    </button>
-                                </div>
-                              </td>";
-                        echo "<td>
-                                <div class='d-flex justify-content-center'>
-                                    <button class='btn btn-action btn-add' onclick='abrirModalResponsable(" . $row['IdPaciente'] . ")'>
-                                        <i class='fas fa-plus'></i> 
-                                    </button>
-                                    <button class='btn btn-action btn-view' onclick='abrirModalEditarResponsable(" . $row['IdPaciente'] . ")'>
-                                        <i class='fas fa-eye'></i>
-                                    </button>
-                                </div>
-                              </td>";
-                        echo "<td>
-                                <div class='d-flex justify-content-center'>
-                                    <button class='btn btn-action btn-add' onclick='abrirModalHistoriaClinica(" . $row['IdPaciente'] . ", null)'>
-                                        <i class='fas fa-plus'></i> 
-                                    </button>
-                                    <button class='btn btn-action btn-view' onclick='abrirModalEditarHistoriaClinica(" . $row['IdPaciente'] . ")'>
-                                        <i class='fas fa-eye'></i>
-                                    </button>
-                                </div>
-                              </td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='7' class='no-data'>No hay pacientes registrados</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $esPacienteActivo = ($row['IdPaciente'] == $pacienteEnAtencion);
+                                $claseFila = $esPacienteActivo ? 'class="paciente-activo"' : '';
+                                
+                                echo "<tr $claseFila>";
+                                echo "<td>" . $no++ . "</td>";
+                                echo "<td>
+                                        <div class='d-flex justify-content-between align-items-center'>
+                                            <span>" . htmlspecialchars($row['NombreCompleto']) . "</span>";
+                                if ($esPacienteActivo) {
+                                    echo "<span class='badge badge-consulta'><i class='fas fa-user-md'></i> En consulta</span>";
+                                }
+                                
+                                echo "<div>
+                <button class='btn btn-action btn-documents' onclick='abrirModalResultados(" . $row['IdPaciente'] . ")'>
+                    <i class='fas fa-file-alt'></i>
+                </button>
+                <button class='btn btn-action btn-edit' onclick='abrirModalEditarPaciente(" . $row['IdPaciente'] . ")'>
+                    <i class='fas fa-edit'></i>
+                </button>
+              </div>
+        </div>
+</td>";
+                                      
+                                      
+                                
+                                echo "<td>
+                                        <div class='d-flex justify-content-center'>
+                                            <button class='btn btn-action btn-add' onclick='abrirModalDatosVitales(" . $row['IdPaciente'] . ")'>
+                                                <i class='fas fa-plus'></i> 
+                                            </button>
+                                            <button class='btn btn-action btn-view' onclick='abrirModalEditarDatosVitales(" . $row['IdPaciente'] . ")'>
+                                                <i class='fas fa-eye'></i>
+                                            </button>
+                                        </div>
+                                      </td>";
+                                
+                                echo "<td>
+                                        <div class='d-flex justify-content-center'>
+                                            <button class='btn btn-action btn-add' onclick='abrirModalAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
+                                                <i class='fas fa-plus'></i> 
+                                            </button>
+                                            <button class='btn btn-action btn-view' onclick='abrirModalEditarAntecedentesPersonales(" . $row['IdPaciente'] . ")'>
+                                                <i class='fas fa-eye'></i>
+                                            </button>
+                                        </div>
+                                      </td>";
+                                
+                                echo "<td>
+                                        <div class='d-flex justify-content-center'>
+                                            <button class='btn btn-action btn-add' onclick='abrirModalAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
+                                                <i class='fas fa-plus'></i> 
+                                            </button>
+                                            <button class='btn btn-action btn-view' onclick='abrirModalEditarAntecedentesFamiliares(" . $row['IdPaciente'] . ")'>
+                                                <i class='fas fa-eye'></i>
+                                            </button>
+                                        </div>
+                                      </td>";
+                                
+                                echo "<td>
+                                        <div class='d-flex justify-content-center'>
+                                            <button class='btn btn-action btn-add' onclick='abrirModalResponsable(" . $row['IdPaciente'] . ")'>
+                                                <i class='fas fa-plus'></i> 
+                                            </button>
+                                            <button class='btn btn-action btn-view' onclick='abrirModalEditarResponsable(" . $row['IdPaciente'] . ")'>
+                                                <i class='fas fa-eye'></i>
+                                            </button>
+                                        </div>
+                                      </td>";
+                                
+                                echo "<td>
+                                        <div class='d-flex justify-content-center'>
+                                            <button class='btn btn-action btn-add' onclick='abrirModalHistoriaClinica(" . $row['IdPaciente'] . ", null)'>
+                                                <i class='fas fa-plus'></i> 
+                                            </button>
+                                            <button class='btn btn-action btn-view' onclick='abrirModalEditarHistoriaClinica(" . $row['IdPaciente'] . ")'>
+                                                <i class='fas fa-eye'></i>
+                                            </button>
+                                        </div>
+                                      </td>";
+                                
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='7' class='no-data'>No hay pacientes registrados</td></tr>";
+                        }
+                        $stmt->close();
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
+
 
 <script>
     function abrirModal(id) {
@@ -1411,6 +1486,66 @@ $(document).ready(function() {
         });
     }
 });
+</script>
+
+
+<script>
+function abrirModalResultados(idPaciente) {
+    document.getElementById('cuerpoTablaResultados').innerHTML = '<tr><td colspan="4" class="text-center">Cargando resultados...</td></tr>';
+
+    var modal = new bootstrap.Modal(document.getElementById('modalResultados'));
+    modal.show();
+    $.ajax({
+        url: 'obtener_resultados.php',
+        method: 'GET',
+        data: { id_paciente: idPaciente },
+        dataType: 'json',
+        success: function(data) {
+            let tablaBody = document.getElementById('cuerpoTablaResultados');
+            
+            if (data.error) {
+                tablaBody.innerHTML = '<tr><td colspan="4" class="text-center">Error: ' + data.error + '</td></tr>';
+                return;
+            }
+            
+            if (data.length === 0) {
+                tablaBody.innerHTML = '<tr><td colspan="4" class="text-center">No hay resultados disponibles para este paciente.</td></tr>';
+                return;
+            }
+            
+            let html = '';
+            data.forEach(resultado => {
+                html += `
+                    <tr>
+                        <td>${resultado.NombreArchivo}</td>
+                        <td>${resultado.TipoArchivo}</td>
+                        <td>${new Date(resultado.FechaSubida).toLocaleDateString()}</td>
+                        <td>
+                            <a href="${resultado.RutaArchivo}" target="_blank" class="btn btn-sm btn-primary"><i class='fas fa-eye'></i>
+                            </a>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tablaBody.innerHTML = html;
+            
+            $('#buscadorResultados').off('keyup').on('keyup', function() {
+                const filtro = $(this).val().toLowerCase();
+                $('#tablaResultadosModal tbody tr').each(function() {
+                    const texto = $(this).find('td:first').text().toLowerCase();
+                    $(this).toggle(texto.includes(filtro));
+                });
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('Error en la solicitud:', xhr.responseText);
+            document.getElementById('cuerpoTablaResultados').innerHTML = 
+                '<tr><td colspan="4" class="text-center">Error al cargar los resultados. Detalles: ' + 
+                (xhr.responseJSON?.error || error) + '</td></tr>';
+        }
+    });
+}
 </script>
 
 </body>
