@@ -274,7 +274,7 @@ ob_start();
             
             <div class="form-actions">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-                <button class="btn btn-primary" onclick="saveAppointment()">Guardar Cita</button>
+                <button class="btn btn-primary" onclick="saveAppointment()">Guardar Citas</button>
             </div>
         </div>
     </div>
