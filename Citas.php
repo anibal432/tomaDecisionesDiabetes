@@ -283,7 +283,7 @@ ob_start();
 <div id="deleteCitasModal" class="delete-modal">
     <div class="delete-modal-content">
         <div class="delete-modal-header">
-            <h3 class="delete-modal-title"><i class="fas fa-trash-alt"></i> Eliminar Cita</h3>
+            <h3 class="delete-modal-title"><i class="fas fa-trash-alt"></i> Eliminar Citas</h3>
             <button class="close-button" onclick="closeDeleteModal()">&times;</button>
         </div>
         
